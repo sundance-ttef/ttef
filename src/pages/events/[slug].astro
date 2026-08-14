@@ -99,11 +99,19 @@ const photos = ev.photos ?? [];
         <div class="coming-soon">
           <div class="cs-icon" aria-hidden="true">&#128197;</div>
           <h3>Details coming soon</h3>
-          <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
-             we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+          {/* A confirmed date is printed at the top of this page, so telling
+              someone to go and look it up on the calendar reads as though the
+              date above were not real. The two states say different things. */}
+          {when.confirmed ? (
+            <p>The date is set &mdash; we&rsquo;re still finalising the rest, and will post
+               full details here as soon as they are.</p>
+          ) : (
+            <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
+               we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+          )}
           <div class="cs-actions">
-            <a class="btn btn-primary" href="/calendar/">See the calendar</a>
-            <a class="btn btn-outline" href="/volunteer/">Help run it</a>
+            {!when.confirmed && <a class="btn btn-primary" href="/calendar/">See the calendar</a>}
+            <a class={`btn ${when.confirmed ? 'btn-primary' : 'btn-outline'}`} href="/volunteer/">Help run it</a>
           </div>
         </div>
       )}

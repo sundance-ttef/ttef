@@ -82,7 +82,7 @@ sponsors.forEach(([id, name, tier, url, logo], i) => {
 // Dates come from what the site already said. Where it only named a month, the
 // day is a placeholder and dateConfirmed is FALSE, so the site shows the month
 // and "date to be announced" rather than a day nobody has agreed to.
-//   [slug, title, date, confirmed, org, summary, photos, showOnEventsPage]
+//   [slug, title, date, confirmed, org, summary, photos]
 const traditions = [
   ['book-fair', 'Book Fair', '2026-10-05', true, 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', [['events/book-fair.jpg', 'Book Fair banner: read more, learn more, dream more']]],
   ['carnival', 'Fall Carnival', '2026-10-23', true, 'pac', 'Games, food, and the biggest family night of the fall.', []],
@@ -99,10 +99,8 @@ const traditions = [
     ['events/talent-show-2.jpg', '2025 Sundance talent show, photo 2'],
     ['events/talent-show-4.jpg', '2025 Sundance talent show, photo 4']]],
   ['senior-clap-out', 'Senior Clap Out', '2027-06-01', true, 'pac', 'Sundance alumni come back to walk the halls one last time.', []],
-  // Linked from Support Us, not Events — it is a fundraiser, not a yearly event.
-  ['dine-out', 'Dine Out Nights', null, false, 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', [], false],
 ]
-traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos, onEventsPage]) => {
+traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos]) => {
   docs.push({
     _id: `tradition-${slug}`,
     _type: 'tradition',
@@ -111,7 +109,6 @@ traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos, onE
     ...(date ? {date, dateConfirmed} : {}),
     org,
     summary,
-    showOnEventsPage: onEventsPage !== false,
     // The header image is an explicit field; the rest are the gallery.
     ...(photos.length ? {coverImage: img(photos[0][0], photos[0][1])} : {}),
     ...(photos.length > 1

@@ -982,17 +982,6 @@
   .donate-hero .give-lead { margin-inline: auto; }
   .donate-body { padding-block: 56px 84px; }
 
-  .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .amt-chip {
-    font: inherit; text-align: left; cursor: pointer;
-    background: var(--surface); border: 2px solid var(--hairline); border-radius: var(--radius-md);
-    padding: 18px 20px; display: flex; flex-direction: column; gap: 3px;
-    transition: border-color .15s, transform .15s, box-shadow .15s;
-  }
-  .amt-chip:hover { border-color: var(--maroon); transform: translateY(-2px); box-shadow: var(--shadow); }
-  .amt-chip.is-suggested { border-color: var(--gold); background: var(--gold-soft); }
-  .amt-value { font-family: var(--display); font-size: var(--fs-4xl); color: var(--maroon); line-height: 1; }
-  .amt-what { font-size: var(--fs-xs); color: var(--muted); }
   .amt-note { font-size: var(--fs-xs); color: var(--muted); font-style: italic; margin-top: 12px; }
 
   .give-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -1022,12 +1011,10 @@
   .tax-badge p { font-size: var(--fs-sm); margin-bottom: 8px; }
 
   @media (max-width: 860px) {
-    .amount-grid { grid-template-columns: repeat(2, 1fr); }
-    .give-grid, .mail-card { grid-template-columns: 1fr; }
+      .give-grid, .mail-card { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) {
-    .amount-grid { grid-template-columns: 1fr; }
-    .donate-hero { padding-block: 112px 48px; }
+      .donate-hero { padding-block: 112px 48px; }
     .mail-card { padding: 24px 22px; }
   }
 
@@ -1268,8 +1255,6 @@
   .sponsor-close { padding-block: 64px 84px; text-align: center; }
   .sponsor-close h3 { font-size: var(--fs-section); }
   .sponsor-close p { font-size: var(--fs-md); color: var(--muted); max-width: 60ch; margin: 12px auto 0; }
-
-  .amount-grid--three { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 860px) { .amount-grid--three { grid-template-columns: 1fr; } }
 
   /* The two-column pairs (monthly giving / employer match, and their siblings on
@@ -1397,3 +1382,17 @@
 .gallery + .coming-soon,
 .breakdown + .gallery { margin-top: 0; }
 
+/* The suggested gift, stated rather than offered as a button that cannot be
+   pressed. The figure carries the weight; the explanation sits beside it. */
+.suggested-gift {
+  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
+  background: var(--gold-soft); border: 1px solid var(--gold);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 34px;
+}
+.sg-amount {
+  font-family: var(--display); font-size: var(--fs-5xl); font-weight: 700;
+  color: var(--gold-ink-2); line-height: 1;
+}
+.sg-copy { flex: 1; min-width: 260px; }
+.sg-copy b { display: block; margin-bottom: 4px; }
+.sg-copy p { font-size: var(--fs-sm); color: var(--muted); margin: 0; }

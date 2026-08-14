@@ -42,12 +42,7 @@ export default defineType({
       options: {dateFormat: 'ddd, MMM D, YYYY'},
       description:
         'This year\u2019s date. It sets the month shown in the Events menu and on the card, and the order events appear in. Put your best guess in and leave "Date confirmed" off until it is settled.',
-      validation: (r) =>
-        r.custom((value, ctx) =>
-          (ctx.document as any)?.showOnEventsPage !== false && !value
-            ? 'A yearly event needs a date — the menu and the grid are ordered by it.'
-            : true,
-        ),
+      validation: (r) => r.required().error('The menu and the grid are ordered by this date.'),
     }),
     defineField({
       name: 'dateConfirmed',
@@ -56,14 +51,6 @@ export default defineType({
       description:
         'Off means the event page shows the month and "date to be announced" instead of a specific day. Turn it on once the date is settled. A date left over from a previous school year is treated as unconfirmed automatically, so a forgotten update can never show families the wrong day.',
       initialValue: false,
-    }),
-    defineField({
-      name: 'showOnEventsPage',
-      title: 'One of the main yearly events?',
-      type: 'boolean',
-      description:
-        'On means it appears in the Events menu and the "Every year at Sundance" grid. Off means the page still exists at its URL but is linked from elsewhere — Dine Out Nights lives under Support Us.',
-      initialValue: true,
     }),
     defineField({
       name: 'org',

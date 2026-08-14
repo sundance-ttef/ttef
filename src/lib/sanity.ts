@@ -139,7 +139,6 @@ export interface Tradition {
   milestones?: Milestone[];
   photosCaption?: string | null;
   body?: any[];
-  showOnEventsPage?: boolean;
   slug: string;
   date?: string | null;
   dateConfirmed?: boolean;
@@ -178,19 +177,22 @@ export const getSponsors = () =>
   sanity.fetch<Sponsor[]>(`*[_type == "sponsor" && defined(logo.asset)]
     | order(order asc, name asc){ name, tier, url, logo }`);
 
+/** Every annual event, in school-year order. Used to build the page routes. */
 export const getTraditions = () =>
-  sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(order asc){
-    title, "slug": slug.current, date, dateConfirmed, org, summary, showOnEventsPage, ctaLabel, ctaUrl, photos
+  sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(date asc){
+    title, "slug": slug.current, date, dateConfirmed, org, summary, ctaLabel, ctaUrl, photos
   }`);
 
 /**
- * The main yearly events: the Events menu and the "Every year at Sundance"
- * grid, which must always agree. Dine Out Nights is excluded — it keeps its
- * page but is linked from Support Us, being a fundraiser rather than a
- * once-a-year event.
+ * The annual events: the Events menu and the grid, which must always agree.
+ *
+ * Dine Out Nights is deliberately NOT one of these. It is a monthly fundraiser
+ * with its own page and its own document type, linked from Support Us — it was
+ * briefly modelled as an annual event with a "not really an annual event"
+ * toggle, which is a sign the type was wrong rather than the data.
  */
 export const getYearlyEvents = () =>
-  sanity.fetch<Tradition[]>(`*[_type == "tradition" && showOnEventsPage != false]
+  sanity.fetch<Tradition[]>(`*[_type == "tradition"]
     | order(date asc){
       title, "slug": slug.current, date, dateConfirmed, org, summary, coverImage
     }`);
