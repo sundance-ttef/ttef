@@ -103,10 +103,10 @@ export default defineType({
     }),
     defineField({
       name: 'coverImage',
-      title: 'Header image',
+      title: 'Photo for the Events page',
       type: 'image',
       description:
-        'The single image that represents this event: it heads the event page and is the picture on the Events grid. Set the hotspot on faces — it is cropped to a wide banner and to a 4:3 card.',
+        'The picture shown on the Events page for this event. It is cropped to a 4:3 card, so set the hotspot on faces. The event\u2019s own page shows the gallery below, not this.',
       options: {hotspot: true},
       fields: [
         {name: 'alt', type: 'string', title: 'Describe the photo',

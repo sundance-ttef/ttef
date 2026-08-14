@@ -47,12 +47,6 @@ const photos = ev.photos ?? [];
         </div>
       </div>
 
-      {ev.coverImage ? (
-        <div class="event-hero">
-          <img src={imageUrl(ev.coverImage, 1180, 420)} alt={ev.coverImage.alt ?? ev.title} />
-        </div>
-      ) : null}
-
       {ev.stats?.length ? (
         <div class="stat-row">
           {ev.stats.map((s) => (
