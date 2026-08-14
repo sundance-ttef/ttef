@@ -45,7 +45,20 @@ export type SanityImage = {
 export function imageUrl(image: SanityImage, width: number, height?: number): string | null {
   if (!image?.asset) return null;
   let b = builder.image(image as any).width(width).auto('format').quality(78);
-  if (height) b = b.height(height).fit('crop');
+  if (height) {
+    b = b.height(height).fit('crop');
+    /**
+     * A phone photo is usually portrait and every tile here is landscape, so
+     * something has to be cut. Sanity's default is to cut from the centre,
+     * which on a photo of people standing up removes their heads.
+     *
+     * With a hotspot set in the Studio, the builder crops around it and that
+     * is always the right answer. Without one — and none of the migrated
+     * photos have one — `entropy` picks the busiest region instead of the
+     * middle, which keeps faces far more often than centring does.
+     */
+    b = image.hotspot ? b.crop('focalpoint') : b.crop('entropy');
+  }
   return b.url();
 }
 
