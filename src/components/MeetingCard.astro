@@ -1,0 +1,19 @@
+---
+/**
+ * The standing invitation to the monthly meetings, shown on both /about/ and
+ * /calendar/. Shared rather than copied so the times and the Zoom link cannot
+ * end up saying different things on two pages.
+ */
+import { org } from '../data/nav';
+---
+
+<div class="meeting-card">
+  <div>
+    <p class="eyebrow">Everyone is welcome</p>
+    <h3>Monthly meetings, second Monday</h3>
+    <p>PAC meets at 6:00&nbsp;PM and the Foundation at 7:00&nbsp;PM in the Sundance Library,
+       with Zoom for anyone who can&rsquo;t make it in person. Every meeting includes an
+       open forum.</p>
+  </div>
+  <a class="btn btn-primary" href={org.zoom} target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
+</div>

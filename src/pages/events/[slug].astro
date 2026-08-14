@@ -13,7 +13,7 @@
  * pointed at by the old-site redirects keep working.
  */
 import Base from '../../layouts/Base.astro';
-import { getTraditions, getTradition, eventDate, orgTag, imageUrl } from '../../lib/sanity';
+import { getTraditions, getTradition, eventWhen, orgTag, imageUrl } from '../../lib/sanity';
 import { toHTML } from '@portabletext/to-html';
 
 export async function getStaticPaths() {
@@ -26,7 +26,7 @@ const ev = await getTradition(slug!);
 if (!ev) throw new Error(`No event in Sanity with slug "${slug}"`);
 
 const tag = orgTag(ev.org);
-const when = eventDate(ev.date, ev.dateConfirmed);
+const when = eventWhen(ev.month, ev.date);
 const whenText =
   when.full ?? (when.month ? `${when.month} — date to be announced` : 'Date to be announced');
 

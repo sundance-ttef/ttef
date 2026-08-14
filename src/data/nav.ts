@@ -1,4 +1,4 @@
-import { getYearlyEvents, eventDate } from '../lib/sanity';
+import { getYearlyEvents, eventWhen } from '../lib/sanity';
 
 export type NavChild = {
   label: string;
@@ -33,7 +33,7 @@ export const nav: NavEntry[] = [
       ...yearlyEvents.map((e) => ({
         label: e.title,
         href: `/events/${e.slug}/`,
-        meta: eventDate(e.date, e.dateConfirmed).month ?? undefined,
+        meta: eventWhen(e.month, e.date).month ?? undefined,
       })),
     ],
   },

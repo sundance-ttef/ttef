@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
 import UpcomingEvents from '../components/UpcomingEvents.astro';
+import MeetingCard from '../components/MeetingCard.astro';
 
 ---
 
@@ -17,6 +18,8 @@ import UpcomingEvents from '../components/UpcomingEvents.astro';
       </div>
       <h3 class="block-title">Upcoming events</h3>
       <UpcomingEvents limit={3} days={90} />
+
+      <MeetingCard />
 
 
       <h3 class="block-title spaced">Full calendar</h3>

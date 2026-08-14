@@ -36,21 +36,26 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'month',
+      title: 'Month it happens',
+      type: 'string',
+      description:
+        'The month this event falls in most years. This is what orders the Events menu and the grid, and it is what visitors see until a date is set.',
+      options: {
+        list: [
+          'August', 'September', 'October', 'November', 'December',
+          'January', 'February', 'March', 'April', 'May', 'June',
+        ],
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({
       name: 'date',
-      title: 'Date',
+      title: 'This year\u2019s date',
       type: 'date',
       options: {dateFormat: 'ddd, MMM D, YYYY'},
       description:
-        'This year\u2019s date. It sets the month shown in the Events menu and on the card, and the order events appear in. Put your best guess in and leave "Date confirmed" off until it is settled.',
-      validation: (r) => r.required().error('The menu and the grid are ordered by this date.'),
-    }),
-    defineField({
-      name: 'dateConfirmed',
-      title: 'Date confirmed',
-      type: 'boolean',
-      description:
-        'Off means the event page shows the month and "date to be announced" instead of a specific day. Turn it on once the date is settled. A date left over from a previous school year is treated as unconfirmed automatically, so a forgotten update can never show families the wrong day.',
-      initialValue: false,
+        'Leave EMPTY until the date is actually settled — the page then shows the month and "date to be announced". Do not put a guess here: a specific day on the page is one families will plan around. A date left over from a previous school year is ignored automatically.',
     }),
     defineField({
       name: 'org',
@@ -164,17 +169,14 @@ export default defineType({
         'A gallery of past years, shown low on the event page. The header image above is separate — these do not need to include it. Photos fill their tiles and are cropped to fit, so set the hotspot on faces.',
     }),
   ],
-  orderings: [{title: 'School year order', name: 'date', by: [{field: 'date', direction: 'asc'}]}],
+  orderings: [{title: 'School year order', name: 'month', by: [{field: 'month', direction: 'asc'}]}],
   preview: {
-    select: {title: 'title', date: 'date', confirmed: 'dateConfirmed', org: 'org', media: 'coverImage'},
-    prepare({title, date, confirmed, org, media}) {
+    select: {title: 'title', month: 'month', date: 'date', org: 'org', media: 'coverImage'},
+    prepare({title, month, date, org, media}) {
       const label = ORGS.find((o) => o.value === org)?.title ?? org
-      const d = date ? new Date(date + 'T12:00:00') : null
-      const when = d
-        ? confirmed
-          ? d.toLocaleDateString('en-US', {month: 'long', day: 'numeric'})
-          : `${d.toLocaleDateString('en-US', {month: 'long'})} — date TBC`
-        : 'No date'
+      const when = date
+        ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month: 'long', day: 'numeric'})
+        : `${month ?? 'No month'} — date to be announced`
       return {title, subtitle: `${when} · ${label}`, media}
     },
   },

@@ -79,27 +79,43 @@ export const schoolYearOf = (iso: string) => {
 
 export const currentSchoolYear = () => schoolYearOf(new Date().toISOString().slice(0, 10));
 
+/** The school year runs August to June, so month names cannot sort themselves. */
+export const SCHOOL_MONTHS = [
+  'August', 'September', 'October', 'November', 'December',
+  'January', 'February', 'March', 'April', 'May', 'June',
+];
+
+const monthIndex = (m?: string | null) => {
+  const i = SCHOOL_MONTHS.indexOf(m ?? '');
+  return i === -1 ? 99 : i;
+};
+
+/** School-year order: by month, then by date within a month. */
+export const bySchoolYear = (a: Tradition, b: Tradition) =>
+  monthIndex(a.month) - monthIndex(b.month) || (a.date ?? '').localeCompare(b.date ?? '');
+
 /**
- * How an event's date should be presented.
+ * How an event's timing should read.
  *
- * The MONTH is safe to show from any date, current or not — Book Fair is in
- * October every year. The DAY is not: last year's day is simply wrong. So a
- * date left over from a previous school year is treated as unconfirmed, and a
- * forgotten annual update degrades to "October, date to be announced" instead
- * of telling families to turn up on the wrong Thursday.
+ * The MONTH is the durable fact — Book Fair is in October every year — and is
+ * always set. The DATE is this year's detail and is often not known yet, in
+ * which case the page says "October — date to be announced" rather than
+ * showing a day nobody has agreed to.
+ *
+ * A date left over from a PREVIOUS school year is ignored, so a forgotten
+ * annual update degrades to the month rather than telling families to turn up
+ * on last year's Thursday.
  */
-export function eventDate(iso?: string | null, confirmed?: boolean) {
-  if (!iso) return {month: null, full: null, confirmed: false, stale: false};
-  const d = new Date(iso + 'T12:00:00');
-  const stale = schoolYearOf(iso) !== currentSchoolYear();
-  const isConfirmed = Boolean(confirmed) && !stale;
+export function eventWhen(month?: string | null, iso?: string | null) {
+  const usable = Boolean(iso) && schoolYearOf(iso!) === currentSchoolYear();
   return {
-    month: d.toLocaleDateString('en-US', {month: 'long'}),
-    full: isConfirmed
-      ? d.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})
+    month: month ?? (iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-US', {month: 'long'}) : null),
+    full: usable
+      ? new Date(iso! + 'T12:00:00').toLocaleDateString('en-US', {
+          weekday: 'long', month: 'long', day: 'numeric',
+        })
       : null,
-    confirmed: isConfirmed,
-    stale,
+    confirmed: usable,
   };
 }
 
@@ -141,7 +157,7 @@ export interface Tradition {
   body?: any[];
   slug: string;
   date?: string | null;
-  dateConfirmed?: boolean;
+  month?: string | null;
   org: 'pac' | 'foundation' | 'school';
   summary: string;
   ctaLabel?: string | null;
@@ -179,8 +195,8 @@ export const getSponsors = () =>
 
 /** Every annual event, in school-year order. Used to build the page routes. */
 export const getTraditions = () =>
-  sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(date asc){
-    title, "slug": slug.current, date, dateConfirmed, org, summary, ctaLabel, ctaUrl, photos
+  sanity.fetch<Tradition[]>(`*[_type == "tradition"]{
+    title, "slug": slug.current, month, date, org, summary, ctaLabel, ctaUrl, photos
   }`);
 
 /**
@@ -191,16 +207,17 @@ export const getTraditions = () =>
  * briefly modelled as an annual event with a "not really an annual event"
  * toggle, which is a sign the type was wrong rather than the data.
  */
-export const getYearlyEvents = () =>
-  sanity.fetch<Tradition[]>(`*[_type == "tradition"]
-    | order(date asc){
-      title, "slug": slug.current, date, dateConfirmed, org, summary, coverImage
-    }`);
+export const getYearlyEvents = async () => {
+  const rows = await sanity.fetch<Tradition[]>(`*[_type == "tradition"]{
+    title, "slug": slug.current, month, date, org, summary, coverImage
+  }`);
+  return rows.sort(bySchoolYear);
+};
 
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
-      title, "slug": slug.current, date, dateConfirmed, org, summary,
+      title, "slug": slug.current, month, date, org, summary,
       coverImage, stats, milestones, photosCaption, body, ctaLabel, ctaUrl, photos
     }`,
     {slug},

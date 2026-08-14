@@ -107,20 +107,31 @@ import UpcomingEvents from '../components/UpcomingEvents.astro';
       <p class="ask-lead">Our {fundraising.schoolYear} goal is <b>{goalText}</b> &mdash; a
          suggested <b>{askText} per student</b>, the lowest ask of any comparable school in
          Poway Unified. Give any amount, once or monthly, and your employer may double it.</p>
-      {fundraising.raised > 0 && (
-        <div class="ask-progress">
-          <div class="bar"><div class="bar-fill" style={`width:${percent}%`}></div></div>
-          <div class="bar-legend">
-            <span><span class="num">{raisedText}</span> raised &middot; {percent}% of {goalText}</span>
-            <span class="num">{remainingText} to go</span>
-          </div>
+      {/* The gap, made visible in the section that asks you to fill it. Before
+          the campaign opens nothing has been raised, and saying "$0 raised ·
+          0% of $111,944" next to "$111,944 to go" states the same figure three
+          times over — so the empty bar simply names the goal. */}
+      <div class="ask-progress">
+        <div class="bar"><div class="bar-fill" style={`width:${percent}%`}></div></div>
+        <div class="bar-legend">
+          {fundraising.raised > 0 ? (
+            <>
+              <span><span class="num">{raisedText}</span> raised &middot; {percent}% funded</span>
+              <span class="num">{remainingText} to go</span>
+            </>
+          ) : (
+            <>
+              <span>Our {fundraising.schoolYear} goal</span>
+              <span class="num">{goalText}</span>
+            </>
+          )}
         </div>
-      )}
+      </div>
 
       <div class="ask-actions">
         <a class="btn btn-lg btn-ghost-light" href="/impact/">See what we fund</a>
-        <a class="btn btn-lg btn-onphoto" href="/donate/">Donate</a>
         <a class="btn btn-lg btn-onphoto" href="/volunteer/">Volunteer</a>
+        <a class="btn btn-lg btn-onphoto" href="/donate/">Donate</a>
       </div>
     </div>
   </section>

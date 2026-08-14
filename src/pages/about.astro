@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
+import MeetingCard from '../components/MeetingCard.astro';
 ---
 
 <Base title="About Us">
@@ -32,16 +33,7 @@ import { org } from '../data/nav';
         </div>
       </div>
 
-      <div class="meeting-card">
-        <div>
-          <p class="eyebrow">Everyone is welcome</p>
-          <h3>Monthly meetings, second Monday</h3>
-          <p>PAC meets at 6:00&nbsp;PM and the Foundation at 7:00&nbsp;PM in the Sundance Library,
-             with Zoom for anyone who can&rsquo;t make it in person. Every meeting includes an
-             open forum.</p>
-        </div>
-        <a class="btn btn-primary" href={org.zoom} target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
-      </div>
+      <MeetingCard />
 
       <h3 class="roster-title">Foundation Board <span>2026&ndash;27</span></h3>
         <div class="leaders">
