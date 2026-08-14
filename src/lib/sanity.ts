@@ -49,6 +49,47 @@ export function imageUrl(image: SanityImage, width: number, height?: number): st
   return b.url();
 }
 
+
+// ---------------------------------------------------------------------------
+// School year
+// ---------------------------------------------------------------------------
+
+/**
+ * The school year a date falls in, identified by its opening calendar year:
+ * 2026 means 2026–27. The boundary is 1 July, so anything from July onward
+ * belongs to the year that is about to start.
+ */
+export const schoolYearOf = (iso: string) => {
+  const d = new Date(iso + 'T12:00:00');
+  return d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1;
+};
+
+export const currentSchoolYear = () => schoolYearOf(new Date().toISOString().slice(0, 10));
+
+/**
+ * How an event's date should be presented.
+ *
+ * The MONTH is safe to show from any date, current or not — Book Fair is in
+ * October every year. The DAY is not: last year's day is simply wrong. So a
+ * date left over from a previous school year is treated as unconfirmed, and a
+ * forgotten annual update degrades to "October, date to be announced" instead
+ * of telling families to turn up on the wrong Thursday.
+ */
+export function eventDate(iso?: string | null, confirmed?: boolean) {
+  if (!iso) return {month: null, full: null, confirmed: false, stale: false};
+  const d = new Date(iso + 'T12:00:00');
+  const stale = schoolYearOf(iso) !== currentSchoolYear();
+  const isConfirmed = Boolean(confirmed) && !stale;
+  return {
+    month: d.toLocaleDateString('en-US', {month: 'long'}),
+    full: isConfirmed
+      ? d.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})
+      : null,
+    confirmed: isConfirmed,
+    stale,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Queries
 // ---------------------------------------------------------------------------
@@ -82,8 +123,8 @@ export interface Tradition {
   title: string;
   showOnEventsPage?: boolean;
   slug: string;
-  monthLabel: string;
-  order: number;
+  date?: string | null;
+  dateConfirmed?: boolean;
   org: 'pac' | 'foundation' | 'school';
   summary: string;
   ctaLabel?: string | null;
@@ -185,7 +226,7 @@ export const getFeatured = async (limit = 3) => {
 
 export const getTraditions = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(order asc){
-    title, "slug": slug.current, monthLabel, order, org, summary, showOnEventsPage, ctaLabel, ctaUrl, photos
+    title, "slug": slug.current, date, dateConfirmed, org, summary, showOnEventsPage, ctaLabel, ctaUrl, photos
   }`);
 
 /**
@@ -196,14 +237,14 @@ export const getTraditions = () =>
  */
 export const getYearlyEvents = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition" && showOnEventsPage != false]
-    | order(order asc){
-      title, "slug": slug.current, monthLabel, order, org, summary, photos
+    | order(date asc){
+      title, "slug": slug.current, date, dateConfirmed, org, summary, photos
     }`);
 
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
-      title, "slug": slug.current, monthLabel, order, org, summary, ctaLabel, ctaUrl, photos
+      title, "slug": slug.current, date, dateConfirmed, org, summary, ctaLabel, ctaUrl, photos
     }`,
     {slug},
   );

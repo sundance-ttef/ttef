@@ -1,5 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { getTradition, eventDate, orgTag } from '../../lib/sanity';
+
+/* The date line comes from the CMS. An unconfirmed date — or one left over
+   from a previous school year — shows only the month, so a forgotten update
+   can never send families on the wrong day. */
+const ev = await getTradition('carnival');
+const when = eventDate(ev?.date, ev?.dateConfirmed);
+const tag = orgTag(ev?.org ?? 'pac');
+const whenText = when.full ?? (when.month ? `${when.month} \u2014 date to be announced` : 'Date to be announced');
 ---
 
 <Base title="Fall Carnival">
@@ -7,7 +16,7 @@ import Base from '../../layouts/Base.astro';
     <div class="wrap">
       <div class="sec-head page-head">
         <div>
-          <p class="eyebrow">PAC &middot; October 23</p>
+          <p class="eyebrow">{tag.label} &middot; {whenText}</p>
           <h2>Fall Carnival</h2>
           <p>Games, food, and the biggest family night of the fall.</p>
         </div>

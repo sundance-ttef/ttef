@@ -1,4 +1,4 @@
-import { getYearlyEvents } from '../lib/sanity';
+import { getYearlyEvents, eventDate } from '../lib/sanity';
 
 export type NavChild = {
   label: string;
@@ -27,10 +27,12 @@ export const nav: NavEntry[] = [
     // in school-year order, the same order the traditions grid uses
     children: [
       { label: 'All events', href: '/events/', overview: true },
+      // Only the month, never the day: the menu is a map of the year, and a
+      // month is right even when this year's exact date is not settled.
       ...yearlyEvents.map((e) => ({
         label: e.title,
         href: `/events/${e.slug}/`,
-        meta: e.monthLabel,
+        meta: eventDate(e.date, e.dateConfirmed).month ?? undefined,
       })),
     ],
   },
@@ -45,10 +47,10 @@ export const nav: NavEntry[] = [
     children: [
       { label: 'All the ways to give', href: '/support/', overview: true },
       { label: 'Donate', href: '/donate/', meta: 'Any time' },
-      { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
       { label: 'Dine Out Nights', href: '/events/dine-out/', meta: 'Monthly' },
-      { label: 'Red Envelope Campaign', href: '/support/red-envelope/', meta: 'Sep–Nov' },
-      { label: 'Corporate Sponsorship', href: '/support/sponsorship/', meta: 'From $250' },
+      { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
+      { label: 'Red Envelope Campaign', href: '/red-envelope/', meta: 'Sep–Nov' },
+      { label: 'Corporate Sponsorship', href: '/sponsorship/', meta: 'From $250' },
     ],
   },
   { label: 'Volunteer', href: '/volunteer/' },

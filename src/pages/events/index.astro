@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getYearlyEvents, imageUrl, orgTag } from '../../lib/sanity';
+import { getYearlyEvents, imageUrl, orgTag, eventDate } from '../../lib/sanity';
 
 /* Events is now only about the main yearly events. The upcoming-dates list and
    the dine-out teaser moved off: dates live on /calendar/, and Dine Out Nights
@@ -15,18 +15,16 @@ const events = await getYearlyEvents();
         <div>
           <p class="eyebrow">Events</p>
           <h2>Events at Sundance</h2>
-          <p>What&rsquo;s coming up next, and the traditions that shape the year. Each one is
-             labelled with who runs it.</p>
+          <p>The traditions that shape the year at Sundance.</p>
         </div>
       </div>
 
 
-      <h3 class="block-title spaced">Every year at Sundance</h3>
-      <p class="block-lede">These come around every school year, roughly in this order.</p>
       <div class="events events-3">
         {events.map((e) => {
           const tag = orgTag(e.org);
           const cover = e.photos?.length ? imageUrl(e.photos[0], 560, 380) : null;
+          const when = eventDate(e.date, e.dateConfirmed);
           return (
             <a class="event event-static is-link" href={`/events/${e.slug}/`}>
               <div class="event-img is-placeholder">
@@ -37,7 +35,7 @@ const events = await getYearlyEvents();
               <div class="event-body">
                 <div class="event-meta">
                   <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{e.monthLabel}</span>
+                  <span class="event-date">{when.month}</span>
                 </div>
                 <h3>{e.title}</h3>
                 <p>{e.summary}</p>

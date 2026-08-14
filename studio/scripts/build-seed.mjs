@@ -58,34 +58,36 @@ sponsors.forEach(([id, name, tier, url, logo], i) => {
 })
 
 // ------------------------------------------------------------- traditions
-// Order is the school year, which is also the order the Events menu uses.
+// Dates come from what the site already said. Where it only named a month, the
+// day is a placeholder and dateConfirmed is FALSE, so the site shows the month
+// and "date to be announced" rather than a day nobody has agreed to.
+//   [slug, title, date, confirmed, org, summary, photos, showOnEventsPage]
 const traditions = [
-  ['book-fair', 'Book Fair', 'October', 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', [['events/book-fair.jpg', 'Book Fair banner: read more, learn more, dream more']]],
-  ['carnival', 'Fall Carnival', 'October', 'pac', 'Games, food, and the biggest family night of the fall.', []],
-  ['multicultural-night', 'Multicultural Night', 'January', 'pac', 'Families share the food, dress, music, and traditions of home.', []],
-  ['auction', 'Spring Auction', 'February', 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', [['gala/gala-3.jpg', 'Guests at the 2024 Sundance auction'],
+  ['book-fair', 'Book Fair', '2026-10-05', true, 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', [['events/book-fair.jpg', 'Book Fair banner: read more, learn more, dream more']]],
+  ['carnival', 'Fall Carnival', '2026-10-23', true, 'pac', 'Games, food, and the biggest family night of the fall.', []],
+  ['multicultural-night', 'Multicultural Night', '2027-01-29', true, 'pac', 'Families share the food, dress, music, and traditions of home.', []],
+  ['auction', 'Spring Auction', '2027-02-06', false, 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', [['gala/gala-3.jpg', 'Guests at the 2024 Sundance auction'],
     ['gala/gala-1.jpg', '2024 Sundance auction, photo 1'],
     ['gala/gala-2.jpg', '2024 Sundance auction, photo 2']]],
-  ['fun-run', 'Fun Run', 'March', 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', [['events/fun-run-1.jpg', 'Sundance students running in the 2025 Fun Run'],
+  ['fun-run', 'Fun Run', '2027-03-13', false, 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', [['events/fun-run-1.jpg', 'Sundance students running in the 2025 Fun Run'],
     ['events/fun-run-2.jpg', '2025 Sundance Fun Run, photo 2'],
     ['events/fun-run-3.jpg', '2025 Sundance Fun Run, photo 3'],
     ['events/fun-run-4.jpg', '2025 Sundance Fun Run, photo 4']]],
-  ['talent-show', 'Talent Show', 'Spring', 'pac', 'Auditions, rehearsals, and a night on stage.', [['events/talent-show-3.jpg', 'Students performing at the 2025 Sundance talent show'],
+  ['talent-show', 'Talent Show', '2027-04-24', false, 'pac', 'Auditions, rehearsals, and a night on stage.', [['events/talent-show-3.jpg', 'Students performing at the 2025 Sundance talent show'],
     ['events/talent-show-1.jpg', '2025 Sundance talent show, photo 1'],
     ['events/talent-show-2.jpg', '2025 Sundance talent show, photo 2'],
     ['events/talent-show-4.jpg', '2025 Sundance talent show, photo 4']]],
-  ['senior-clap-out', 'Senior Clap Out', 'June', 'pac', 'Sundance alumni come back to walk the halls one last time.', []],
+  ['senior-clap-out', 'Senior Clap Out', '2027-06-01', true, 'pac', 'Sundance alumni come back to walk the halls one last time.', []],
   // Linked from Support Us, not Events — it is a fundraiser, not a yearly event.
-  ['dine-out', 'Dine Out Nights', 'Monthly', 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', [], false],
+  ['dine-out', 'Dine Out Nights', null, false, 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', [], false],
 ]
-traditions.forEach(([slug, title, monthLabel, org, summary, photos, onEventsPage], i) => {
+traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos, onEventsPage]) => {
   docs.push({
     _id: `tradition-${slug}`,
     _type: 'tradition',
     title,
     slug: {_type: 'slug', current: slug},
-    monthLabel,
-    order: i + 1,
+    ...(date ? {date, dateConfirmed} : {}),
     org,
     summary,
     showOnEventsPage: onEventsPage !== false,

@@ -16,13 +16,13 @@
 
 [[redirects]]
   from = "/red-envelope-campaign/"
-  to = "/support/red-envelope/"
+  to = "/red-envelope/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/corporate-sponsorship/"
-  to = "/support/sponsorship/"
+  to = "/sponsorship/"
   status = 301
   force = true
 
@@ -63,6 +63,21 @@
   from = "/admin/*"
   to = "https://ttef.sanity.studio/:splat"
   status = 302
+  force = true
+
+# The "ways to give" pages were briefly nested under /support/. They are flat
+# now — /donate/ and /shop/ always were, so the set was split across two shapes
+# for no reason. /events/* stays nested because those pages are a real set.
+[[redirects]]
+  from = "/support/red-envelope/"
+  to = "/red-envelope/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/support/sponsorship/"
+  to = "/sponsorship/"
+  status = 301
   force = true
 
 # About Us was three separate pages on the old site

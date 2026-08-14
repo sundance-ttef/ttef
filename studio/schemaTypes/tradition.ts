@@ -36,20 +36,26 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
-      name: 'monthLabel',
-      title: 'When (short label)',
-      type: 'string',
+      name: 'date',
+      title: 'Date',
+      type: 'date',
+      options: {dateFormat: 'ddd, MMM D, YYYY'},
       description:
-        'Shown in the Events menu and on the traditions grid, e.g. October, Spring, Monthly.',
-      validation: (r) => r.required(),
+        'This year\u2019s date. It sets the month shown in the Events menu and on the card, and the order events appear in. Put your best guess in and leave "Date confirmed" off until it is settled.',
+      validation: (r) =>
+        r.custom((value, ctx) =>
+          (ctx.document as any)?.showOnEventsPage !== false && !value
+            ? 'A yearly event needs a date — the menu and the grid are ordered by it.'
+            : true,
+        ),
     }),
     defineField({
-      name: 'order',
-      title: 'Position in the school year',
-      type: 'number',
+      name: 'dateConfirmed',
+      title: 'Date confirmed',
+      type: 'boolean',
       description:
-        'Orders the Events menu and the grid. August is early, June is late — 1, 2, 3… in that order.',
-      validation: (r) => r.required(),
+        'Off means the event page shows the month and "date to be announced" instead of a specific day. Turn it on once the date is settled. A date left over from a previous school year is treated as unconfirmed automatically, so a forgotten update can never show families the wrong day.',
+      initialValue: false,
     }),
     defineField({
       name: 'showOnEventsPage',
