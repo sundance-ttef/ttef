@@ -32,10 +32,13 @@ import Base from '../layouts/Base.astro';
           <label>Email<input type="email" name="email" required placeholder="jane@example.com" /></label>
           <label for="contact-to">This is for
             <select id="contact-to" name="recipient">
-              <option value="other">Other</option>
               <option value="foundation">The Foundation &mdash; donating, sponsorship, funding</option>
               <option value="pac">PAC &mdash; events and activities</option>
               <option value="sponsorship">Corporate sponsorship</option>
+              {/* Last in the list, but still the default: without `selected`
+                  the browser picks the first option, so anyone who never
+                  touched the dropdown would be filed as a Foundation enquiry. */}
+              <option value="other" selected>Other</option>
             </select>
           </label>
           <label>Message<textarea name="message" rows="5" required placeholder="How can we help?"></textarea></label>
