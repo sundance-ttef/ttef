@@ -1,0 +1,108 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# ---------------------------------------------------------------------------
+# Redirects from the old WordPress site.
+#
+# These are not optional. The 2025 red envelope and donation form carry printed
+# QR codes pointing at the old URLs, and those envelopes are in families' homes
+# for the whole school year. Breaking them mid-campaign breaks the paper trail.
+# Sources for every path: the old site's sitemap, captured in ttef-resources.
+# ---------------------------------------------------------------------------
+
+[[redirects]]
+  from = "/red-envelope-campaign/"
+  to = "/support/red-envelope/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/corporate-sponsorship/"
+  to = "/support/#sponsorship"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/spring-auction/"
+  to = "/support/auction/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fun-run/"
+  to = "/support/fun-run/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/dining-out-nights/"
+  to = "/support/dine-out/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/talent-show/"
+  to = "/events/talent-show/"
+  status = 301
+  force = true
+
+# About Us was three separate pages on the old site
+[[redirects]]
+  from = "/mission/"
+  to = "/about/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/board-members/"
+  to = "/about/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/attend-a-board-meeting/"
+  to = "/calendar/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/what-we-fund/"
+  to = "/impact/"
+  status = 301
+  force = true
+
+# The old news feed's newest post was from December 2020; send it home
+[[redirects]]
+  from = "/recent-news/"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/facebook/"
+  to = "https://www.facebook.com/groups/214661706390640"
+  status = 301
+  force = true
+
+# /donate/, /volunteer/, /contact/, /calendar/ and /staff-resources/ keep their
+# old paths, so they need no redirect.
+
+# ---------------------------------------------------------------------------
+# Headers
+# ---------------------------------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

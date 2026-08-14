@@ -1191,3 +1191,10 @@
     .hero-photo { padding-block: 28px 320px; }
     .hero-copy h1 { font-size: 27px; }
   }
+
+  /* Honeypot: a field people never see and bots fill in. Positioned off-screen
+     rather than display:none, since some bots skip hidden inputs. */
+  .hp-field {
+    position: absolute; left: -9999px; width: 1px; height: 1px;
+    overflow: hidden; opacity: 0;
+  }

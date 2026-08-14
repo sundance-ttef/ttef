@@ -13,19 +13,33 @@ import Base from '../layouts/Base.astro';
         </div>
       </div>
       <div class="contact-grid">
-        <form class="contact-form" onsubmit="return false;">
-          <label>Your name<input type="text" placeholder="Jane Wildcat"></label>
-          <label>Email<input type="email" placeholder="jane@example.com"></label>
+        <form
+          class="contact-form"
+          name="contact"
+          method="POST"
+          action="/contact/thanks/"
+          data-netlify="true"
+          netlify-honeypot="website"
+        >
+          {/* Netlify needs the form name in the payload */}
+          <input type="hidden" name="form-name" value="contact" />
+          {/* Honeypot: hidden from people, filled in by bots */}
+          <p class="hp-field" aria-hidden="true">
+            <label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
+          <label>Your name<input type="text" name="name" required placeholder="Jane Wildcat" /></label>
+          <label>Email<input type="email" name="email" required placeholder="jane@example.com" /></label>
           <label for="contact-to">This is for
-            <select id="contact-to">
+            <select id="contact-to" name="recipient">
               <option value="either">Either &mdash; not sure</option>
               <option value="foundation">The Foundation &mdash; donating, sponsorship, funding</option>
               <option value="pac">PAC &mdash; events and activities</option>
             </select>
           </label>
-          <label>Message<textarea rows="5" placeholder="How can we help?"></textarea></label>
+          <label>Message<textarea name="message" rows="5" required placeholder="How can we help?"></textarea></label>
           <button class="btn btn-primary" type="submit">Send message</button>
-          <p class="form-note">Demo only &mdash; this form doesn&rsquo;t send yet.</p>
+          <p class="form-note">We usually reply within a few days.</p>
         </form>
         <aside class="contact-card">
           <h3>Twin Trails Education Foundation</h3>
