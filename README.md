@@ -66,7 +66,14 @@ commit someone can see.
 Content is fetched at **build time** and baked into the HTML, so visitors never talk
 to Sanity: no runtime dependency, no per-visitor API cost, and the site keeps serving
 if Sanity is down. The trade-off is that publishing does not change the site until a
-rebuild runs — see the build hook below.
+rebuild runs.
+
+A Sanity webhook triggers that rebuild. **It currently points at the `dev` branch
+build hook**, because branch deploys cost 0 Netlify credits while a production deploy
+costs 15 — and before launch nobody is reading the production site anyway. **At launch,
+repoint it at the `main` build hook**, or publishing will never reach the live site.
+The webhook excludes drafts, so typing in the Studio does not trigger builds, and
+Sanity batches per transaction rather than per document.
 
 Two things behave on their own, by design, so nobody has to maintain them:
 past calendar events disappear, and the next dine-out night marks itself "next up".
