@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import Needs from '../components/Needs.astro';
+---
+
+<Base title="Contact">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Get in touch</h2>
+          <p>Questions about donating, volunteering, events, or sponsorship.</p>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <form class="contact-form" onsubmit="return false;">
+          <label>Your name<input type="text" placeholder="Jane Wildcat"></label>
+          <label>Email<input type="email" placeholder="jane@example.com"></label>
+          <label for="contact-to">This is for
+            <select id="contact-to">
+              <option value="either">Either &mdash; not sure</option>
+              <option value="foundation">The Foundation &mdash; donating, sponsorship, funding</option>
+              <option value="pac">PAC &mdash; events and activities</option>
+            </select>
+          </label>
+          <label>Message<textarea rows="5" placeholder="How can we help?"></textarea></label>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-note">Demo only &mdash; this form doesn&rsquo;t send yet.</p>
+        </form>
+        <aside class="contact-card">
+          <h3>Twin Trails Education Foundation</h3>
+          <p>8944 Twin Trails Drive<br>San Diego, CA 92129</p>
+          <p><a href="tel:8584842950">858&#8209;484&#8209;2950</a></p>
+          <hr>
+          <p><b>Foundation</b><br><a href="mailto:Sundance-Foundation@GoogleGroups.com">Sundance-Foundation@GoogleGroups.com</a></p>
+          <p><b>PAC</b><br><a href="mailto:pacsundancepq@gmail.com">pacsundancepq@gmail.com</a></p>
+          <p><b>Finance &amp; reimbursements</b><br><a href="mailto:sundance-finance@googlegroups.com">sundance-finance@googlegroups.com</a></p>
+          <hr>
+          <p class="ein-line">501(c)(3) non-profit<br>Federal Tax ID <span class="num">20&#8209;1105904</span></p>
+        </aside>
+      </div>
+            <Needs title="Decisions needed">
+
+          <li>A contact form is new &mdash; the current site only lists an email address. A static site needs a form service plus spam protection.</li>
+          <li><b>Official contact runs through personal Gmail today</b> (stephanies.warner@, gautham.jayaram@). Role addresses would survive board rotation.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

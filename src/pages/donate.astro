@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Needs from '../components/Needs.astro';
+---
+
+<Base title="Donate" darkTop>
+  <section class="donate-hero">
+    <div class="wrap">
+      <p class="eyebrow give-eyebrow">Donate</p>
+      <h2>Give to Sundance</h2>
+      <p class="give-lead">Every penny is tax&#8209;deductible and goes straight to the classroom.
+         Our suggested gift is <b>$250 per student</b> &mdash; but any amount, given any way,
+         makes a difference.</p>
+    </div>
+  </section>
+
+  <section class="donate-body">
+    <div class="wrap">
+      <h3 class="block-title">Choose an amount</h3>
+      <div class="amount-grid">
+            <button type="button" class="amt-chip">
+              <span class="amt-value num">$25</span><span class="amt-what">Art supplies for a classroom</span>
+            </button>
+            <button type="button" class="amt-chip">
+              <span class="amt-value num">$50</span><span class="amt-what">A week of Running Club</span>
+            </button>
+            <button type="button" class="amt-chip">
+              <span class="amt-value num">$100</span><span class="amt-what">A field trip seat for a student</span>
+            </button>
+            <button type="button" class="amt-chip is-suggested">
+              <span class="amt-value num">$250</span><span class="amt-what">Our suggested gift per student</span>
+            </button>
+            <button type="button" class="amt-chip">
+              <span class="amt-value num">$500</span><span class="amt-what">A month of the reading program</span>
+            </button>
+            <button type="button" class="amt-chip">
+              <span class="amt-value num">Other</span><span class="amt-what">Any amount helps</span>
+            </button>
+      </div>
+      <p class="amt-note">Amounts are illustrative &mdash; the real figures should come from the
+         Foundation before launch.</p>
+
+      <h3 class="block-title spaced">Choose how to give</h3>
+      <div class="give-grid">
+          <div class="give-card">
+            <div class="give-icon" aria-hidden="true">&#128179;</div>
+            <h3>Credit or debit card</h3>
+            <p>Fastest, and works from your phone. Processed securely by Square.</p>
+            <a class="btn btn-primary" href="/donate/">Give by card</a>
+          </div>
+          <div class="give-card">
+            <div class="give-icon" aria-hidden="true">&#127991;&#65039;</div>
+            <h3>PayPal</h3>
+            <p>One-time, or spread it across 10 monthly payments of $10, $20, $25, or $50.</p>
+            <a class="btn btn-outline" href="/donate/">Give with PayPal</a>
+          </div>
+          <div class="give-card">
+            <div class="give-icon" aria-hidden="true">&#128221;</div>
+            <h3>Donation form</h3>
+            <p>The same form that comes home in the red envelope, filled in online.</p>
+            <a class="btn btn-outline" href="/donate/">Open the form</a>
+          </div>
+          <div class="give-card">
+            <div class="give-icon" aria-hidden="true">&#9993;&#65039;</div>
+            <h3>Check or cash</h3>
+            <p>Payable to Twin Trails Education Foundation. Send it back to school in the red envelope, or mail it.</p>
+            <a class="btn btn-outline" href="/donate/">See the address</a>
+          </div>
+      </div>
+
+      <div class="two-col mt">
+        <div class="breakdown">
+          <h3>Make it monthly</h3>
+          <p class="col-p">Spreading a gift across the school year is easier on most budgets and
+             gives the Foundation something dependable to plan around. PayPal supports
+             <b>10 monthly payments</b> at $10, $20, $25, or $50.</p>
+          <p class="col-p">$25 a month for ten months is $250 &mdash; the full suggested gift,
+             without a single large payment.</p>
+          <a class="btn btn-primary" href="/donate/">Set up monthly giving</a>
+        </div>
+        <aside class="match-card">
+          <div class="match-icon">&#10005;&#65038;2</div>
+          <h3>Ask your employer to match</h3>
+          <p>Many employers match charitable donations, some at 2:1. It is usually a short online
+             form, and it can double what Sundance receives at no extra cost to you.</p>
+          <a class="btn btn-gold" href="/donate/">Check your employer</a>
+          <p class="match-note">Questions about matching? Gautham Jayaram handles them.</p>
+        </aside>
+      </div>
+
+      <div class="mail-card">
+        <div>
+          <h3>Giving by check or cash</h3>
+          <p>Make checks payable to <b>Twin Trails Education Foundation</b>. Send it back to
+             school in the red envelope, or mail it to:</p>
+          <p class="addr">Twin Trails Education Foundation<br>8944 Twin Trails Drive<br>San Diego, CA 92129</p>
+        </div>
+        <div class="tax-badge">
+          <p class="eyebrow">Tax&#8209;deductible</p>
+          <p>Twin Trails Education Foundation is a registered <b>501(c)(3)</b> non&#8209;profit.</p>
+          <p class="ein-line">Federal Tax ID <span class="num">20&#8209;1105904</span></p>
+        </div>
+      </div>
+
+            <Needs title="Before this page goes live">
+
+          <li>Every button here is inert. The real page wires them to the existing Square checkout, the PayPal button, and the JotForm donation form.</li>
+          <li>The suggested amounts and what each one buys are <b>illustrative</b> and need the Foundation&rsquo;s real figures.</li>
+          <li>Employer matching links to matchinggifts.com/powayusd; confirm that is still current.</li>
+          <li>Matching questions currently route to a personal Gmail. A role address would survive board turnover.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

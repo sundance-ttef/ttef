@@ -1,0 +1,206 @@
+---
+import Base from '../../layouts/Base.astro';
+import Needs from '../../components/Needs.astro';
+---
+
+<Base title="Events">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">Events</p>
+          <h2>Events at Sundance</h2>
+          <p>What&rsquo;s coming up next, and the traditions that shape the year. Each one is
+             labelled with who runs it.</p>
+        </div>
+      </div>
+
+      <h3 class="block-title">Upcoming dine out nights</h3>
+      <div class="dineout-upcoming">
+        <ul class="up-list">
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">NOV</span><span class="up-day">&mdash;</span></div>
+            <div class="up-body">
+              <div class="up-name">November dine out &mdash; coming soon</div>
+              <div class="up-time">Restaurant and date to be announced</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+        </ul>
+        <a class="btn btn-outline" href="/support/dine-out/">All dine out nights</a>
+      </div>
+
+      <h3 class="block-title">Coming up next</h3>
+      <div class="upcoming">
+        <ul class="up-list">
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">13</span></div>
+            <div class="up-body">
+              <div class="up-name">Back to School Night</div>
+              <div class="up-time">5:30 &ndash; 7:00 PM</div>
+            </div>
+            <span class="owner s">School</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">21</span></div>
+            <div class="up-body">
+              <div class="up-name">VAPA</div>
+              <div class="up-time"></div>
+            </div>
+            <span class="owner s">School</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">28</span></div>
+            <div class="up-body">
+              <div class="up-name">Friday Flag</div>
+              <div class="up-time">8:00 &ndash; 8:30 AM</div>
+            </div>
+            <span class="owner s">School</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">11</span></div>
+            <div class="up-body">
+              <div class="up-name">Back to School Dance</div>
+              <div class="up-time">5:30 &ndash; 7:30 PM</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">14</span></div>
+            <div class="up-body">
+              <div class="up-name">Monthly PAC Meeting</div>
+              <div class="up-time">6:00 &ndash; 7:00 PM &middot; Library</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">14</span></div>
+            <div class="up-body">
+              <div class="up-name">Monthly Foundation Meeting</div>
+              <div class="up-time">7:00 &ndash; 8:00 PM &middot; Library + Zoom</div>
+            </div>
+            <span class="owner f">Foundation</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">19</span></div>
+            <div class="up-body">
+              <div class="up-name">Bike Rodeo</div>
+              <div class="up-time">10:00 AM &ndash; 12:00 PM</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">22</span></div>
+            <div class="up-body">
+              <div class="up-name">Picture Day</div>
+              <div class="up-time"></div>
+            </div>
+            <span class="owner s">School</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">5</span></div>
+            <div class="up-body">
+              <div class="up-name"><a class="up-link" href="/events/book-fair/">Book Fair &mdash; all week</a></div>
+              <div class="up-time">Oct 5 &ndash; 9</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">12</span></div>
+            <div class="up-body">
+              <div class="up-name">Monthly PAC Meeting</div>
+              <div class="up-time">6:00 &ndash; 7:00 PM &middot; Library</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">12</span></div>
+            <div class="up-body">
+              <div class="up-name">Monthly Foundation Meeting</div>
+              <div class="up-time">7:00 &ndash; 8:00 PM &middot; Library + Zoom</div>
+            </div>
+            <span class="owner f">Foundation</span>
+          </li>
+          <li class="up-row">
+            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">23</span></div>
+            <div class="up-body">
+              <div class="up-name"><a class="up-link" href="/events/carnival/">Fall Carnival</a></div>
+              <div class="up-time">5:30 &ndash; 7:30 PM</div>
+            </div>
+            <span class="owner p">PAC</span>
+          </li>
+        </ul>
+        <a class="btn btn-primary" href="/calendar/">See the full calendar</a>
+      </div>
+
+      <h3 class="block-title spaced">Every year at Sundance</h3>
+      <p class="block-lede">These come around every school year, roughly in this order.</p>
+      <div class="events events-3">
+        <a class="event event-static is-link" href="/events/book-fair/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">October</span></div>
+            <h3>Book Fair</h3>
+            <p>A week of books in the library, with proceeds coming back to Sundance.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/events/carnival/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">October</span></div>
+            <h3>Fall Carnival</h3>
+            <p>Games, food, and the biggest family night of the fall.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/events/multicultural-night/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">January</span></div>
+            <h3>Multicultural Night</h3>
+            <p>Families share the food, dress, music, and traditions of home.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/support/auction/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner f">Foundation</span><span class="event-date">February</span></div>
+            <h3>Spring Auction</h3>
+            <p>An evening out for the grown-ups. The 2024 auction raised over $10,500.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/support/fun-run/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner f">Foundation</span><span class="event-date">March</span></div>
+            <h3>Fun Run</h3>
+            <p>Students collect pledges and run. School-wide goals unlock celebrations.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/events/talent-show/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">Spring</span></div>
+            <h3>Talent Show</h3>
+            <p>Auditions, rehearsals, and a night on stage.</p>
+          </div>
+        </a>
+        <a class="event event-static is-link" href="/events/senior-clap-out/">
+          <div class="event-img is-placeholder"><span>Photo needed</span></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">June</span></div>
+            <h3>Senior Clap Out</h3>
+            <p>Sundance alumni come back to walk the halls one last time.</p>
+          </div>
+        </a>
+      </div>
+
+            <Needs>
+
+          <li><b>Photos for all nine traditions.</b> None exist &mdash; the placeholders are honest about it rather than borrowing unrelated images.</li>
+          <li>Confirmed 26&ndash;27 dates. These come from the Google Calendar; the live site&rsquo;s Fun Run and Auction pages still show 2024.</li>
+          <li>Which events get their own page rather than just a calendar entry.</li>
+          <li><b>Dine Out Nights needs its restaurant list</b> &mdash; today it only says &ldquo;check the newsletter&rdquo;.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

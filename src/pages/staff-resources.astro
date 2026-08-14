@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Needs from '../components/Needs.astro';
+---
+
+<Base title="Staff Resources">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">For staff</p>
+          <h2>Staff resources</h2>
+          <p>Supply reimbursement for Sundance teachers and staff.</p>
+        </div>
+      </div>
+      <div class="breakdown reimb">
+        <h3>Teacher supply reimbursement</h3>
+        <p>The Foundation reimburses <b>$18 per student</b> for classroom supplies in 2026&ndash;27,
+           calculated from actual class rosters as of September&nbsp;30 rather than grade-level caps.</p>
+        <ul class="fund-list">
+          <li><span>Submission window</span><span class="amt">Sep 1 &ndash; Oct 30</span></li>
+          <li><span>Reimbursement deadline</span><span class="amt">Dec 1</span></li>
+          <li><span>Per student</span><span class="amt">$18.00</span></li>
+        </ul>
+        <p class="reimb-note"><b>Not eligible:</b> food, individual teacher or student supplies,
+           gifts, gift cards, or anything bought with a gift card. Please don&rsquo;t mix personal
+           purchases onto a receipt.</p>
+        <div class="btn-row">
+          <a class="btn btn-lg btn-primary" href="https://form.jotform.com/261928705657166"
+             target="_blank" rel="noopener noreferrer">Submit receipts &rarr;</a>
+        </div>
+        <p class="form-embed-note">On the live site this form can be embedded directly in the
+           page, so staff never leave the site to submit. Opens in a new tab here.</p>
+      </div>
+            <Needs title="Note">
+
+          <li>This page is <b>missing from the design brief</b> but exists on the live site and is actively used. It must not be dropped in the migration.</li>
+          <li>The receipt form is wired to the real 26&ndash;27 JotForm (<code>261928705657166</code>). Confirm it is the current one before launch &mdash; an older form (<code>232174364324149</code>) is also referenced on the live site.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

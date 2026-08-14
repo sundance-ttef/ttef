@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import Needs from '../components/Needs.astro';
+---
+
+<Base title="Calendar">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">Calendar</p>
+          <h2>School year calendar</h2>
+          <p>Foundation meetings, PAC events, school holidays, and everything in between &mdash;
+             straight from the Foundation&rsquo;s own Google Calendar.</p>
+        </div>
+      </div>
+
+      <div class="cal-frame">
+        <iframe title="Twin Trails Education Foundation calendar" loading="lazy"
+          src="https://calendar.google.com/calendar/embed?src=twintrailsfoundation%40gmail.com&amp;ctz=America%2FLos_Angeles&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=1&amp;showCalendars=0"></iframe>
+        <p class="cal-fallback">The live calendar renders here on the real site. This preview
+           blocks external embeds, so it appears blank.</p>
+      </div>
+
+      <div class="cal-actions">
+        <div class="cal-block">
+          <h3>Subscribe</h3>
+          <p>Add it once and every update appears in your own calendar.</p>
+          <div class="sub-links">
+            <a class="sub-link" href="https://calendar.google.com/calendar/render?cid=twintrailsfoundation%40gmail.com" target="_blank" rel="noopener noreferrer">Google Calendar</a>
+            <a class="sub-link" href="https://calendar.google.com/calendar/ical/twintrailsfoundation%40gmail.com/public/basic.ics" target="_blank" rel="noopener noreferrer">Apple Calendar</a>
+            <a class="sub-link" href="https://calendar.google.com/calendar/ical/twintrailsfoundation%40gmail.com/public/basic.ics" target="_blank" rel="noopener noreferrer">Download .ics</a>
+          </div>
+        </div>
+        <div class="cal-block zoom-block">
+          <h3>Join a meeting</h3>
+          <p>Foundation meetings are the second Monday at 7:00&nbsp;PM in the Sundance Library,
+             with Zoom for anyone who can&rsquo;t be there.</p>
+          <a class="btn btn-primary" href="https://us02web.zoom.us/j/87377496307" target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
+        </div>
+      </div>
+
+            <Needs title="Check before launch">
+
+          <li>The Zoom link is the one published on the current site. The designer asked for it to be updated after each meeting &mdash; confirm whether it actually rotates.</li>
+          <li><b>Publishing a live Zoom link publicly invites disruption</b> of a school meeting. Worth considering a request-the-link flow instead.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

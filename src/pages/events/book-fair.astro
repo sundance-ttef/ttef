@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Needs from '../../components/Needs.astro';
+---
+
+<Base title="Book Fair">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">PAC &middot; October</p>
+          <h2>Book Fair</h2>
+          <p>A week of books in the library, with proceeds coming back to Sundance.</p>
+        </div>
+      </div>
+      <div class="coming-soon">
+        <div class="cs-icon" aria-hidden="true">&#128197;</div>
+        <h3>2026&ndash;27 details coming soon</h3>
+        <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
+           we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+        <div class="cs-actions">
+          <a class="btn btn-primary" href="/calendar/">See the calendar</a>
+          <a class="btn btn-outline" href="/volunteer/">Help run it</a>
+        </div>
+      </div>
+            <Needs>
+
+          <li>Dates and hours for 26&ndash;27</li>
+          <li>The book vendor and how online ordering works</li>
+          <li>Volunteer shift sign-up sheet</li>
+          <li>Photos from a previous fair</li>
+      </Needs>
+    </div>
+  </section>
+</Base>

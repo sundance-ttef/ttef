@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import Needs from '../../components/Needs.astro';
+---
+
+<Base title="Dine Out Nights">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">PAC &middot; Monthly</p>
+          <h2>Dine Out Nights</h2>
+          <p>Eat at a local restaurant on the right night, and a portion of your check comes
+             back to Sundance. No coupon, no sign-up &mdash; just show up.</p>
+        </div>
+      </div>
+
+      <h3 class="block-title">This year&rsquo;s schedule</h3>
+      <div class="dine-grid">
+          <div class="dine-card is-past">
+            <div class="dine-photo"><span>&mdash;</span></div>
+            <div class="dine-body">
+              <div class="dine-date">September</div>
+              <div class="dine-name">Coming soon</div>
+              <p>Details for this year are still being arranged.</p>
+            </div>
+          </div>
+          <div class="dine-card is-past">
+            <div class="dine-photo"><span>&mdash;</span></div>
+            <div class="dine-body">
+              <div class="dine-date">October</div>
+              <div class="dine-name">Coming soon</div>
+              <p>Details for this year are still being arranged.</p>
+            </div>
+          </div>
+          <div class="dine-card is-next">
+            <div class="dine-photo"><span>Restaurant photo<br>needed</span></div>
+            <div class="dine-body">
+              <div class="dine-date">November &middot; next up</div>
+              <div class="dine-name">Coming soon</div>
+              <p>Restaurant to be announced. Mention Sundance and a portion of your check comes back to school.</p>
+            </div>
+          </div>
+      </div>
+
+            <Needs>
+
+          <li><b>The restaurant list and dates.</b> This is the single biggest content gap on the
+              site &mdash; the current page names no restaurants and no dates at all, and just
+              says to check the Weekly Wildcat newsletter. Whoever runs Dine Outs is the only source.</li>
+          <li><b>Restaurant photos.</b> Using images from a restaurant&rsquo;s own website needs
+              their permission &mdash; worth asking when the night is arranged, since they benefit too.
+              A photo of Sundance families at the restaurant avoids the question entirely.</li>
+          <li>The percentage each restaurant gives back, if we are allowed to state it.</li>
+          <li>Whether flyers can be pulled in automatically (the Canva question) or uploaded per event.</li>
+      </Needs>
+    </div>
+  </section>
+</Base>
