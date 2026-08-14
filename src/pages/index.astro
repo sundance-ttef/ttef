@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText } from '../data/fundraising';
 ---
@@ -15,7 +16,7 @@ import { fundraising, goalText } from '../data/fundraising';
           <p>Family giving funds the teachers, programs, and everyday experiences that district
              funding alone can&rsquo;t reach.</p>
           <div class="hero-cta">
-            <a class="btn btn-lg btn-onphoto" href="/donate/">Donate now</a>
+            <a class="btn btn-lg btn-primary" href="/donate/">Donate now</a>
             <a class="btn btn-lg btn-ghost-light" href="/impact/">See what we fund</a>
           </div>
         </div>
@@ -133,7 +134,7 @@ import { fundraising, goalText } from '../data/fundraising';
              reading intervention, clubs, and classroom supplies. Our {fundraising.schoolYear} goal
              is <b>{goalText}</b>.</p>
         </div>
-        <a class="btn btn-lg btn-primary" href="/impact/">See what we fund</a>
+        <a class="btn btn-lg btn-onphoto" href="/impact/">See what we fund</a>
       </div>
     </div>
   </section>
@@ -143,12 +144,12 @@ import { fundraising, goalText } from '../data/fundraising';
     <div class="wrap">
       <p class="eyebrow give-eyebrow">Support us</p>
       <h2>Every penny goes straight to the classroom</h2>
-      <p class="give-lead">Our suggested contribution is <b>$250 per student</b> &mdash; the lowest
+      <p class="give-lead">Our suggested contribution is <b>{askText} per student</b> &mdash; the lowest
          ask of any comparable school in Poway Unified. Give any amount, once or monthly, and
          your employer may double it.</p>
       <div class="give-actions">
-        <a class="btn btn-lg btn-onphoto" href="/donate/">Donate now</a>
-        <a class="btn btn-lg btn-ghost-light" href="/support/">All the ways to give</a>
+        <a class="btn btn-lg btn-primary" href="/donate/">Donate now</a>
+        <a class="btn btn-lg btn-outline" href="/support/">All the ways to give</a>
       </div>
     </div>
   </section>

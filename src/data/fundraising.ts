@@ -16,6 +16,10 @@ export const fundraising = {
   /** When `raised` was last checked, e.g. 'Aug 11'. Null hides the label. */
   updated: null as string | null,
   schoolYear: '2026–27',
+  /** The per-student ask. Total goal divided across the school, rounded. */
+  suggestedPerStudent: 275,
+  /** Months the Red Envelope monthly plan runs over. */
+  monthlyPlanMonths: 10,
 };
 
 const usd = (n: number) => '$' + n.toLocaleString('en-US');
@@ -23,6 +27,12 @@ const usd = (n: number) => '$' + n.toLocaleString('en-US');
 export const goalText = usd(fundraising.goal);
 export const raisedText = usd(fundraising.raised);
 export const remainingText = usd(Math.max(0, fundraising.goal - fundraising.raised));
+export const askText = usd(fundraising.suggestedPerStudent);
+/** e.g. "$27.50" — the monthly equivalent of the suggested gift. */
+export const askMonthlyText =
+  '$' + (fundraising.suggestedPerStudent / fundraising.monthlyPlanMonths)
+        .toFixed(2).replace(/\.00$/, '');
+
 export const percent = fundraising.goal
   ? Math.round((fundraising.raised / fundraising.goal) * 100)
   : 0;

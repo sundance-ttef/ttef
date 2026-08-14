@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { org } from '../data/nav';
 ---
 
 <Base title="About Us">
@@ -12,12 +13,6 @@ import Base from '../layouts/Base.astro';
           <p>The Twin Trails Education Foundation and the Parent Activities Committee, and how
              they work together for Sundance Elementary.</p>
         </div>
-      </div>
-
-      <div class="about-photos">
-        <div class="ap-item"><img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" /></div>
-        <div class="ap-item"><img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" /></div>
-        <div class="ap-item"><img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" /></div>
       </div>
 
       <div class="duo">
@@ -45,7 +40,7 @@ import Base from '../layouts/Base.astro';
              with Zoom for anyone who can&rsquo;t make it in person. Every meeting includes an
              open forum.</p>
         </div>
-        <a class="btn btn-primary" href="/contact/?to=either" >Get the Zoom link</a>
+        <a class="btn btn-primary" href={org.zoom} target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
       </div>
 
       <h3 class="roster-title">Foundation Board <span>2026&ndash;27</span></h3>

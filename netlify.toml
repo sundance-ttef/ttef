@@ -22,25 +22,25 @@
 
 [[redirects]]
   from = "/corporate-sponsorship/"
-  to = "/support/#sponsorship"
+  to = "/support/sponsorship/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/spring-auction/"
-  to = "/support/auction/"
+  to = "/events/auction/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/fun-run/"
-  to = "/support/fun-run/"
+  to = "/events/fun-run/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/dining-out-nights/"
-  to = "/support/dine-out/"
+  to = "/events/dine-out/"
   status = 301
   force = true
 

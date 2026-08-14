@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { org } from '../data/nav';
 ---
 
 <Base title="Calendar">
@@ -35,7 +36,7 @@ import Base from '../layouts/Base.astro';
           <h3>Join a meeting</h3>
           <p>Foundation meetings are the second Monday at 7:00&nbsp;PM in the Sundance Library,
              with Zoom for anyone who can&rsquo;t be there.</p>
-          <a class="btn btn-primary" href="https://us02web.zoom.us/j/87377496307" target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
+          <a class="btn btn-primary" href={org.zoom} target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
         </div>
       </div>
     </div>
