@@ -213,28 +213,39 @@
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: center 42%;
   }
-  /* The headline sits at the TOP of the photo, which is exactly where the old
-     scrim was weakest — it fell to .2 by 40%, right across the copy, over a
-     bright crowd shot. It now holds through the text and lifts below it, so
-     the photograph still reads as a photograph. */
+  /* A light wash only — enough to keep the photo from washing out white text,
+     not enough to dull the picture. The readability work is done by the text
+     shadow below, which darkens only the pixels immediately behind the letters
+     rather than the whole photograph. The stronger band at the bottom is for
+     the join with the section beneath, not for legibility. */
   .hero-photo::after {
     content: ""; position: absolute; inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(30,0,15,.74) 0%,
-      rgba(30,0,15,.62) 34%,
-      rgba(30,0,15,.28) 62%,
-      rgba(30,0,15,.66) 100%
+      rgba(30,0,15,.34) 0%,
+      rgba(30,0,15,.24) 45%,
+      rgba(30,0,15,.18) 70%,
+      rgba(30,0,15,.55) 100%
     );
   }
-  /* Two shadows: a tight one for edge definition against light patches in the
-     photo, and a wide soft one to lift the whole block off the image. */
+  /* Three layers doing three jobs: a hairline shadow for edge definition
+     against bright pixels, a short one for weight, and a wide diffuse one that
+     acts as a halo so the text carries over a busy crowd shot. */
   .hero-copy {
     position: relative; z-index: 2; color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,.6), 0 2px 22px rgba(0,0,0,.55);
+    text-shadow:
+      0 1px 2px rgba(0,0,0,.9),
+      0 2px 10px rgba(0,0,0,.75),
+      0 6px 34px rgba(0,0,0,.6);
   }
-  .hero-copy h1 { font-size: var(--fs-hero); max-width: 19ch; letter-spacing: -.015em; }
-  .hero-copy p { max-width: 44ch; margin-top: 14px; font-size: var(--fs-lg); }
+  /* 19ch forced this 44-character headline onto three lines even on a wide
+     screen, with the right half of the photo empty. Two lines is the shape it
+     wants; `balance` keeps them even rather than leaving a short widow. */
+  .hero-copy h1 {
+    font-size: var(--fs-hero); max-width: 26ch; letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+  .hero-copy p { max-width: 52ch; margin-top: 14px; font-size: var(--fs-lg); }
   .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
 
   /* ---------- foundation / PAC ---------- */
