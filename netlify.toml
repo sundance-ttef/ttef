@@ -50,6 +50,21 @@
   status = 301
   force = true
 
+# The Studio is hosted by Sanity, but board members should not have to remember
+# a sanity.studio address. 302, not 301: a permanent redirect would be cached in
+# their browsers and we may yet move the Studio onto this domain.
+[[redirects]]
+  from = "/admin"
+  to = "https://ttef.sanity.studio/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin/*"
+  to = "https://ttef.sanity.studio/:splat"
+  status = 302
+  force = true
+
 # About Us was three separate pages on the old site
 [[redirects]]
   from = "/mission/"
