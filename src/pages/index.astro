@@ -86,7 +86,6 @@ import { fundraising, goalText } from '../data/fundraising';
       </div>
       <div class="events">
         <a class="event" href="/calendar/">
-          <div class="event-img"><img src="/img/funrun.jpg" alt="Volunteers gathered under the Fun Run finish line arch"></div>
           <div class="event-body">
             <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">Fri, Sep 11 &middot; 5:30&ndash;7:30 PM</span></div>
             <h3>Back to School Dance</h3>
@@ -95,7 +94,6 @@ import { fundraising, goalText } from '../data/fundraising';
           </div>
         </a>
         <a class="event" href="/calendar/">
-          <div class="event-img"><img src="/img/birding.jpg" alt="Students using binoculars on a field trip with a teacher"></div>
           <div class="event-body">
             <div class="event-meta"><span class="owner f">Foundation</span><span class="event-date">Mon, Sep 14 &middot; 7:00&ndash;8:00 PM</span></div>
             <h3>Monthly Foundation Meeting</h3>
@@ -104,7 +102,6 @@ import { fundraising, goalText } from '../data/fundraising';
           </div>
         </a>
         <a class="event" href="/calendar/">
-          <div class="event-img"><img src="/img/beautify.jpg" alt="Families and students volunteering together in the school parking lot"></div>
           <div class="event-body">
             <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">Sat, Sep 19 &middot; 10:00 AM&ndash;12:00 PM</span></div>
             <h3>Bike Rodeo</h3>
@@ -122,34 +119,21 @@ import { fundraising, goalText } from '../data/fundraising';
 
 
 
-  <!-- IMPACT TEASER -->
-  <section class="impact-teaser">
+  <!-- THE ASK -->
+  <section class="the-ask">
     <div class="wrap">
-      <div class="teaser-inner">
-        <div>
-          <p class="eyebrow">Our impact</p>
-          <h2>We need your help to fill the gap</h2>
-          <p>State funding doesn&rsquo;t cover the enrichment programs that make Sundance what it
-             is. Family giving pays for four staff positions, the science lab, music and choir,
-             reading intervention, clubs, and classroom supplies. Our {fundraising.schoolYear} goal
-             is <b>{goalText}</b>.</p>
-        </div>
-        <a class="btn btn-lg btn-onphoto" href="/impact/">See what we fund</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SUPPORT TEASER -->
-  <section class="support-teaser">
-    <div class="wrap">
-      <p class="eyebrow give-eyebrow">Support us</p>
-      <h2>Every penny goes straight to the classroom</h2>
-      <p class="give-lead">Our suggested contribution is <b>{askText} per student</b> &mdash; the lowest
-         ask of any comparable school in Poway Unified. Give any amount, once or monthly, and
-         your employer may double it.</p>
-      <div class="give-actions">
-        <a class="btn btn-lg btn-primary" href="/donate/">Donate now</a>
-        <a class="btn btn-lg btn-outline" href="/support/">All the ways to give</a>
+      <p class="eyebrow">Our impact</p>
+      <h2>We need your help to fill the gap</h2>
+      <p class="ask-lead">State funding doesn&rsquo;t cover the enrichment programs that make
+         Sundance what it is. Family giving pays for four staff positions, the science lab,
+         music and choir, reading intervention, clubs, and classroom supplies.</p>
+      <p class="ask-lead">Our {fundraising.schoolYear} goal is <b>{goalText}</b> &mdash; a suggested
+         <b>{askText} per student</b>, the lowest ask of any comparable school in Poway Unified.
+         Give any amount, once or monthly, and your employer may double it.</p>
+      <div class="ask-actions">
+        <a class="btn btn-lg btn-ghost-light" href="/impact/">See what we fund</a>
+        <a class="btn btn-lg btn-onphoto" href="/donate/">Donate</a>
+        <a class="btn btn-lg btn-ghost-light" href="/volunteer/">Volunteer</a>
       </div>
     </div>
   </section>

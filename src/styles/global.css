@@ -675,16 +675,8 @@
   .cal-embed, .shop-cta { padding: 38px 22px; }
   }
 
-  /* Swapped with the support band below: two maroon blocks near the footer read
-     as red-on-red. The "what we fund" ask carries the colour now. */
-  .impact-teaser {
-    background: linear-gradient(140deg, var(--maroon-deep) 0%, var(--maroon) 55%, var(--maroon-mid) 100%);
-    color: #fff; padding-block: 68px;
-  }
-  .impact-teaser .eyebrow { color: color-mix(in srgb, var(--gold) 85%, #fff); }
-  .impact-teaser h2 { color: #fff; }
-  .impact-teaser p { color: rgba(255,255,255,.9); }
-  .impact-teaser b { color: #fff; }
+  /* .teaser-inner p/b come later in this file with the same specificity, so these
+     must out-rank them or the body text stays grey on maroon. */
   .teaser-inner {
     display: flex; align-items: center; justify-content: space-between; gap: 34px; flex-wrap: wrap;
   }
@@ -930,17 +922,6 @@
     font-size: 11.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
   }
 
-  .support-teaser {
-    background: var(--surface-2); color: var(--ink);
-    padding-block: 76px; text-align: center;
-  }
-  .support-teaser .eyebrow { color: var(--muted); }
-  .support-teaser h2 { color: var(--ink); }
-  .support-teaser .give-lead { color: var(--muted); }
-  .support-teaser .give-lead b { color: var(--ink); }
-  .support-teaser h2 { font-size: clamp(30px, 4.4vw, 46px); margin-top: 10px; }
-  .support-teaser .give-lead { margin-inline: auto; }
-  .support-teaser .give-actions { justify-content: center; }
 
   .duo-list.two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 18px; }
   .panel-btn { margin-top: 26px; align-self: flex-start; }
@@ -1293,4 +1274,36 @@
   .two-col .breakdown > .btn,
   .two-col .breakdown > .btn-row,
   .two-col .match-card > .btn { margin-top: auto; }
+  /* the flex column above stretches its children, which blew the buttons out to
+     full width — they should stay the size of their label */
+  .two-col .btn { align-self: flex-start; }
   .two-col .match-card .match-note { margin-top: 14px !important; }
+
+  /* Home "Upcoming events" cards carry no photo: the only images we had were
+     borrowed from other events, which read as a caption error. Text-only until
+     there is a real photo of the actual event. */
+  #events .event { min-height: 0; }
+  #events .event-body { padding-top: 22px; }
+
+  /* One ask, not two. Two maroon blocks ran together near the footer, and the
+     impact teaser and the donate teaser were making the same request twice. */
+  .the-ask {
+    background: linear-gradient(140deg, var(--maroon-deep) 0%, var(--maroon) 55%, var(--maroon-mid) 100%);
+    color: #fff; padding-block: 84px; text-align: center;
+  }
+  .the-ask .eyebrow { color: color-mix(in srgb, var(--gold) 85%, #fff); }
+  .the-ask h2 {
+    color: #fff; font-size: clamp(30px, 4.4vw, 48px);
+    margin-top: 10px; max-width: 20ch; margin-inline: auto; letter-spacing: -.015em;
+  }
+  .the-ask .ask-lead {
+    color: rgba(255,255,255,.9); font-size: 17.5px; max-width: 62ch;
+    margin: 16px auto 0; line-height: 1.65;
+  }
+  .the-ask .ask-lead b { color: #fff; font-weight: 650; }
+  .ask-actions { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+  @media (max-width: 560px) {
+    .the-ask { padding-block: 60px; }
+    .ask-actions { flex-direction: column; align-items: stretch; }
+    .ask-actions .btn { width: 100%; justify-content: center; }
+  }
