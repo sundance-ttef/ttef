@@ -48,6 +48,27 @@ export default defineType({
       initialValue: 'pac',
     }),
     defineField({
+      name: 'featured',
+      title: 'Show on the home page',
+      type: 'boolean',
+      description:
+        'The home page shows the next three featured events as cards. Leave off for routine dates like Friday Flag so the highlights stay highlights.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 3,
+      description: 'Only shown on the home-page card. Required if this is featured.',
+      validation: (r) =>
+        r.custom((value, ctx) =>
+          (ctx.document as any)?.featured && !value
+            ? 'A featured event needs a description — it is what the home-page card shows.'
+            : true,
+        ),
+    }),
+    defineField({
       name: 'tradition',
       title: 'Links to which event page?',
       type: 'reference',

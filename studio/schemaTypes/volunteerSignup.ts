@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {ORGS} from './occurrence'
 
 /**
  * A current volunteer sign-up on /volunteer/.
@@ -18,6 +19,14 @@ export default defineType({
       type: 'string',
       description: 'e.g. Garden Club, Back to School Dance',
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'org',
+      title: 'Who runs it',
+      type: 'string',
+      options: {list: ORGS, layout: 'radio'},
+      validation: (r) => r.required(),
+      initialValue: 'pac',
     }),
     defineField({
       name: 'when',

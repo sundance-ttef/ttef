@@ -90,21 +90,25 @@ const MONTHS = {JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6, JUL: 7, AUG: 8, 
 const iso = (mon, day) =>
   `${yearFor(mon)}-${String(MONTHS[mon]).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 
+// [month, day, name, time, org, tradition slug, description (home card only)]
 const occurrences = [
   ['AUG', 13, 'Back to School Night', '5:30 – 7:00 PM', 'school', null],
   ['AUG', 21, 'VAPA', '', 'school', null],
   ['AUG', 28, 'Friday Flag', '8:00 – 8:30 AM', 'school', null],
-  ['SEP', 11, 'Back to School Dance', '5:30 – 7:30 PM', 'pac', null],
+  ['SEP', 11, 'Back to School Dance', '5:30 – 7:30 PM', 'pac', null,
+   'The first big family night of the year. Music, dancing, and a chance to meet your Wildcat\u2019s new classmates.'],
   ['SEP', 14, 'Monthly PAC Meeting', '6:00 – 7:00 PM · Library', 'pac', null],
-  ['SEP', 14, 'Monthly Foundation Meeting', '7:00 – 8:00 PM · Library + Zoom', 'foundation', null],
-  ['SEP', 19, 'Bike Rodeo', '10:00 AM – 12:00 PM', 'pac', null],
+  ['SEP', 14, 'Monthly Foundation Meeting', '7:00 – 8:00 PM · Library + Zoom', 'foundation', null,
+   'Second Monday of every month in the Sundance Library, with Zoom. Everyone is welcome, and there\u2019s always an open forum.'],
+  ['SEP', 19, 'Bike Rodeo', '10:00 AM – 12:00 PM', 'pac', null,
+   'A morning of bike safety, skills, and games on campus for riders of every age and confidence level.'],
   ['SEP', 22, 'Picture Day', '', 'school', null],
   ['OCT', 5, 'Book Fair — all week', 'Oct 5 – 9', 'pac', 'book-fair'],
   ['OCT', 12, 'Monthly PAC Meeting', '6:00 – 7:00 PM · Library', 'pac', null],
   ['OCT', 12, 'Monthly Foundation Meeting', '7:00 – 8:00 PM · Library + Zoom', 'foundation', null],
   ['OCT', 23, 'Fall Carnival', '5:30 – 7:30 PM', 'pac', 'carnival'],
 ]
-occurrences.forEach(([mon, day, name, time, org, tradition], i) => {
+occurrences.forEach(([mon, day, name, time, org, tradition, description], i) => {
   docs.push({
     _id: `occurrence-${i}`,
     _type: 'occurrence',
@@ -112,21 +116,26 @@ occurrences.forEach(([mon, day, name, time, org, tradition], i) => {
     date: iso(mon, day),
     ...(time ? {time} : {}),
     org,
+    // Anything with a home-page blurb is one of the three featured cards.
+    ...(description ? {description, featured: true} : {}),
     ...(tradition ? {tradition: {_type: 'reference', _ref: `tradition-${tradition}`}} : {}),
   })
 })
 
 // ----------------------------------------------------------- dine outs
 const dineOuts = [
-  ['september', 'September', null, null, null],
-  ['october', 'October', null, null, null],
-  ['november', 'November', null, 'Restaurant and date to be announced', 'events/dine-out-november.jpg'],
+  ['september', 'September', null, 'Details for this year are still being arranged.', null],
+  ['october', 'October', null, 'Details for this year are still being arranged.', null],
+  ['november', 'November', null,
+   'Restaurant to be announced. Mention Sundance and a portion of your check comes back to school.',
+   'events/dine-out-november.jpg'],
 ]
-dineOuts.forEach(([id, month, date, blurb, photo]) => {
+dineOuts.forEach(([id, month, date, blurb, photo], i) => {
   docs.push({
     _id: `dineOut-${id}`,
     _type: 'dineOutNight',
     month,
+    order: i + 1,
     ...(date ? {date} : {}),
     ...(blurb ? {blurb} : {}),
     ...(photo ? {photo: img(photo)} : {}),
@@ -138,7 +147,8 @@ docs.push({
   _id: 'signup-garden',
   _type: 'volunteerSignup',
   title: 'Garden Club',
-  description: 'Help students plant, weed, and harvest in the school garden.',
+  org: 'pac',
+  description: 'Help students plant, weed, and tend the school garden.',
   url: 'https://www.signupgenius.com/go/10C0A4FADAB2CA7FFC07-64608483-garden#/',
   order: 0,
 })
@@ -146,8 +156,11 @@ docs.push({
   _id: 'signup-dance',
   _type: 'volunteerSignup',
   title: 'Back to School Dance',
-  when: 'Thu, Sep 11 · 5:30 – 7:30 PM',
-  description: 'Set-up, snacks, and clean-up crew for the first family night of the year.',
+  org: 'pac',
+  // Sep 11 2026 is a Friday — the page said Fri, an earlier draft of this
+  // script said Thu. The page was right.
+  when: 'Fri, Sep 11 · 5:30–7:30 PM',
+  description: 'Setup, snacks, and cleanup shifts for the first family night.',
   order: 1,
 })
 

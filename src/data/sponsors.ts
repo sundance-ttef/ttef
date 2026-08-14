@@ -1,12 +1,15 @@
 /**
- * Corporate sponsors, and what each tier buys.
+ * Corporate sponsors, now edited in Sanity under "Sponsors".
  *
- * The logos appear in two places — the scrolling rail on the home page and the
- * tiered wall on /support/ — so they live here rather than being written twice.
+ * `logo` is resolved to a CDN URL here rather than in the templates, so the
+ * home rail and the tiered wall on /support/ keep rendering `<img src={s.logo}>`
+ * exactly as they did when logos were files in /public.
  *
- * When the CMS lands this is the shape it fills: a sponsor is a name, a tier, a
- * link, and a logo.
+ * The width is requested explicitly: Sanity serves the original otherwise, and
+ * a board member uploading a 4MB photo of a business card would push it down
+ * the wire untouched. 500px is 2x the widest slot the CSS allows.
  */
+import { getSponsors, imageUrl } from '../lib/sanity';
 
 export type Tier = 'platinum' | 'gold' | 'silver' | 'bronze';
 
@@ -17,15 +20,17 @@ export interface Sponsor {
   logo: string;
 }
 
-/** Order within a tier is the order they appear. */
-export const sponsors: Sponsor[] = [
-  { name: 'The Barron Team', tier: 'platinum', url: 'https://thebarronteam.com', logo: '/img/sp-barron.png' },
-  { name: 'Dr. Melanie Orthodontics', tier: 'gold', url: 'https://www.drmelanieorthodontics.com/', logo: '/img/sp-dmo.png' },
-  { name: 'Smile PHR', tier: 'gold', url: 'https://smilephr.com', logo: '/img/sp-smilephr.png' },
-  { name: 'Carmel Mountain Dental Care', tier: 'gold', url: 'https://www.carmelmtndentalcare.com/', logo: '/img/sp-cmdc.png' },
-  { name: 'Kappel Realty Group', tier: 'silver', url: 'https://kappelrealtygroup.com', logo: '/img/sp-kappel.png' },
-];
+const LOGO_WIDTH = 500;
 
+export const sponsors: Sponsor[] = (await getSponsors())
+  .map((s) => ({ name: s.name, tier: s.tier, url: s.url, logo: imageUrl(s.logo, LOGO_WIDTH)! }))
+  .filter((s) => s.logo);
+
+/**
+ * Tier prices stay in code. They are the published rate card the sponsorship
+ * page's table is built from, and they change once a year by board decision —
+ * not the kind of thing that should be editable without review.
+ */
 export const tiers: { key: Tier; label: string; price: string }[] = [
   { key: 'platinum', label: 'Platinum', price: '$1,600' },
   { key: 'gold', label: 'Gold', price: '$1,000' },

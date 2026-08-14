@@ -22,6 +22,15 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'order',
+      title: 'Position in the school year',
+      type: 'number',
+      description:
+        'September is 1, October 2, and so on. Needed because months that have no date yet would otherwise sort alphabetically — November before October before September.',
+      validation: (r) => r.required(),
+      initialValue: 1,
+    }),
+    defineField({
       name: 'date',
       title: 'Date',
       type: 'date',
@@ -57,7 +66,7 @@ export default defineType({
       options: {hotspot: true},
     }),
   ],
-  orderings: [{title: 'Date', name: 'date', by: [{field: 'date', direction: 'asc'}]}],
+  orderings: [{title: 'School year order', name: 'order', by: [{field: 'order', direction: 'asc'}]}],
   preview: {
     select: {month: 'month', restaurant: 'restaurant', date: 'date', media: 'photo'},
     prepare({month, restaurant, date, media}) {

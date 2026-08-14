@@ -1,5 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { getUpcoming, getDineOutNights, orgTag, dateChip } from '../../lib/sanity';
+
+const upcoming = await getUpcoming(12);
+
+/* The dine-out teaser shows only the next night; the full schedule lives on
+   its own page. Undated months count as upcoming — an unscheduled month is
+   still ahead of us. */
+const today = new Date().toISOString().slice(0, 10);
+const nextDineOut = (await getDineOutNights()).find((n) => !n.date || n.date >= today);
 ---
 
 <Base title="Events">
@@ -17,14 +26,19 @@ import Base from '../../layouts/Base.astro';
       <h3 class="block-title">Upcoming dine out nights</h3>
       <div class="dineout-upcoming">
         <ul class="up-list">
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">NOV</span><span class="up-day">&mdash;</span></div>
-            <div class="up-body">
-              <div class="up-name">November dine out &mdash; coming soon</div>
-              <div class="up-time">Restaurant and date to be announced</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
+          {nextDineOut && (
+            <li class="up-row">
+              <div class="up-date">
+                <span class="up-mon">{nextDineOut.date ? dateChip(nextDineOut.date).mon : nextDineOut.month.slice(0, 3).toUpperCase()}</span>
+                <span class="up-day">{nextDineOut.date ? dateChip(nextDineOut.date).day : '\u2014'}</span>
+              </div>
+              <div class="up-body">
+                <div class="up-name">{nextDineOut.month} dine out{nextDineOut.restaurant ? ` \u2014 ${nextDineOut.restaurant}` : ' \u2014 coming soon'}</div>
+                <div class="up-time">{nextDineOut.restaurant ? nextDineOut.blurb : 'Restaurant and date to be announced'}</div>
+              </div>
+              <span class="owner p">PAC</span>
+            </li>
+          )}
         </ul>
         <a class="btn btn-outline" href="/events/dine-out/">All dine out nights</a>
       </div>
@@ -32,102 +46,21 @@ import Base from '../../layouts/Base.astro';
       <h3 class="block-title">Coming up next</h3>
       <div class="upcoming">
         <ul class="up-list">
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">13</span></div>
-            <div class="up-body">
-              <div class="up-name">Back to School Night</div>
-              <div class="up-time">5:30 &ndash; 7:00 PM</div>
-            </div>
-            <span class="owner s">School</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">21</span></div>
-            <div class="up-body">
-              <div class="up-name">VAPA</div>
-              <div class="up-time"></div>
-            </div>
-            <span class="owner s">School</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">AUG</span><span class="up-day">28</span></div>
-            <div class="up-body">
-              <div class="up-name">Friday Flag</div>
-              <div class="up-time">8:00 &ndash; 8:30 AM</div>
-            </div>
-            <span class="owner s">School</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">11</span></div>
-            <div class="up-body">
-              <div class="up-name">Back to School Dance</div>
-              <div class="up-time">5:30 &ndash; 7:30 PM</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">14</span></div>
-            <div class="up-body">
-              <div class="up-name">Monthly PAC Meeting</div>
-              <div class="up-time">6:00 &ndash; 7:00 PM &middot; Library</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">14</span></div>
-            <div class="up-body">
-              <div class="up-name">Monthly Foundation Meeting</div>
-              <div class="up-time">7:00 &ndash; 8:00 PM &middot; Library + Zoom</div>
-            </div>
-            <span class="owner f">Foundation</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">19</span></div>
-            <div class="up-body">
-              <div class="up-name">Bike Rodeo</div>
-              <div class="up-time">10:00 AM &ndash; 12:00 PM</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">SEP</span><span class="up-day">22</span></div>
-            <div class="up-body">
-              <div class="up-name">Picture Day</div>
-              <div class="up-time"></div>
-            </div>
-            <span class="owner s">School</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">5</span></div>
-            <div class="up-body">
-              <div class="up-name"><a class="up-link" href="/events/book-fair/">Book Fair &mdash; all week</a></div>
-              <div class="up-time">Oct 5 &ndash; 9</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">12</span></div>
-            <div class="up-body">
-              <div class="up-name">Monthly PAC Meeting</div>
-              <div class="up-time">6:00 &ndash; 7:00 PM &middot; Library</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">12</span></div>
-            <div class="up-body">
-              <div class="up-name">Monthly Foundation Meeting</div>
-              <div class="up-time">7:00 &ndash; 8:00 PM &middot; Library + Zoom</div>
-            </div>
-            <span class="owner f">Foundation</span>
-          </li>
-          <li class="up-row">
-            <div class="up-date"><span class="up-mon">OCT</span><span class="up-day">23</span></div>
-            <div class="up-body">
-              <div class="up-name"><a class="up-link" href="/events/carnival/">Fall Carnival</a></div>
-              <div class="up-time">5:30 &ndash; 7:30 PM</div>
-            </div>
-            <span class="owner p">PAC</span>
-          </li>
+          {upcoming.map((e) => {
+            const tag = orgTag(e.org);
+            const chip = dateChip(e.date);
+            const row = (
+              <>
+                <div class="up-date"><span class="up-mon">{chip.mon}</span><span class="up-day">{chip.day}</span></div>
+                <div class="up-body">
+                  <div class="up-name">{e.href ? <a class="up-link" href={`/events/${e.href}/`}>{e.name}</a> : e.name}</div>
+                  <div class="up-time">{e.time}</div>
+                </div>
+                <span class={`owner ${tag.cls}`}>{tag.label}</span>
+              </>
+            );
+            return <li class="up-row">{row}</li>;
+          })}
         </ul>
         <a class="btn btn-primary" href="/calendar/">See the full calendar</a>
       </div>

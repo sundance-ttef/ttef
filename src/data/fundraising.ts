@@ -1,25 +1,39 @@
 /**
- * The fundraising figures, in one place.
+ * The fundraising figures, now edited in Sanity under "Campaign & goal".
  *
- * These appear on both /impact/ and /support/. Keeping them here means the
- * treasurer's update is a single number in a single file — and when the CMS
- * lands, this is the shape it fills in.
+ * This module keeps the shape it had when the numbers were hard-coded, so
+ * every page that reads `goalText` or `percent` is unchanged. What moved is
+ * where the numbers come from.
  *
- * `updated` is shown to visitors, so it should change whenever `raised` does.
- * Leave it null while the campaign hasn't started and no date is shown.
+ * The fetch is a top-level await, which means it happens once at build time
+ * and the values are baked into the HTML. If Sanity is unreachable or the
+ * document is missing, the BUILD FAILS rather than deploying a page that tells
+ * families the goal is $0 — a wrong number here is worse than a late deploy.
  */
+import { getCampaign } from '../lib/sanity';
+
+const campaign = await getCampaign();
+
+if (!campaign) {
+  throw new Error(
+    'No "Campaign & goal" document found in Sanity. The site cannot build ' +
+      'without the fundraising figures — check the singleton exists in the Studio.',
+  );
+}
+
 export const fundraising = {
-  /** Total needed for the 2026–27 school year. */
-  goal: 111944,
-  /** Raised so far. */
-  raised: 0,
-  /** When `raised` was last checked, e.g. 'Aug 11'. Null hides the label. */
-  updated: null as string | null,
-  schoolYear: '2026–27',
-  /** The per-student ask. Total goal divided across the school, rounded. */
-  suggestedPerStudent: 275,
-  /** Months the Red Envelope monthly plan runs over. */
-  monthlyPlanMonths: 10,
+  goal: campaign.goal,
+  raised: campaign.raised,
+  /** e.g. 'Aug 11'. Null hides the label. */
+  updated: campaign.updated
+    ? new Date(campaign.updated + 'T12:00:00').toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      })
+    : null,
+  schoolYear: campaign.schoolYear,
+  suggestedPerStudent: campaign.suggestedPerStudent,
+  monthlyPlanMonths: campaign.monthlyPlanMonths,
 };
 
 const usd = (n: number) => '$' + n.toLocaleString('en-US');
@@ -30,8 +44,10 @@ export const remainingText = usd(Math.max(0, fundraising.goal - fundraising.rais
 export const askText = usd(fundraising.suggestedPerStudent);
 /** e.g. "$27.50" — the monthly equivalent of the suggested gift. */
 export const askMonthlyText =
-  '$' + (fundraising.suggestedPerStudent / fundraising.monthlyPlanMonths)
-        .toFixed(2).replace(/\.00$/, '');
+  '$' +
+  (fundraising.suggestedPerStudent / fundraising.monthlyPlanMonths)
+    .toFixed(2)
+    .replace(/\.00$/, '');
 
 export const percent = fundraising.goal
   ? Math.round((fundraising.raised / fundraising.goal) * 100)

@@ -15,17 +15,17 @@
 {"_id":"occurrence-0","_type":"occurrence","name":"Back to School Night","date":"2026-08-13","time":"5:30 – 7:00 PM","org":"school"}
 {"_id":"occurrence-1","_type":"occurrence","name":"VAPA","date":"2026-08-21","org":"school"}
 {"_id":"occurrence-2","_type":"occurrence","name":"Friday Flag","date":"2026-08-28","time":"8:00 – 8:30 AM","org":"school"}
-{"_id":"occurrence-3","_type":"occurrence","name":"Back to School Dance","date":"2026-09-11","time":"5:30 – 7:30 PM","org":"pac"}
+{"_id":"occurrence-3","_type":"occurrence","name":"Back to School Dance","date":"2026-09-11","time":"5:30 – 7:30 PM","org":"pac","description":"The first big family night of the year. Music, dancing, and a chance to meet your Wildcat’s new classmates.","featured":true}
 {"_id":"occurrence-4","_type":"occurrence","name":"Monthly PAC Meeting","date":"2026-09-14","time":"6:00 – 7:00 PM · Library","org":"pac"}
-{"_id":"occurrence-5","_type":"occurrence","name":"Monthly Foundation Meeting","date":"2026-09-14","time":"7:00 – 8:00 PM · Library + Zoom","org":"foundation"}
-{"_id":"occurrence-6","_type":"occurrence","name":"Bike Rodeo","date":"2026-09-19","time":"10:00 AM – 12:00 PM","org":"pac"}
+{"_id":"occurrence-5","_type":"occurrence","name":"Monthly Foundation Meeting","date":"2026-09-14","time":"7:00 – 8:00 PM · Library + Zoom","org":"foundation","description":"Second Monday of every month in the Sundance Library, with Zoom. Everyone is welcome, and there’s always an open forum.","featured":true}
+{"_id":"occurrence-6","_type":"occurrence","name":"Bike Rodeo","date":"2026-09-19","time":"10:00 AM – 12:00 PM","org":"pac","description":"A morning of bike safety, skills, and games on campus for riders of every age and confidence level.","featured":true}
 {"_id":"occurrence-7","_type":"occurrence","name":"Picture Day","date":"2026-09-22","org":"school"}
 {"_id":"occurrence-8","_type":"occurrence","name":"Book Fair — all week","date":"2026-10-05","time":"Oct 5 – 9","org":"pac","tradition":{"_type":"reference","_ref":"tradition-book-fair"}}
 {"_id":"occurrence-9","_type":"occurrence","name":"Monthly PAC Meeting","date":"2026-10-12","time":"6:00 – 7:00 PM · Library","org":"pac"}
 {"_id":"occurrence-10","_type":"occurrence","name":"Monthly Foundation Meeting","date":"2026-10-12","time":"7:00 – 8:00 PM · Library + Zoom","org":"foundation"}
 {"_id":"occurrence-11","_type":"occurrence","name":"Fall Carnival","date":"2026-10-23","time":"5:30 – 7:30 PM","org":"pac","tradition":{"_type":"reference","_ref":"tradition-carnival"}}
-{"_id":"dineOut-september","_type":"dineOutNight","month":"September"}
-{"_id":"dineOut-october","_type":"dineOutNight","month":"October"}
-{"_id":"dineOut-november","_type":"dineOutNight","month":"November","blurb":"Restaurant and date to be announced","photo":{"_type":"image","_sanityAsset":"image@file:///Users/tyler/Code/ttef/public/img/events/dine-out-november.jpg"}}
-{"_id":"signup-garden","_type":"volunteerSignup","title":"Garden Club","description":"Help students plant, weed, and harvest in the school garden.","url":"https://www.signupgenius.com/go/10C0A4FADAB2CA7FFC07-64608483-garden#/","order":0}
-{"_id":"signup-dance","_type":"volunteerSignup","title":"Back to School Dance","when":"Thu, Sep 11 · 5:30 – 7:30 PM","description":"Set-up, snacks, and clean-up crew for the first family night of the year.","order":1}
+{"_id":"dineOut-september","_type":"dineOutNight","month":"September","order":1,"blurb":"Details for this year are still being arranged."}
+{"_id":"dineOut-october","_type":"dineOutNight","month":"October","order":2,"blurb":"Details for this year are still being arranged."}
+{"_id":"dineOut-november","_type":"dineOutNight","month":"November","order":3,"blurb":"Restaurant to be announced. Mention Sundance and a portion of your check comes back to school.","photo":{"_type":"image","_sanityAsset":"image@file:///Users/tyler/Code/ttef/public/img/events/dine-out-november.jpg"}}
+{"_id":"signup-garden","_type":"volunteerSignup","title":"Garden Club","org":"pac","description":"Help students plant, weed, and tend the school garden.","url":"https://www.signupgenius.com/go/10C0A4FADAB2CA7FFC07-64608483-garden#/","order":0}
+{"_id":"signup-dance","_type":"volunteerSignup","title":"Back to School Dance","org":"pac","when":"Fri, Sep 11 · 5:30–7:30 PM","description":"Setup, snacks, and cleanup shifts for the first family night.","order":1}

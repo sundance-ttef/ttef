@@ -3,6 +3,11 @@ import Base from '../layouts/Base.astro';
 import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText } from '../data/fundraising';
+import { getFeatured, orgTag } from '../lib/sanity';
+
+/* The three cards are curated, not simply the next three dates — otherwise
+   Friday Flag and picture day would push the family events off the page. */
+const featured = await getFeatured(3);
 ---
 
 <Base title="home">
@@ -85,30 +90,24 @@ import { fundraising, goalText } from '../data/fundraising';
         <a class="link-more" href="/calendar/">View full calendar &rarr;</a>
       </div>
       <div class="events">
-        <a class="event" href="/calendar/">
-          <div class="event-body">
-            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">Fri, Sep 11 &middot; 5:30&ndash;7:30 PM</span></div>
-            <h3>Back to School Dance</h3>
-            <p>The first big family night of the year. Music, dancing, and a chance to meet
-               your Wildcat&rsquo;s new classmates.</p>
-          </div>
-        </a>
-        <a class="event" href="/calendar/">
-          <div class="event-body">
-            <div class="event-meta"><span class="owner f">Foundation</span><span class="event-date">Mon, Sep 14 &middot; 7:00&ndash;8:00 PM</span></div>
-            <h3>Monthly Foundation Meeting</h3>
-            <p>Second Monday of every month in the Sundance Library, with Zoom. Everyone is
-               welcome, and there&rsquo;s always an open forum.</p>
-          </div>
-        </a>
-        <a class="event" href="/calendar/">
-          <div class="event-body">
-            <div class="event-meta"><span class="owner p">PAC</span><span class="event-date">Sat, Sep 19 &middot; 10:00 AM&ndash;12:00 PM</span></div>
-            <h3>Bike Rodeo</h3>
-            <p>A morning of bike safety, skills, and games on campus for riders of every age
-               and confidence level.</p>
-          </div>
-        </a>
+        {featured.map((e) => {
+          const tag = orgTag(e.org);
+          const when = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', {
+            weekday: 'short', month: 'short', day: 'numeric',
+          });
+          return (
+            <a class="event" href={e.href ? `/events/${e.href}/` : '/calendar/'}>
+              <div class="event-body">
+                <div class="event-meta">
+                  <span class={`owner ${tag.cls}`}>{tag.label}</span>
+                  <span class="event-date">{when}{e.time && <> &middot; {e.time}</>}</span>
+                </div>
+                <h3>{e.name}</h3>
+                <p>{e.description}</p>
+              </div>
+            </a>
+          );
+        })}
       </div>
     </div>
   </section>

@@ -1,5 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { getDineOutNights, imageUrl } from '../../lib/sanity';
+
+const nights = await getDineOutNights();
+
+/* "Next up" is the first night that has not happened yet — derived, not stored,
+   so nobody has to move a flag every month. A night with no date sorts last and
+   counts as upcoming, which is right: an unscheduled month is still to come. */
+const today = new Date().toISOString().slice(0, 10);
+const nextIndex = nights.findIndex((n) => !n.date || n.date >= today);
 ---
 
 <Base title="Dine Out Nights">
@@ -16,30 +25,35 @@ import Base from '../../layouts/Base.astro';
 
       <h3 class="block-title">This year&rsquo;s schedule</h3>
       <div class="dine-grid">
-          <div class="dine-card is-past">
-            <div class="dine-photo"><img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" /></div>
-            <div class="dine-body">
-              <div class="dine-date">September</div>
-              <div class="dine-name">Coming soon</div>
-              <p>Details for this year are still being arranged.</p>
+        {nights.map((n, i) => {
+          const photo = imageUrl(n.photo, 520, 380);
+          const dayLabel = n.date
+            ? new Date(n.date + 'T12:00:00').toLocaleDateString('en-US', {
+                weekday: 'short', month: 'short', day: 'numeric',
+              })
+            : null;
+          return (
+            <div class={`dine-card${i === nextIndex ? ' is-next' : i < nextIndex ? ' is-past' : ''}`}>
+              <div class="dine-photo">
+                {photo
+                  ? <img src={photo} alt={`${n.restaurant ?? n.month} dine out night`} loading="lazy" />
+                  : <img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" />}
+              </div>
+              <div class="dine-body">
+                <div class="dine-date">
+                  {dayLabel ?? n.month}{i === nextIndex && <> &middot; next up</>}
+                </div>
+                <div class="dine-name">{n.restaurant ?? 'Coming soon'}</div>
+                {n.blurb && <p>{n.blurb}</p>}
+                {n.link && (
+                  <a class="dine-link" href={n.link} target="_blank" rel="noopener noreferrer">
+                    Restaurant details &rarr;
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-          <div class="dine-card is-past">
-            <div class="dine-photo"><img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" /></div>
-            <div class="dine-body">
-              <div class="dine-date">October</div>
-              <div class="dine-name">Coming soon</div>
-              <p>Details for this year are still being arranged.</p>
-            </div>
-          </div>
-          <div class="dine-card is-next">
-            <div class="dine-photo"><img src="/img/events/dine-out-november.jpg" alt="November dine out night flyer" loading="lazy" /></div>
-            <div class="dine-body">
-              <div class="dine-date">November &middot; next up</div>
-              <div class="dine-name">Coming soon</div>
-              <p>Restaurant to be announced. Mention Sundance and a portion of your check comes back to school.</p>
-            </div>
-          </div>
+          );
+        })}
       </div>
     </div>
   </section>

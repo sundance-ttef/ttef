@@ -74,6 +74,7 @@ export interface Occurrence {
   date: string;
   time?: string;
   org: 'pac' | 'foundation' | 'school';
+  description?: string | null;
   href?: string | null;
 }
 
@@ -100,10 +101,41 @@ export interface DineOutNight {
 
 export interface VolunteerSignup {
   title: string;
+  org: 'pac' | 'foundation' | 'school';
   when: string | null;
   description: string | null;
   url: string | null;
 }
+
+
+/**
+ * Start time of a free-text time string, in minutes past midnight, for sorting
+ * two events that fall on the same day.
+ *
+ * The meridiem usually belongs to the END of the range — "6:00 – 7:00 PM" means
+ * the 6:00 is PM — so the first meridiem appearing anywhere after the opening
+ * time is the one that applies. "10:00 AM – 12:00 PM" still reads correctly
+ * because its own AM comes first.
+ *
+ * Anything without a clock time ("Oct 5 – 9", or blank) sorts first, which is
+ * where an all-day event belongs.
+ */
+export function startMinutes(time?: string | null): number {
+  if (!time) return -1;
+  const m = time.match(/(\d{1,2}):(\d{2})/);
+  if (!m) return -1;
+  let h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  const rest = time.slice(m.index! + m[0].length);
+  const mer = (rest.match(/\b([AP])M\b/i) ?? time.match(/\b([AP])M\b/i))?.[1]?.toUpperCase();
+  if (mer === 'P' && h !== 12) h += 12;
+  if (mer === 'A' && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+/** Same day → earlier start time first. Keeps builds deterministic. */
+const byDateThenTime = (a: Occurrence, b: Occurrence) =>
+  a.date === b.date ? startMinutes(a.time) - startMinutes(b.time) : a.date < b.date ? -1 : 1;
 
 /** Today at midnight, so an event happening TODAY still counts as upcoming. */
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -117,14 +149,38 @@ export const getSponsors = () =>
   sanity.fetch<Sponsor[]>(`*[_type == "sponsor" && defined(logo.asset)]
     | order(order asc, name asc){ name, tier, url, logo }`);
 
-/** Upcoming only — anything before today drops out with no manual pruning. */
-export const getUpcoming = (limit = 12) =>
-  sanity.fetch<Occurrence[]>(
+/**
+ * Upcoming only — anything before today drops out with no manual pruning.
+ *
+ * Two events on the same day are then ordered by start time. `date asc` alone
+ * left them shuffling between builds, and `_createdAt` could not break the tie
+ * because an import writes every document in one transaction with the same
+ * timestamp.
+ */
+export const getUpcoming = async (limit = 12) => {
+  const rows = await sanity.fetch<Occurrence[]>(
     `*[_type == "occurrence" && date >= $today] | order(date asc)[0...$limit]{
-      name, date, time, org, "href": tradition->slug.current
+      name, date, time, org, description, "href": tradition->slug.current
     }`,
     {today: todayISO(), limit},
   );
+  return rows.sort(byDateThenTime);
+};
+
+/**
+ * The home page's three cards. Featured only, so routine dates like Friday
+ * Flag never crowd out the things families actually need to see.
+ */
+export const getFeatured = async (limit = 3) => {
+  const rows = await sanity.fetch<Occurrence[]>(
+    `*[_type == "occurrence" && date >= $today && featured == true]
+      | order(date asc)[0...$limit]{
+        name, date, time, org, description, "href": tradition->slug.current
+      }`,
+    {today: todayISO(), limit},
+  );
+  return rows.sort(byDateThenTime);
+};
 
 export const getTraditions = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(order asc){
@@ -141,10 +197,25 @@ export const getTradition = (slug: string) =>
 
 export const getDineOutNights = () =>
   sanity.fetch<DineOutNight[]>(`*[_type == "dineOutNight"]
-    | order(select(defined(date) => date, "9999-12-31") asc, month asc){
-      month, date, restaurant, blurb, link, photo
-    }`);
+    | order(order asc){ month, date, restaurant, blurb, link, photo }`);
 
 export const getVolunteerSignups = () =>
   sanity.fetch<VolunteerSignup[]>(`*[_type == "volunteerSignup"]
-    | order(order asc, title asc){ title, when, description, url }`);
+    | order(order asc, title asc){ title, org, when, description, url }`);
+
+/** The coloured org tag: class suffix and label, matching the CSS. */
+export const orgTag = (org: 'pac' | 'foundation' | 'school') =>
+  org === 'foundation'
+    ? {cls: 'f', label: 'Foundation'}
+    : org === 'school'
+      ? {cls: 's', label: 'School'}
+      : {cls: 'p', label: 'PAC'};
+
+/** "SEP" / "11" for the date chips on the upcoming lists. */
+export const dateChip = (iso: string) => {
+  const d = new Date(iso + 'T12:00:00');
+  return {
+    mon: d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase(),
+    day: String(d.getDate()),
+  };
+};
