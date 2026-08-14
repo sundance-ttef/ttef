@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { fundraising, goalText, raisedText, percent } from '../data/fundraising';
 ---
 
 <Base title="Our Impact">
@@ -64,10 +65,10 @@ import Base from '../layouts/Base.astro';
 
         <aside class="goal-card">
           <p class="eyebrow">Raised so far</p>
-          <div class="goal-figure">$38,420</div>
+          <div class="goal-figure">{raisedText}</div>
           <div class="goal-of">of our <span class="num">$111,944</span> goal for 2026&ndash;27</div>
-          <div class="bar"><div class="bar-fill"></div></div>
-          <div class="bar-legend"><span>34% funded</span><span>Updated Aug 11</span></div>
+          <div class="bar"><div class="bar-fill" style={`width:${percent}%`}></div></div>
+          <div class="bar-legend"><span>{percent}% funded</span>{fundraising.updated && <span>Updated {fundraising.updated}</span>}</div>
         </aside>
       </div>
     </div>

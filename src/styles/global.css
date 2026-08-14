@@ -305,7 +305,7 @@
   .goal-figure { font-family: var(--display); font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
   .goal-of { font-size: 14px; color: var(--muted); margin-top: 6px; }
   .bar { height: 13px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 18px; border: 1px solid var(--hairline); }
-  .bar-fill { height: 100%; width: 34.3%; border-radius: 999px; background: linear-gradient(90deg, var(--maroon) 0%, var(--teal) 100%); }
+  .bar-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--maroon) 0%, var(--teal) 100%); }
   .bar-legend { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-top: 8px; font-variant-numeric: tabular-nums; }
   .placeholder-flag {
     margin-top: 16px; font-size: 12.5px; line-height: 1.5; color: var(--muted);
@@ -444,7 +444,13 @@
   .open-col-head.p { background: var(--teal); }
   .open-role {
     background: var(--surface); border: 1px dashed var(--hairline); border-radius: 12px;
-    padding: 15px 18px; border-left: 3px solid var(--gold);
+    padding: 15px 18px 15px 21px; position: relative; overflow: hidden;
+  }
+  /* The gold edge is drawn as an overlay rather than a border-left: mixing a
+     solid border with a dashed one leaves a notch where they meet at the
+     rounded corners. */
+  .open-role::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold);
   }
   .open-name { font-weight: 650; font-size: 16.5px; }
   .open-desc { font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
@@ -494,7 +500,13 @@
   .open-col-head.p { background: var(--teal); }
   .open-role {
     background: var(--surface); border: 1px dashed var(--hairline); border-radius: 12px;
-    padding: 15px 18px; border-left: 3px solid var(--gold);
+    padding: 15px 18px 15px 21px; position: relative; overflow: hidden;
+  }
+  /* The gold edge is drawn as an overlay rather than a border-left: mixing a
+     solid border with a dashed one leaves a notch where they meet at the
+     rounded corners. */
+  .open-role::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold);
   }
   .open-name { font-weight: 650; font-size: 16.5px; }
   .open-desc { font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
@@ -1198,3 +1210,27 @@
     position: absolute; left: -9999px; width: 1px; height: 1px;
     overflow: hidden; opacity: 0;
   }
+
+  /* "Photo coming soon" stand-in. `contain` rather than `cover`, because the
+     artwork carries baked-in text that cropping would cut. */
+  .no-photo {
+    width: 100%; height: 100%; object-fit: contain;
+    background: var(--surface); padding: 6%;
+  }
+  .ap-item, .gal-item, .ps-item, .dine-photo, .event-img.is-placeholder { overflow: hidden; }
+  .event-img.is-placeholder { display: block; }
+  .dine-photo { padding: 0; }
+
+  /* Page intros were inheriting the 56ch cap meant for narrow section blurbs,
+     so short sentences wrapped a word or two early. */
+  .page-head p { max-width: 74ch; }
+
+  /* The volunteer survey button used to float between the sign-up list and the
+     org panels, belonging to neither. Same card treatment as /events/. */
+  .signups-card {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 22px 26px 26px; margin-bottom: 46px;
+  }
+  .signups-card .signup-row { border-color: var(--hairline); }
+  .signups-card .open-cta { margin-top: 20px; }

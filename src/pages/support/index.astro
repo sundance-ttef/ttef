@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { fundraising, goalText, raisedText, remainingText, percent } from '../../data/fundraising';
 ---
 
 <Base title="Support Us" darkTop>
@@ -22,12 +23,12 @@ import Base from '../../layouts/Base.astro';
         <div class="pw-head">
           <div>
             <p class="eyebrow">2026&ndash;27 progress</p>
-            <div class="pw-figure"><span class="num">$38,420</span> <span class="pw-of">of <span class="num">$111,944</span></span></div>
+            <div class="pw-figure"><span class="num">{raisedText}</span> <span class="pw-of">of <span class="num">{goalText}</span></span></div>
           </div>
-          <div class="pw-pct num">34%</div>
+          <div class="pw-pct num">{percent}%</div>
         </div>
-        <div class="bar bar-lg"><div class="bar-fill"></div></div>
-        <div class="bar-legend"><span>Updated Aug 11</span><span class="num">$73,524 to go</span></div>
+        <div class="bar bar-lg"><div class="bar-fill" style={`width:${percent}%`}></div></div>
+        <div class="bar-legend"><span>{fundraising.updated ? `Updated ${fundraising.updated}` : `${fundraising.schoolYear} campaign`}</span><span class="num">{remainingText} to go</span></div>
       </div>
 
       <div class="fundraisers">
