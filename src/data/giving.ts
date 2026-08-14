@@ -9,10 +9,20 @@
  * the Square checkout and the JotForm were both created for the 2025 campaign.
  */
 export const giving = {
-  /** Card payments, processed by Square. */
-  square:
-    'https://checkout.square.site/merchant/MLMA25HK3453G/checkout/4N3AMJLQBAGWNCZ474IA36NZ',
-  /** PayPal hosted button — one-time or the 10-month recurring plan. */
+  /**
+   * ⚠️ DEAD — the Square checkout returns 404, verified in a browser on
+   * 2026-08-14. The same dead link is live on twintrailsfoundation.org today,
+   * so card donors there hit an error page.
+   *
+   * Card giving is routed through PayPal instead: its donate page offers
+   * "Donate with Debit or Credit Card" without needing a PayPal account.
+   * If the Foundation still uses Square, generate a fresh checkout link and
+   * point `card` back at it.
+   */
+  squareDead: 'https://checkout.square.site/merchant/MLMA25HK3453G/checkout/4N3AMJLQBAGWNCZ474IA36NZ',
+  /** Where "Give by card" points until Square is replaced. */
+  get card() { return this.paypal; },
+  /** PayPal hosted button — one-time, recurring, or card without an account. */
   paypal:
     'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3XYDNS9KFKNMA',
   /** The Red Envelope donation form families fill in online. */
