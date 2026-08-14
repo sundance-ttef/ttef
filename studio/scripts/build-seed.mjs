@@ -87,10 +87,10 @@ const traditions = [
   ['book-fair', 'Book Fair', '2026-10-05', true, 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', [['events/book-fair.jpg', 'Book Fair banner: read more, learn more, dream more']]],
   ['carnival', 'Fall Carnival', '2026-10-23', true, 'pac', 'Games, food, and the biggest family night of the fall.', []],
   ['multicultural-night', 'Multicultural Night', '2027-01-29', true, 'pac', 'Families share the food, dress, music, and traditions of home.', []],
-  ['auction', 'Spring Auction', '2027-02-06', false, 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', [['gala/gala-3.jpg', 'Guests at the 2024 Sundance auction'],
+  ['auction', 'Spring Auction', '2027-02-26', true, 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', [['gala/gala-3.jpg', 'Guests at the 2024 Sundance auction'],
     ['gala/gala-1.jpg', '2024 Sundance auction, photo 1'],
     ['gala/gala-2.jpg', '2024 Sundance auction, photo 2']]],
-  ['fun-run', 'Fun Run', '2027-03-13', false, 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', [['events/fun-run-1.jpg', 'Sundance students running in the 2025 Fun Run'],
+  ['fun-run', 'Fun Run', '2027-03-26', true, 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', [['events/fun-run-1.jpg', 'Sundance students running in the 2025 Fun Run'],
     ['events/fun-run-2.jpg', '2025 Sundance Fun Run, photo 2'],
     ['events/fun-run-3.jpg', '2025 Sundance Fun Run, photo 3'],
     ['events/fun-run-4.jpg', '2025 Sundance Fun Run, photo 4']]],
@@ -160,6 +160,18 @@ docs.push({
   description: 'Setup, snacks, and cleanup shifts for the first family night.',
   order: 1,
 })
+
+// Headline figures, lifted from the hand-built pages these replace.
+const STATS = {
+  auction: [['$10,500+', 'Raised in 2024'], ['Feb 26', '2027 auction'], ['5:30 PM', 'Doors open']],
+  'fun-run': [['$30,000', 'School-wide goal'], ['$75', 'Per-student baseline'], ['Mar 26', '2027 event']],
+}
+for (const d of docs) {
+  const slug = d._type === 'tradition' ? d.slug?.current : null
+  if (slug && STATS[slug]) {
+    d.stats = STATS[slug].map(([value, label], i) => ({_type: 'stat', _key: `s${i}`, value, label}))
+  }
+}
 
 const out = resolve(here, 'seed.ndjson')
 writeFileSync(out, docs.map((d) => JSON.stringify(d)).join('\n') + '\n')

@@ -588,54 +588,7 @@
   .event-static.is-link { cursor: pointer; }
   .event-static.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
-  /* The upcoming list on /calendar/. The date chip is a small calendar page:
-     weekday on the coloured strip, month and day beneath — the same shape the
-     events list used, which read faster than a run of prose dates. */
-  /* The list needs a surface of its own: on the page background the rows read
-     as loose text rather than a block of dates, and it has to hold its own
-     against the framed calendar embed below it. */
-  .cal-card {
-    background: var(--surface); border: 1px solid var(--hairline);
-    border-radius: var(--radius); box-shadow: var(--shadow);
-    padding: 8px 26px; margin-bottom: 44px;
-  }
-  .cal-list { list-style: none; margin: 0; padding: 0; }
-  .cal-row {
-    display: flex; align-items: center; gap: 18px; padding: 14px 0;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .cal-row:last-child { border-bottom: 0; }
-  .cal-date {
-    width: 62px; flex-shrink: 0; text-align: center; overflow: hidden;
-    border-radius: var(--radius-sm); background: var(--surface-sunken);
-    line-height: 1.1; padding-bottom: 7px;
-  }
-  .cal-dow {
-    display: block; background: var(--maroon); color: #fff;
-    font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .14em; padding: 3px 0 4px;
-  }
-  .cal-mon {
-    display: block; font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .12em;
-    color: var(--maroon); padding-top: 6px;
-  }
-  .cal-day {
-    display: block; font-family: var(--display); font-size: var(--fs-2xl); font-weight: 600;
-  }
-  .cal-body { flex: 1; min-width: 0; }
-  .cal-name { font-size: var(--fs-md); font-weight: 650; }
-  .cal-name a { color: var(--maroon); text-decoration: none; }
-  .cal-name a:hover { text-decoration: underline; }
-  .cal-meta { display: flex; align-items: center; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
-  .cal-time {
-    font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums;
-  }
-  .cal-zoom { flex-shrink: 0; padding: 9px 18px; font-size: var(--fs-sm); }
-
-  @media (max-width: 560px) {
-    .cal-row { flex-wrap: wrap; gap: 14px; }
-    .cal-body { flex-basis: calc(100% - 84px); }
-    .cal-zoom { margin-left: 84px; }
-  }
+  .event-zoom { color: var(--maroon); font-weight: 650; margin-top: 8px; }
 
   .cal-frame {
     position: relative; border-radius: var(--radius); overflow: hidden;

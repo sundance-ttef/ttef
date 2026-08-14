@@ -1,24 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
-import { getYearlyEvents, orgTag } from '../lib/sanity';
-import { getCalendarEvents, matchEvent, orgOf, isZoomMeeting, timeLabel } from '../lib/calendar';
+import UpcomingEvents from '../components/UpcomingEvents.astro';
 
-/* A scannable list above the month grid. Not duplication for its own sake: the
-   embed is a third-party iframe that reads poorly on a phone and is close to
-   opaque to a screen reader, so this is the accessible, fast path to "what is
-   happening soon". The grid remains for browsing a month. */
-const yearly = await getYearlyEvents();
-const upcoming = (await getCalendarEvents({days: 90})).slice(0, 8);
-/* The date chip: weekday on the coloured strip, month and day below. */
-const chip = (iso: string) => {
-  const d = new Date(iso + 'T12:00:00');
-  return {
-    dow: d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase(),
-    mon: d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase(),
-    day: String(d.getDate()),
-  };
-};
 ---
 
 <Base title="Calendar">
@@ -32,43 +16,9 @@ const chip = (iso: string) => {
              straight from the Foundation&rsquo;s own Google Calendar.</p>
         </div>
       </div>
+      <h3 class="block-title">What&rsquo;s next</h3>
+      <UpcomingEvents limit={9} days={90} />
 
-      {upcoming.length > 0 && (
-        <>
-          <h3 class="block-title">What&rsquo;s next</h3>
-          <div class="cal-card">
-            <ul class="cal-list">
-            {upcoming.map((e) => {
-              const match = matchEvent(e.title, yearly);
-              const tag = orgTag(match?.org ?? orgOf(e.title));
-              const c = chip(e.date);
-              return (
-                <li class="cal-row">
-                  <div class="cal-date">
-                    <span class="cal-dow">{c.dow}</span>
-                    <span class="cal-mon">{c.mon}</span>
-                    <span class="cal-day">{c.day}</span>
-                  </div>
-                  <div class="cal-body">
-                    <div class="cal-name">
-                      {match ? <a href={`/events/${match.slug}/`}>{e.title}</a> : e.title}
-                    </div>
-                    <div class="cal-meta">
-                      <span class="cal-time">{timeLabel(e)}</span>
-                      <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                    </div>
-                  </div>
-                  {isZoomMeeting(e.title) && (
-                    <a class="btn btn-outline cal-zoom" href={org.zoom}
-                       target="_blank" rel="noopener noreferrer">Join by Zoom</a>
-                  )}
-                </li>
-              );
-            })}
-            </ul>
-          </div>
-        </>
-      )}
 
       <h3 class="block-title spaced">Full calendar</h3>
       <div class="cal-frame">

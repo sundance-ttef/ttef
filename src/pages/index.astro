@@ -3,15 +3,8 @@ import Base from '../layouts/Base.astro';
 import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText, raisedText, remainingText, percent } from '../data/fundraising';
-import { getYearlyEvents, orgTag } from '../lib/sanity';
-import { getCalendarEvents, matchEvent, orgOf, timeLabel } from '../lib/calendar';
+import UpcomingEvents from '../components/UpcomingEvents.astro';
 
-/* Upcoming dates come from the school's Google Calendar — the one the PAC
-   already keeps up to date and that /calendar/ embeds. Routine staff entries
-   are filtered out so the three cards stay useful to families. A date that
-   matches one of the annual events links to that event's page. */
-const yearly = await getYearlyEvents();
-const upcoming = (await getCalendarEvents({days: 120, includeRoutine: false})).slice(0, 3);
 ---
 
 <Base title="home">
@@ -93,27 +86,7 @@ const upcoming = (await getCalendarEvents({days: 120, includeRoutine: false})).s
         </div>
         <a class="link-more" href="/calendar/">View full calendar &rarr;</a>
       </div>
-      <div class="events">
-        {upcoming.map((e) => {
-          const match = matchEvent(e.title, yearly);
-          const tag = orgTag(match?.org ?? orgOf(e.title));
-          const when = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', {
-            weekday: 'short', month: 'short', day: 'numeric',
-          });
-          return (
-            <a class="event" href={match ? `/events/${match.slug}/` : '/calendar/'}>
-              <div class="event-body">
-                <div class="event-meta">
-                  <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{when} &middot; {timeLabel(e)}</span>
-                </div>
-                <h3>{e.title}</h3>
-                {match && <p>{match.summary}</p>}
-              </div>
-            </a>
-          );
-        })}
-      </div>
+      <UpcomingEvents limit={3} headlinesOnly={true} />
     </div>
   </section>
 

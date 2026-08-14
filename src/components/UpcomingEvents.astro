@@ -1,0 +1,63 @@
+---
+/**
+ * The "what's coming up" cards, shared by the home page and /calendar/.
+ *
+ * Dates come from the school's Google Calendar, which the PAC already keeps up
+ * to date. An entry whose title matches one of the annual events links to that
+ * event's page and borrows its description and its org, which is real data
+ * rather than the guess made from the title.
+ */
+import { getYearlyEvents, orgTag } from '../lib/sanity';
+import { getCalendarEvents, matchEvent, orgOf, timeLabel, isZoomMeeting } from '../lib/calendar';
+import { org } from '../data/nav';
+
+interface Props {
+  /** How many cards to show. */
+  limit?: number;
+  /** How far ahead to look. */
+  days?: number;
+  /**
+   * Drop the routine staff entries (VAPA, Friday Flag). True on the home page,
+   * where three slots are too few to spend on them; false on /calendar/, which
+   * is meant to be complete.
+   */
+  headlinesOnly?: boolean;
+}
+
+const { limit = 3, days = 120, headlinesOnly = false } = Astro.props;
+
+const yearly = await getYearlyEvents();
+const events = (await getCalendarEvents({ days, includeRoutine: !headlinesOnly })).slice(0, limit);
+---
+
+{events.length > 0 && (
+  <div class="events">
+    {events.map((e) => {
+      const match = matchEvent(e.title, yearly);
+      const tag = orgTag(match?.org ?? orgOf(e.title));
+      /* The whole card is a link, so a Join-by-Zoom link inside it would be a
+         nested anchor. A meeting's card therefore points AT the Zoom room —
+         which is what someone clicking a meeting wants anyway. */
+      const zoom = isZoomMeeting(e.title);
+      const href = zoom ? org.zoom : match ? `/events/${match.slug}/` : '/calendar/';
+      const when = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      });
+      return (
+        <a class="event" href={href} {...(zoom ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
+          <div class="event-body">
+            <div class="event-meta">
+              <span class={`owner ${tag.cls}`}>{tag.label}</span>
+              <span class="event-date">{when} &middot; {timeLabel(e)}</span>
+            </div>
+            <h3>{e.title}</h3>
+            {match && <p>{match.summary}</p>}
+            {zoom && <p class="event-zoom">Join by Zoom &rarr;</p>}
+          </div>
+        </a>
+      );
+    })}
+  </div>
+)}

@@ -102,6 +102,29 @@ export default defineType({
       validation: (r) => r.uri({scheme: ['http', 'https']}),
     }),
     defineField({
+      name: 'stats',
+      title: 'Headline numbers',
+      type: 'array',
+      description:
+        'The two or three figures worth putting at the top of the page — what was raised, the goal, when doors open. Leave empty and the row is not shown.',
+      of: [
+        {
+          type: 'object',
+          name: 'stat',
+          fields: [
+            {name: 'value', title: 'Figure', type: 'string', description: 'e.g. $10,500+ or 5:30 PM',
+             validation: (r: any) => r.required()},
+            {name: 'label', title: 'What it is', type: 'string', description: 'e.g. Raised in 2024',
+             validation: (r: any) => r.required()},
+          ],
+          preview: {
+            select: {value: 'value', label: 'label'},
+            prepare: ({value, label}: any) => ({title: value, subtitle: label}),
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'photos',
       title: 'Photos',
       type: 'array',
