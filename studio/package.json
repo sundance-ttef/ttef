@@ -1,0 +1,21 @@
+{
+  "name": "ttef-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio for the Twin Trails Education Foundation site",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "seed": "node scripts/seed.mjs"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.9.2",
+    "react": "^19",
+    "react-dom": "^19",
+    "sanity": "^6.9.2",
+    "styled-components": "^6"
+  }
+}
