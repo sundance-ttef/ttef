@@ -125,6 +125,36 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'milestones',
+      title: 'Goal milestones',
+      type: 'array',
+      description:
+        'What unlocks at what total, e.g. "Pie in the Face" at $25,000. Shown as a list. Leave empty and the section is not shown.',
+      of: [
+        {
+          type: 'object',
+          name: 'milestone',
+          fields: [
+            {name: 'label', title: 'What it unlocks', type: 'string',
+             validation: (r: any) => r.required()},
+            {name: 'amount', title: 'At what total', type: 'string',
+             description: 'Written as families read it, e.g. $25,000.',
+             validation: (r: any) => r.required()},
+          ],
+          preview: {
+            select: {label: 'label', amount: 'amount'},
+            prepare: ({label, amount}: any) => ({title: label, subtitle: amount}),
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'photosCaption',
+      title: 'Photo caption',
+      type: 'string',
+      description: 'Optional line under the photos, e.g. "Last year\u2019s talent show."',
+    }),
+    defineField({
       name: 'photos',
       title: 'Photos',
       type: 'array',

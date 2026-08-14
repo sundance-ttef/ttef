@@ -173,6 +173,23 @@ for (const d of docs) {
   }
 }
 
+// Fun Run's unlock tiers and the talent show caption, from the pages replaced.
+const MILESTONES = {
+  'fun-run': [['Custom sweatbands', '$20,000'], ['Pie in the Face', '$25,000'],
+              ['School-wide Field Day', '$30,000']],
+}
+const CAPTIONS = {'talent-show': '\u2018Last year\u2019s talent show.'.slice(1)}
+for (const d of docs) {
+  const slug = d._type === 'tradition' ? d.slug?.current : null
+  if (!slug) continue
+  if (MILESTONES[slug]) {
+    d.milestones = MILESTONES[slug].map(([label, amount], i) => ({
+      _type: 'milestone', _key: `m${i}`, label, amount,
+    }))
+  }
+  if (CAPTIONS[slug]) d.photosCaption = CAPTIONS[slug]
+}
+
 const out = resolve(here, 'seed.ndjson')
 writeFileSync(out, docs.map((d) => JSON.stringify(d)).join('\n') + '\n')
 

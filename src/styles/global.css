@@ -301,7 +301,13 @@
   }
   .owner.f { background: var(--maroon-tint); color: var(--maroon); }
   .owner.p { background: var(--teal-soft); color: var(--teal); }
-  .event-date { font-size: var(--fs-2xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+  /* The date and time are the point of an upcoming-event card — an event IS a
+     thing happening at a time — so they carry the weight, not the grey caption
+     treatment they had. */
+  .event-date {
+    font-size: var(--fs-sm); font-weight: 700; color: var(--maroon);
+    font-variant-numeric: tabular-nums;
+  }
   .event h3 { font-size: var(--fs-xl); }
   .event p { font-size: var(--fs-sm); color: var(--muted); }
 
@@ -1262,8 +1268,6 @@
   .sponsor-close { padding-block: 64px 84px; text-align: center; }
   .sponsor-close h3 { font-size: var(--fs-section); }
   .sponsor-close p { font-size: var(--fs-md); color: var(--muted); max-width: 60ch; margin: 12px auto 0; }
-  @media (max-width: 500px) { .btn-shop { padding: 7px 13px; font-size: var(--fs-xs); } }
-  @media (max-width: 400px) { .btn-shop { display: none; } }
 
   .amount-grid--three { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 860px) { .amount-grid--three { grid-template-columns: 1fr; } }
@@ -1365,3 +1369,23 @@
   .two-col--fit { align-items: start; }
   .two-col--fit > * { display: block; }
   .two-col--fit .btn { align-self: auto; }
+
+/* ---------------------------------------------------------------------------
+   Header: buttons on desktop, menu items on mobile
+
+   Shop and Volunteer are outline buttons beside Donate on a wide screen. Once
+   the nav collapses to a hamburger there is no room — the logo, the toggle and
+   three buttons overflow the 1180px wrap and push Donate past the content edge
+   — so the buttons hide and the same two links appear inside the menu instead.
+   Without that swap, /volunteer/ and /shop/ would be reachable on a phone only
+   from the footer.
+
+   These live at the END of the file on purpose: `.btn-shop` is defined further
+   up at the same specificity, so an earlier rule would simply lose.
+--------------------------------------------------------------------------- */
+.nav-mobile-only { display: none; }
+
+@media (max-width: 1100px) {
+  .header-actions .btn-shop { display: none; }
+  .nav .nav-mobile-only { display: block; }
+}

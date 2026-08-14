@@ -1,0 +1,110 @@
+---
+/**
+ * Every annual event page, from one layout.
+ *
+ * These were seven near-identical files that drifted: five were the same
+ * placeholder shell, two had hand-built stats and galleries, and NONE of them
+ * rendered the photos editors had uploaded — Book Fair had two and Fun Run
+ * four, sitting invisible in the CMS. One route means a new event added in the
+ * Studio gets a real page with no code, and a change to the layout reaches
+ * every event at once.
+ *
+ * The URL comes from the event's slug, so the paths printed on flyers and
+ * pointed at by the old-site redirects keep working.
+ */
+import Base from '../../layouts/Base.astro';
+import { getTraditions, getTradition, eventDate, orgTag, imageUrl } from '../../lib/sanity';
+import { toHTML } from '@portabletext/to-html';
+
+export async function getStaticPaths() {
+  const events = await getTraditions();
+  return events.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params;
+const ev = await getTradition(slug!);
+if (!ev) throw new Error(`No event in Sanity with slug "${slug}"`);
+
+const tag = orgTag(ev.org);
+const when = eventDate(ev.date, ev.dateConfirmed);
+const whenText =
+  when.full ?? (when.month ? `${when.month} — date to be announced` : 'Date to be announced');
+
+/* An event with no write-up yet still shows its date, its photos and its
+   numbers — "details coming soon" replaces the body only, never the page. */
+const body = ev.body?.length ? toHTML(ev.body) : null;
+const photos = ev.photos ?? [];
+---
+
+<Base title={ev.title}>
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">{tag.label} &middot; {whenText}</p>
+          <h2>{ev.title}</h2>
+          <p>{ev.summary}</p>
+        </div>
+      </div>
+
+      {ev.stats?.length ? (
+        <div class="stat-row">
+          {ev.stats.map((s) => (
+            <div class="stat">
+              <div class="stat-num">{s.value}</div>
+              <div class="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {body ? (
+        <div class="event-body-copy" set:html={body} />
+      ) : (
+        <div class="coming-soon">
+          <div class="cs-icon" aria-hidden="true">&#128197;</div>
+          <h3>Details coming soon</h3>
+          <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
+             we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+          <div class="cs-actions">
+            <a class="btn btn-primary" href="/calendar/">See the calendar</a>
+            <a class="btn btn-outline" href="/volunteer/">Help run it</a>
+          </div>
+        </div>
+      )}
+
+      {ev.milestones?.length ? (
+        <div class="breakdown mt">
+          <h3>What we unlock together</h3>
+          <ul class="fund-list">
+            {ev.milestones.map((m) => (
+              <li><span>{m.label}</span><span class="amt">{m.amount}</span></li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {ev.ctaLabel && ev.ctaUrl ? (
+        <div class="cs-actions mt">
+          <a class="btn btn-lg btn-primary" href={ev.ctaUrl} target="_blank" rel="noopener noreferrer">
+            {ev.ctaLabel}
+          </a>
+        </div>
+      ) : null}
+
+      {photos.length ? (
+        <>
+          <h3 class="block-title spaced">Photos</h3>
+          <div class="gallery">
+            {photos.map((p) => (
+              <div class="gal-item">
+                <img src={imageUrl(p, 560, 420)} alt={p?.alt ?? ev.title} loading="lazy" />
+              </div>
+            ))}
+          </div>
+          {ev.photosCaption && <p class="ps-caption">{ev.photosCaption}</p>}
+        </>
+      ) : null}
+    </div>
+  </section>
+</Base>

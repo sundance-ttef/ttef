@@ -47,6 +47,9 @@ export const nav: NavEntry[] = [
     children: [
       { label: 'All the ways to give', href: '/support/', overview: true },
       { label: 'Donate', href: '/donate/', meta: 'Any time' },
+      // Giving time counts as supporting the school, and Volunteer left the
+      // top-level nav when it became a header button.
+      { label: 'Volunteer', href: '/volunteer/', meta: 'Give time' },
       { label: 'Dine Out Nights', href: '/events/dine-out/', meta: 'Monthly' },
       { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
       { label: 'Red Envelope Campaign', href: '/red-envelope/', meta: 'Sep–Nov' },

@@ -116,8 +116,15 @@ export interface Sponsor {
   logo: SanityImage;
 }
 
+export interface Stat { value: string; label: string }
+export interface Milestone { label: string; amount: string }
+
 export interface Tradition {
   title: string;
+  stats?: Stat[];
+  milestones?: Milestone[];
+  photosCaption?: string | null;
+  body?: any[];
   showOnEventsPage?: boolean;
   slug: string;
   date?: string | null;
@@ -177,7 +184,8 @@ export const getYearlyEvents = () =>
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
-      title, "slug": slug.current, date, dateConfirmed, org, summary, ctaLabel, ctaUrl, photos
+      title, "slug": slug.current, date, dateConfirmed, org, summary,
+      stats, milestones, photosCaption, body, ctaLabel, ctaUrl, photos
     }`,
     {slug},
   );
