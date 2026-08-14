@@ -259,8 +259,25 @@
   .together + section { padding-top: 38px; }
   .together-photo-note { display: none; }
   .together-head { max-width: 74ch; margin: 0 0 26px; }
-  .together-head h2 { font-size: var(--fs-section); letter-spacing: -.018em; color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
-  .together-head p { margin-top: 12px; font-size: var(--fs-md); color: rgba(255,255,255,.92); text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+  /* This block sits lower on the photo than the hero copy — over the densest,
+     brightest part of the crowd — so it gets the same layered shadow rather
+     than the single soft one it had, which left it competing with the picture.
+     The paragraph is full white for the same reason. */
+  .together-head h2 {
+    font-size: var(--fs-section); letter-spacing: -.018em; color: #fff;
+    text-wrap: balance;
+    text-shadow:
+      0 1px 2px rgba(0,0,0,.9),
+      0 2px 10px rgba(0,0,0,.75),
+      0 6px 34px rgba(0,0,0,.6);
+  }
+  .together-head p {
+    margin-top: 12px; font-size: var(--fs-md); color: #fff;
+    text-shadow:
+      0 1px 2px rgba(0,0,0,.85),
+      0 2px 10px rgba(0,0,0,.7),
+      0 6px 30px rgba(0,0,0,.55);
+  }
 
   .duo {
     display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
