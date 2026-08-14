@@ -444,13 +444,7 @@
   .open-col-head.p { background: var(--teal); }
   .open-role {
     background: var(--surface); border: 1px dashed var(--hairline); border-radius: 12px;
-    padding: 15px 18px 15px 21px; position: relative; overflow: hidden;
-  }
-  /* The gold edge is drawn as an overlay rather than a border-left: mixing a
-     solid border with a dashed one leaves a notch where they meet at the
-     rounded corners. */
-  .open-role::before {
-    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold);
+    padding: 15px 18px;
   }
   .open-name { font-weight: 650; font-size: 16.5px; }
   .open-desc { font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
@@ -500,13 +494,7 @@
   .open-col-head.p { background: var(--teal); }
   .open-role {
     background: var(--surface); border: 1px dashed var(--hairline); border-radius: 12px;
-    padding: 15px 18px 15px 21px; position: relative; overflow: hidden;
-  }
-  /* The gold edge is drawn as an overlay rather than a border-left: mixing a
-     solid border with a dashed one leaves a notch where they meet at the
-     rounded corners. */
-  .open-role::before {
-    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold);
+    padding: 15px 18px;
   }
   .open-name { font-weight: 650; font-size: 16.5px; }
   .open-desc { font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
