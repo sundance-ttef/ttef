@@ -1,0 +1,23 @@
+# Redirects, in Cloudflare Pages / Netlify `_redirects` format.
+#
+# Generated from netlify.toml so the two cannot drift. Both hosts read this
+# file, which is the point: the redirect map is the one piece of hosting
+# config that MUST survive a move, because printed QR codes point at these
+# paths and those envelopes are in families' homes for the school year.
+
+/red-envelope-campaign/      /red-envelope/                               301
+/corporate-sponsorship/      /sponsorship/                                301
+/spring-auction/             /events/auction/                             301
+/fun-run/                    /events/fun-run/                             301
+/dining-out-nights/          /events/dine-out/                            301
+/talent-show/                /events/talent-show/                         301
+/admin                       https://ttef.sanity.studio/                  302
+/admin/*                     https://ttef.sanity.studio/:splat            302
+/support/red-envelope/       /red-envelope/                               301
+/support/sponsorship/        /sponsorship/                                301
+/mission/                    /about/                                      301
+/board-members/              /about/                                      301
+/attend-a-board-meeting/     /calendar/                                   301
+/what-we-fund/               /impact/                                     301
+/recent-news/                /                                            301
+/facebook/                   https://www.facebook.com/groups/214661706390640 301

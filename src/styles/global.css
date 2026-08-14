@@ -588,6 +588,44 @@
   .event-static.is-link { cursor: pointer; }
   .event-static.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
+  /* The upcoming list on /calendar/. The date chip is a small calendar page:
+     weekday on the coloured strip, month and day beneath — the same shape the
+     events list used, which read faster than a run of prose dates. */
+  .cal-list { list-style: none; margin: 0 0 40px; padding: 0; }
+  .cal-row {
+    display: flex; align-items: center; gap: 18px; padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .cal-row:last-child { border-bottom: 0; }
+  .cal-date {
+    width: 66px; flex-shrink: 0; text-align: center; overflow: hidden;
+    border-radius: var(--radius-sm); border: 1px solid var(--hairline);
+    background: var(--surface); line-height: 1.15;
+  }
+  .cal-dow {
+    display: block; background: var(--maroon); color: #fff;
+    font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .14em; padding: 3px 0;
+  }
+  .cal-md {
+    display: block; font-family: var(--display); font-size: var(--fs-md);
+    font-weight: 600; padding: 5px 0 6px; white-space: nowrap;
+  }
+  .cal-body { flex: 1; min-width: 0; }
+  .cal-name { font-size: var(--fs-md); font-weight: 650; }
+  .cal-name a { color: var(--maroon); text-decoration: none; }
+  .cal-name a:hover { text-decoration: underline; }
+  .cal-meta { display: flex; align-items: center; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
+  .cal-time {
+    font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .cal-zoom { flex-shrink: 0; padding: 9px 18px; font-size: var(--fs-sm); }
+
+  @media (max-width: 560px) {
+    .cal-row { flex-wrap: wrap; gap: 14px; }
+    .cal-body { flex-basis: calc(100% - 84px); }
+    .cal-zoom { margin-left: 84px; }
+  }
+
   .cal-frame {
     position: relative; border-radius: var(--radius); overflow: hidden;
     border: 1px solid var(--hairline); background: var(--surface); box-shadow: var(--shadow);

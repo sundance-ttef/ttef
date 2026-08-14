@@ -75,7 +75,13 @@ const NOT_HEADLINE = [/^vapa$/i, /^friday flag$/i];
 export const orgOf = (title: string): 'pac' | 'foundation' | 'school' =>
   /foundation/i.test(title) ? 'foundation' : /\bpac\b/i.test(title) ? 'pac' : 'school';
 
-export const isZoomMeeting = (title: string) => /foundation meeting/i.test(title);
+/**
+ * Both the PAC and the Foundation monthly meetings are on Zoom, so any entry
+ * that is a meeting carries the join link. This is why /calendar/ no longer
+ * needs a standing "join a meeting" block: the link sits on the meeting
+ * itself, beside the date it applies to.
+ */
+export const isZoomMeeting = (title: string) => /\bmeetings?\b/i.test(title);
 
 /**
  * Link a calendar entry to an event page when it is clearly the same thing.
