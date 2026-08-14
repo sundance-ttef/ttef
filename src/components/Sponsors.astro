@@ -1,0 +1,119 @@
+---
+/* Home-page sponsor rail: auto-advances, and is a real scroll region the
+   visitor can drag, swipe, wheel, or arrow through. */
+---
+
+<section class="sponsors sponsor-strip" id="sponsors-home">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Thank you</p>
+          <h2>Our corporate sponsors</h2>
+          <p>Local businesses who fund Sundance directly. Sponsorships start at $250.</p>
+        </div>
+        <a class="btn btn-gold" href="/support/">Become a sponsor</a>
+      </div>
+      <div class="sponsor-rail">
+        <button class="rail-btn rail-prev" type="button" aria-label="Previous sponsors">&#8249;</button>
+        <div class="sponsor-scroller" tabindex="0" role="region" aria-label="Our corporate sponsors">
+          <div class="scroller-track strip-track">
+            <a class="strip-item t-platinum" href="http://www.thebarronteam.com" target="_blank" rel="noopener noreferrer">
+              <span class="tier-tab" aria-hidden="true">Platinum</span>
+              <span class="strip-logo"><img src="/img/sp-barron.png" alt="The Barron Team"></span>
+              <span class="sr">The Barron Team &mdash; Platinum sponsor</span>
+            </a>
+            <a class="strip-item t-gold" href="https://www.drmelanieorthodontics.com/" target="_blank" rel="noopener noreferrer">
+              <span class="tier-tab" aria-hidden="true">Gold</span>
+              <span class="strip-logo"><img src="/img/sp-dmo.png" alt="Dr. Melanie Orthodontics"></span>
+              <span class="sr">Dr. Melanie Orthodontics &mdash; Gold sponsor</span>
+            </a>
+            <a class="strip-item t-gold" href="http://smilephr.com" target="_blank" rel="noopener noreferrer">
+              <span class="tier-tab" aria-hidden="true">Gold</span>
+              <span class="strip-logo"><img src="/img/sp-smilephr.png" alt="Smile PHR"></span>
+              <span class="sr">Smile PHR &mdash; Gold sponsor</span>
+            </a>
+            <a class="strip-item t-gold" href="https://www.carmelmtndentalcare.com/" target="_blank" rel="noopener noreferrer">
+              <span class="tier-tab" aria-hidden="true">Gold</span>
+              <span class="strip-logo"><img src="/img/sp-cmdc.png" alt="Carmel Mountain Dental Care"></span>
+              <span class="sr">Carmel Mountain Dental Care &mdash; Gold sponsor</span>
+            </a>
+            <a class="strip-item t-silver" href="http://kappelrealtygroup.com" target="_blank" rel="noopener noreferrer">
+              <span class="tier-tab" aria-hidden="true">Silver</span>
+              <span class="strip-logo"><img src="/img/sp-kappel.png" alt="Kappel Realty Group"></span>
+              <span class="sr">Kappel Realty Group &mdash; Silver sponsor</span>
+            </a>
+          </div>
+        </div>
+        <button class="rail-btn rail-next" type="button" aria-label="More sponsors">&#8250;</button>
+      </div>
+    </div>
+  </section>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sc = document.querySelector<HTMLElement>('.sponsor-scroller');
+  const track = sc?.querySelector<HTMLElement>('.scroller-track');
+
+  if (sc && track) {
+    // repeat until the row is comfortably wider than the viewport, so the loop is seamless
+    let guard = 0;
+    while (track.scrollWidth < sc.clientWidth * 1.6 && guard++ < 8) {
+      Array.from(track.children).forEach((node) => {
+        if ((node as HTMLElement).dataset.clone) return;
+        const c = node.cloneNode(true) as HTMLElement;
+        c.dataset.clone = '1';
+        c.setAttribute('aria-hidden', 'true');
+        c.tabIndex = -1;
+        c.querySelectorAll('a, img').forEach((el) => ((el as HTMLElement).tabIndex = -1));
+        track.appendChild(c);
+      });
+    }
+
+    const half = () => track.scrollWidth / 2;
+    let paused = false;
+    let idle: number | undefined;
+    const hold = (ms = 2500) => {
+      paused = true;
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => (paused = false), ms);
+    };
+
+    sc.addEventListener('pointerenter', () => { paused = true; window.clearTimeout(idle); });
+    sc.addEventListener('pointerleave', () => (paused = false));
+    sc.addEventListener('focusin', () => { paused = true; window.clearTimeout(idle); });
+    sc.addEventListener('focusout', () => (paused = false));
+    ['wheel', 'touchstart', 'pointerdown'].forEach((ev) =>
+      sc.addEventListener(ev, () => hold(), { passive: true })
+    );
+
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('.strip-item');
+      return card ? card.getBoundingClientRect().width + 20 : 300;
+    };
+    document.querySelector('.rail-prev')?.addEventListener('click', () => {
+      hold(4000); sc.scrollBy({ left: -step(), behavior: 'smooth' });
+    });
+    document.querySelector('.rail-next')?.addEventListener('click', () => {
+      hold(4000); sc.scrollBy({ left: step(), behavior: 'smooth' });
+    });
+
+    if (!reduced) {
+      // scrollLeft reads back rounded, so `+= 0.45` would be discarded each frame.
+      // Track the position as a float and assign it.
+      let pos = (sc.scrollLeft = 1);
+      sc.addEventListener('scroll', () => {
+        if (paused && Math.abs(sc.scrollLeft - pos) > 2) pos = sc.scrollLeft;
+      }, { passive: true });
+      const tick = () => {
+        if (!paused) {
+          pos += 0.45;
+          const h = half();
+          if (h > 0 && pos >= h) pos -= h;
+          sc.scrollLeft = pos;
+        }
+        requestAnimationFrame(tick);
+      };
+      tick();
+    }
+  }
+</script>

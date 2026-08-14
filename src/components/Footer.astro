@@ -1,0 +1,46 @@
+---
+import { org, social } from '../data/nav';
+---
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <img class="foot-mark" src="/img/ttef-logo-white.png"
+             alt="Sundance Elementary Twin Trails Foundation and PAC" width="640" height="168" />
+        <h4>{org.name}</h4>
+        <p style="font-size:14.5px;max-width:38ch;">
+          Supporting {org.school} since 2004. Every penny of your donation is tax&#8209;deductible.
+        </p>
+        <p style="font-size:14.5px;margin-top:14px;">
+          {org.address[0]}<br />{org.address[1]}<br />
+          <a href={org.phoneHref}>{org.phone}</a>
+        </p>
+      </div>
+      <div>
+        <h4>Get involved</h4>
+        <ul>
+          <li><a href="/volunteer/">Volunteer</a></li>
+          <li><a href="/calendar/">Attend a meeting</a></li>
+          <li><a href="/support/#sponsorship">Become a sponsor</a></li>
+          <li><a href="/shop/">Spirit Wear shop</a></li>
+          <li><a href="/staff-resources/">Staff resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href={`mailto:${org.email.foundation}`}>Foundation</a></li>
+          <li><a href={`mailto:${org.email.pac}`}>PAC</a></li>
+          <li><a href={`mailto:${org.email.finance}`}>Finance</a></li>
+          <li><a href={social.facebook} target="_blank" rel="noopener noreferrer">Facebook group</a></li>
+          <li><a href={social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <span>&copy; {new Date().getFullYear()} {org.name} &mdash; a 501(c)(3) non&#8209;profit organization</span>
+      <span class="ein">Federal Tax ID <span class="num">{org.ein}</span></span>
+    </div>
+  </div>
+</footer>
