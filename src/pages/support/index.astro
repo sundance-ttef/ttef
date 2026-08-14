@@ -100,7 +100,7 @@ import { populatedTiers, sponsorsIn } from '../../data/sponsors';
             <div class="marquee"><div class="marquee-track">
               {sponsorsIn(t.key).map((sp) => (
                 <a href={sp.url} target="_blank" rel="noopener noreferrer">
-                  <img src={sp.logo} alt={sp.name} loading="lazy" />
+                  <img src={sp.logo} alt={sp.name} decoding="async" />
                 </a>
               ))}
             </div></div>

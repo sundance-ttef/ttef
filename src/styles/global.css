@@ -213,13 +213,28 @@
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: center 42%;
   }
+  /* The headline sits at the TOP of the photo, which is exactly where the old
+     scrim was weakest — it fell to .2 by 40%, right across the copy, over a
+     bright crowd shot. It now holds through the text and lifts below it, so
+     the photograph still reads as a photograph. */
   .hero-photo::after {
     content: ""; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(35,0,18,.52) 0%, rgba(35,0,18,.2) 40%, rgba(35,0,18,.62) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(30,0,15,.74) 0%,
+      rgba(30,0,15,.62) 34%,
+      rgba(30,0,15,.28) 62%,
+      rgba(30,0,15,.66) 100%
+    );
   }
-  .hero-copy { position: relative; z-index: 2; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,.5); }
+  /* Two shadows: a tight one for edge definition against light patches in the
+     photo, and a wide soft one to lift the whole block off the image. */
+  .hero-copy {
+    position: relative; z-index: 2; color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,.6), 0 2px 22px rgba(0,0,0,.55);
+  }
   .hero-copy h1 { font-size: var(--fs-hero); max-width: 19ch; letter-spacing: -.015em; }
-  .hero-copy p { max-width: 44ch; margin-top: 14px; font-size: var(--fs-lg); opacity: .95; }
+  .hero-copy p { max-width: 44ch; margin-top: 14px; font-size: var(--fs-lg); }
   .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
 
   /* ---------- foundation / PAC ---------- */
