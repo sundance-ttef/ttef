@@ -102,6 +102,18 @@ export default defineType({
       validation: (r) => r.uri({scheme: ['http', 'https']}),
     }),
     defineField({
+      name: 'coverImage',
+      title: 'Header image',
+      type: 'image',
+      description:
+        'The single image that represents this event: it heads the event page and is the picture on the Events grid. Set the hotspot on faces — it is cropped to a wide banner and to a 4:3 card.',
+      options: {hotspot: true},
+      fields: [
+        {name: 'alt', type: 'string', title: 'Describe the photo',
+         description: 'Read aloud by screen readers.'},
+      ],
+    }),
+    defineField({
       name: 'stats',
       title: 'Headline numbers',
       type: 'array',
@@ -156,18 +168,18 @@ export default defineType({
     }),
     defineField({
       name: 'photos',
-      title: 'Photos',
+      title: 'Photos from previous years',
       type: 'array',
       of: [{type: 'image', options: {hotspot: true}, fields: [
         {name: 'alt', type: 'string', title: 'Describe the photo', description: 'Read aloud by screen readers.'},
       ]}],
       description:
-        'THE FIRST PHOTO IS THE COVER shown on the Events page — drag your best one to the front. Photos fill their tiles and are cropped to fit, so set the hotspot on faces. Leave empty to show placeholders.',
+        'A gallery of past years, shown low on the event page. The header image above is separate — these do not need to include it. Photos fill their tiles and are cropped to fit, so set the hotspot on faces.',
     }),
   ],
   orderings: [{title: 'School year order', name: 'date', by: [{field: 'date', direction: 'asc'}]}],
   preview: {
-    select: {title: 'title', date: 'date', confirmed: 'dateConfirmed', org: 'org', media: 'photos.0'},
+    select: {title: 'title', date: 'date', confirmed: 'dateConfirmed', org: 'org', media: 'coverImage'},
     prepare({title, date, confirmed, org, media}) {
       const label = ORGS.find((o) => o.value === org)?.title ?? org
       const d = date ? new Date(date + 'T12:00:00') : null

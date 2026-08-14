@@ -121,6 +121,7 @@ export interface Milestone { label: string; amount: string }
 
 export interface Tradition {
   title: string;
+  coverImage?: SanityImage;
   stats?: Stat[];
   milestones?: Milestone[];
   photosCaption?: string | null;
@@ -178,14 +179,14 @@ export const getTraditions = () =>
 export const getYearlyEvents = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition" && showOnEventsPage != false]
     | order(date asc){
-      title, "slug": slug.current, date, dateConfirmed, org, summary, photos
+      title, "slug": slug.current, date, dateConfirmed, org, summary, coverImage
     }`);
 
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
       title, "slug": slug.current, date, dateConfirmed, org, summary,
-      stats, milestones, photosCaption, body, ctaLabel, ctaUrl, photos
+      coverImage, stats, milestones, photosCaption, body, ctaLabel, ctaUrl, photos
     }`,
     {slug},
   );

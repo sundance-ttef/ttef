@@ -1389,3 +1389,18 @@
   .header-actions .btn-shop { display: none; }
   .nav .nav-mobile-only { display: block; }
 }
+
+/* The event page stacks blocks that were each written for a page of their own,
+   so they carry no separation between them: the gallery sat flush against the
+   "details coming soon" card below it. */
+.gallery { margin-bottom: 40px; }
+.gallery + .coming-soon,
+.breakdown + .gallery { margin-top: 0; }
+
+/* The event page's header image: a wide banner, cropped by Sanity so a tall
+   phone photo cannot push the page content below the fold. */
+.event-hero {
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 30px;
+  background: var(--surface-sunken); line-height: 0;
+}
+.event-hero img { width: 100%; height: auto; display: block; }

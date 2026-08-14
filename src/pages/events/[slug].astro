@@ -47,6 +47,12 @@ const photos = ev.photos ?? [];
         </div>
       </div>
 
+      {ev.coverImage ? (
+        <div class="event-hero">
+          <img src={imageUrl(ev.coverImage, 1180, 420)} alt={ev.coverImage.alt ?? ev.title} />
+        </div>
+      ) : null}
+
       {ev.stats?.length ? (
         <div class="stat-row">
           {ev.stats.map((s) => (
@@ -58,20 +64,9 @@ const photos = ev.photos ?? [];
         </div>
       ) : null}
 
-      {body ? (
-        <div class="event-body-copy" set:html={body} />
-      ) : (
-        <div class="coming-soon">
-          <div class="cs-icon" aria-hidden="true">&#128197;</div>
-          <h3>Details coming soon</h3>
-          <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
-             we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
-          <div class="cs-actions">
-            <a class="btn btn-primary" href="/calendar/">See the calendar</a>
-            <a class="btn btn-outline" href="/volunteer/">Help run it</a>
-          </div>
-        </div>
-      )}
+      {body && <div class="event-body-copy" set:html={body} />}
+
+
 
       {ev.milestones?.length ? (
         <div class="breakdown mt">
@@ -84,17 +79,9 @@ const photos = ev.photos ?? [];
         </div>
       ) : null}
 
-      {ev.ctaLabel && ev.ctaUrl ? (
-        <div class="cs-actions mt">
-          <a class="btn btn-lg btn-primary" href={ev.ctaUrl} target="_blank" rel="noopener noreferrer">
-            {ev.ctaLabel}
-          </a>
-        </div>
-      ) : null}
-
       {photos.length ? (
         <>
-          <h3 class="block-title spaced">Photos</h3>
+          <h3 class="block-title spaced">Photos from previous years</h3>
           <div class="gallery">
             {photos.map((p) => (
               <div class="gal-item">
@@ -105,6 +92,27 @@ const photos = ev.photos ?? [];
           {ev.photosCaption && <p class="ps-caption">{ev.photosCaption}</p>}
         </>
       ) : null}
+
+      {ev.ctaLabel && ev.ctaUrl ? (
+        <div class="cs-actions mt">
+          <a class="btn btn-lg btn-primary" href={ev.ctaUrl} target="_blank" rel="noopener noreferrer">
+            {ev.ctaLabel}
+          </a>
+        </div>
+      ) : null}
+
+      {!body && (
+        <div class="coming-soon">
+          <div class="cs-icon" aria-hidden="true">&#128197;</div>
+          <h3>Details coming soon</h3>
+          <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
+             we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+          <div class="cs-actions">
+            <a class="btn btn-primary" href="/calendar/">See the calendar</a>
+            <a class="btn btn-outline" href="/volunteer/">Help run it</a>
+          </div>
+        </div>
+      )}
     </div>
   </section>
 </Base>

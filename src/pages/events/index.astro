@@ -23,13 +23,13 @@ const events = await getYearlyEvents();
       <div class="events events-3">
         {events.map((e) => {
           const tag = orgTag(e.org);
-          const cover = e.photos?.length ? imageUrl(e.photos[0], 560, 380) : null;
+          const cover = imageUrl(e.coverImage, 560, 380);
           const when = eventDate(e.date, e.dateConfirmed);
           return (
             <a class="event event-static is-link" href={`/events/${e.slug}/`}>
               <div class="event-img is-placeholder">
                 {cover
-                  ? <img class="event-photo" src={cover} alt={e.photos?.[0]?.alt ?? e.title} loading="lazy" />
+                  ? <img class="event-photo" src={cover} alt={e.coverImage?.alt ?? e.title} loading="lazy" />
                   : <img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" />}
               </div>
               <div class="event-body">

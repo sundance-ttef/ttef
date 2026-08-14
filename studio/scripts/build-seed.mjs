@@ -112,9 +112,10 @@ traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos, onE
     org,
     summary,
     showOnEventsPage: onEventsPage !== false,
-    // First photo is the card cover on the events grid.
-    ...(photos.length
-      ? {photos: photos.map(([rel, alt]) => ({...img(rel, alt), _key: rel.replace(/\W/g, '')}))}
+    // The header image is an explicit field; the rest are the gallery.
+    ...(photos.length ? {coverImage: img(photos[0][0], photos[0][1])} : {}),
+    ...(photos.length > 1
+      ? {photos: photos.slice(1).map(([rel, alt]) => ({...img(rel, alt), _key: rel.replace(/\W/g, '')}))}
       : {}),
   })
 })
