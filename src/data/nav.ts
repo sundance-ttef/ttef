@@ -21,6 +21,7 @@ const yearlyEvents = await getYearlyEvents();
 export const nav: NavEntry[] = [
   { label: 'About Us', href: '/about/' },
   { label: 'Our Impact', href: '/impact/' },
+  { label: 'Calendar', href: '/calendar/' },
   {
     label: 'Events',
     href: '/events/',
@@ -36,7 +37,6 @@ export const nav: NavEntry[] = [
       })),
     ],
   },
-  { label: 'Calendar', href: '/calendar/' },
   {
     label: 'Support Us',
     href: '/support/',
@@ -53,7 +53,6 @@ export const nav: NavEntry[] = [
       { label: 'Corporate Sponsorship', href: '/sponsorship/', meta: 'From $250' },
     ],
   },
-  { label: 'Volunteer', href: '/volunteer/' },
   { label: 'Contact', href: '/contact/' },
 ];
 

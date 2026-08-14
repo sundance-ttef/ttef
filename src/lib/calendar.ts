@@ -75,8 +75,12 @@ export const timeLabel = (e: {time: string; allDay: boolean}) =>
  * owner field, and defaulting everything to "School" mislabels the PAC and
  * Foundation meetings, which is the one thing the coloured tag exists to say.
  */
-export const orgOf = (title: string): 'pac' | 'foundation' | 'school' =>
-  /foundation/i.test(title) ? 'foundation' : /\bpac\b/i.test(title) ? 'pac' : 'school';
+export const orgOf = (title: string): 'pac' | 'foundation' | 'school' => {
+  if (/foundation/i.test(title)) return 'foundation';
+  // PAC runs these but rarely says so in the calendar entry's title.
+  if (/\bpac\b|dine\s*out|carnival|book fair|spirit|dance/i.test(title)) return 'pac';
+  return 'school';
+};
 
 /**
  * Both the PAC and the Foundation monthly meetings are on Zoom, so any entry

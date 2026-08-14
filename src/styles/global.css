@@ -591,7 +591,15 @@
   /* The upcoming list on /calendar/. The date chip is a small calendar page:
      weekday on the coloured strip, month and day beneath — the same shape the
      events list used, which read faster than a run of prose dates. */
-  .cal-list { list-style: none; margin: 0 0 40px; padding: 0; }
+  /* The list needs a surface of its own: on the page background the rows read
+     as loose text rather than a block of dates, and it has to hold its own
+     against the framed calendar embed below it. */
+  .cal-card {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 8px 26px; margin-bottom: 44px;
+  }
+  .cal-list { list-style: none; margin: 0; padding: 0; }
   .cal-row {
     display: flex; align-items: center; gap: 18px; padding: 14px 0;
     border-bottom: 1px solid var(--hairline);

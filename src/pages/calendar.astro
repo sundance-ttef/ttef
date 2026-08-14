@@ -36,7 +36,8 @@ const chip = (iso: string) => {
       {upcoming.length > 0 && (
         <>
           <h3 class="block-title">What&rsquo;s next</h3>
-          <ul class="cal-list">
+          <div class="cal-card">
+            <ul class="cal-list">
             {upcoming.map((e) => {
               const match = matchEvent(e.title, yearly);
               const tag = orgTag(match?.org ?? orgOf(e.title));
@@ -64,7 +65,8 @@ const chip = (iso: string) => {
                 </li>
               );
             })}
-          </ul>
+            </ul>
+          </div>
         </>
       )}
 
