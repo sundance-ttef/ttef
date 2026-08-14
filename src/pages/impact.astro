@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import { fundraising, goalText, raisedText, percent } from '../data/fundraising';
+import { fundraising, budget, goalText, raisedText, percent } from '../data/fundraising';
+
+const usd = (n: number) => '$' + n.toLocaleString('en-US');
 ---
 
 <Base title="Our Impact">
@@ -49,24 +51,20 @@ import { fundraising, goalText, raisedText, percent } from '../data/fundraising'
         <div class="breakdown">
           <h3>Full line&#8209;item breakdown</h3>
           <ul class="fund-list">
-            <li><span>Math + STEAM Impact Aide <em>(Mrs. Miles)</em></span><span class="amt">$29,645</span></li>
-            <li><span>Reading Impact Aide</span><span class="amt">$19,634</span></li>
-            <li><span>Fundraising Support <em>(Red Envelope, Fun Run, Auction)</em></span><span class="amt">$16,500</span></li>
-            <li><span>PE Teacher <em>(Mrs. Norris)</em></span><span class="amt">$15,815</span></li>
-            <li><span>School, Classroom + Library Supplies</span><span class="amt">$11,500</span></li>
-            <li><span>Music + Choir Teacher <em>(Mrs. Serrano)</em></span><span class="amt">$6,800</span></li>
-            <li><span>Field Trip Support</span><span class="amt">$4,900</span></li>
-            <li><span>Clubs &mdash; Running, Chess, Musical Theater + more</span><span class="amt">$3,100</span></li>
-            <li><span>Business Expenses <em>(insurance, taxes, website)</em></span><span class="amt">$2,050</span></li>
-            <li><span>PAC Support &amp; Student Activities</span><span class="amt">$2,000</span></li>
+            {budget.map((line) => (
+              <li>
+                <span>{line.label}{line.note && <> <em>({line.note})</em></>}</span>
+                <span class="amt">{usd(line.amount)}</span>
+              </li>
+            ))}
           </ul>
-          <div class="fund-total"><span>2026&ndash;27 goal</span><span class="num">$111,944</span></div>
+          <div class="fund-total"><span>{fundraising.schoolYear} goal</span><span class="num">{goalText}</span></div>
         </div>
 
         <aside class="goal-card">
           <p class="eyebrow">Raised so far</p>
           <div class="goal-figure">{raisedText}</div>
-          <div class="goal-of">of our <span class="num">$111,944</span> goal for 2026&ndash;27</div>
+          <div class="goal-of">of our <span class="num">{goalText}</span> goal for {fundraising.schoolYear}</div>
           <div class="bar"><div class="bar-fill" style={`width:${percent}%`}></div></div>
           <div class="bar-legend"><span>{percent}% funded</span>{fundraising.updated && <span>Updated {fundraising.updated}</span>}</div>
         </aside>

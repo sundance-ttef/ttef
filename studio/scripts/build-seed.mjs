@@ -34,11 +34,32 @@ const img = (rel, alt) => {
 const docs = []
 
 // ---------------------------------------------------------------- campaign
+// The 2026–27 budget, exactly as /impact/ listed it. The goal is their sum
+// (111,944) — it is not stored separately, so the two can never disagree.
+const budget = [
+  ['Math + STEAM Impact Aide', 'Mrs. Miles', 29645],
+  ['Reading Impact Aide', null, 19634],
+  ['Fundraising Support', 'Red Envelope, Fun Run, Auction', 16500],
+  ['PE Teacher', 'Mrs. Norris', 15815],
+  ['School, Classroom + Library Supplies', null, 11500],
+  ['Music + Choir Teacher', 'Mrs. Serrano', 6800],
+  ['Field Trip Support', null, 4900],
+  ['Clubs — Running, Chess, Musical Theater + more', null, 3100],
+  ['Business Expenses', 'insurance, taxes, website', 2050],
+  ['PAC Support & Student Activities', null, 2000],
+]
+
 docs.push({
   _id: 'siteSettings',
   _type: 'siteSettings',
   schoolYear: '2026–27',
-  goal: 111944,
+  budget: budget.map(([label, note, amount], i) => ({
+    _type: 'budgetLine',
+    _key: `line${i}`,
+    label,
+    ...(note ? {note} : {}),
+    amount,
+  })),
   raised: 0,
   suggestedPerStudent: 275,
   monthlyPlanMonths: 10,

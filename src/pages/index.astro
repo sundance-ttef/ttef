@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
-import { fundraising, goalText } from '../data/fundraising';
+import { fundraising, goalText, raisedText, remainingText, percent } from '../data/fundraising';
 import { getYearlyEvents, orgTag } from '../lib/sanity';
 import { getCalendarEvents, matchEvent, orgOf } from '../lib/calendar';
 
@@ -134,6 +134,16 @@ const upcoming = (await getCalendarEvents({days: 120, includeRoutine: false})).s
       <p class="ask-lead">Our {fundraising.schoolYear} goal is <b>{goalText}</b> &mdash; a
          suggested <b>{askText} per student</b>, the lowest ask of any comparable school in
          Poway Unified. Give any amount, once or monthly, and your employer may double it.</p>
+      {fundraising.raised > 0 && (
+        <div class="ask-progress">
+          <div class="bar"><div class="bar-fill" style={`width:${percent}%`}></div></div>
+          <div class="bar-legend">
+            <span><span class="num">{raisedText}</span> raised &middot; {percent}% of {goalText}</span>
+            <span class="num">{remainingText} to go</span>
+          </div>
+        </div>
+      )}
+
       <div class="ask-actions">
         <a class="btn btn-lg btn-ghost-light" href="/impact/">See what we fund</a>
         <a class="btn btn-lg btn-onphoto" href="/donate/">Donate</a>

@@ -21,8 +21,19 @@ if (!campaign) {
   );
 }
 
+/**
+ * The line-item budget, and the goal derived from it.
+ *
+ * The goal is the SUM of the budget rather than a number stored beside it.
+ * Two figures that have to agree will eventually disagree — a treasurer edits
+ * one line and forgets the total — and a goal that contradicts the breakdown
+ * printed right below it is the kind of error a parent notices.
+ */
+export const budget = campaign.budget ?? [];
+const goal = budget.reduce((total, line) => total + (line.amount ?? 0), 0);
+
 export const fundraising = {
-  goal: campaign.goal,
+  goal,
   raised: campaign.raised,
   /** e.g. 'Aug 11'. Null hides the label. */
   updated: campaign.updated

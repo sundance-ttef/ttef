@@ -1300,10 +1300,42 @@
     margin: 16px auto 0; line-height: 1.65;
   }
   .the-ask .ask-lead b { color: #fff; font-weight: 650; }
+  /* The gap made visible, inside the band that asks you to fill it. The bar
+     elsewhere sits on a light surface; here it is on maroon, so the track and
+     the legend need their own contrast rather than inheriting. */
+  .ask-progress {
+    max-width: 560px; margin: 26px auto 4px;
+  }
+  .ask-progress .bar {
+    background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.28); margin-top: 0;
+  }
+  .ask-progress .bar-fill { background: linear-gradient(90deg, var(--gold), #E4B65A); }
+  .ask-progress .bar-legend {
+    display: flex; justify-content: space-between; gap: 16px;
+    margin-top: 10px; font-size: var(--fs-sm); color: rgba(255,255,255,.86);
+  }
+  .ask-progress .bar-legend .num { color: #fff; font-weight: 700; }
+
   .ask-actions { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
   @media (max-width: 560px) {
     .the-ask { padding-block: 60px; }
-    .ask-actions { flex-direction: column; align-items: stretch; }
+    /* The gap made visible, inside the band that asks you to fill it. The bar
+     elsewhere sits on a light surface; here it is on maroon, so the track and
+     the legend need their own contrast rather than inheriting. */
+  .ask-progress {
+    max-width: 560px; margin: 26px auto 4px;
+  }
+  .ask-progress .bar {
+    background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.28); margin-top: 0;
+  }
+  .ask-progress .bar-fill { background: linear-gradient(90deg, var(--gold), #E4B65A); }
+  .ask-progress .bar-legend {
+    display: flex; justify-content: space-between; gap: 16px;
+    margin-top: 10px; font-size: var(--fs-sm); color: rgba(255,255,255,.86);
+  }
+  .ask-progress .bar-legend .num { color: #fff; font-weight: 700; }
+
+  .ask-actions { flex-direction: column; align-items: stretch; }
     .ask-actions .btn { width: 100%; justify-content: center; }
   }
 

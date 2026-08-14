@@ -25,11 +25,50 @@ export default defineType({
       initialValue: '2026–27',
     }),
     defineField({
-      name: 'goal',
-      title: 'Fundraising goal (whole dollars)',
-      type: 'number',
-      description: 'No commas or dollar sign — just the number, e.g. 111944.',
-      validation: (r) => r.required().min(0).integer(),
+      name: 'budget',
+      title: 'What the money pays for',
+      type: 'array',
+      description:
+        'The line-item budget shown on Our Impact. THE FUNDRAISING GOAL IS THE SUM OF THESE — there is no separate goal to keep in step, so editing a line here updates the goal, the progress bars and the per-student ask everywhere on the site. Drag to reorder; the site shows them in this order.',
+      validation: (r) => r.required().min(1),
+      of: [
+        {
+          type: 'object',
+          name: 'budgetLine',
+          fields: [
+            {
+              name: 'label',
+              title: 'What it is',
+              type: 'string',
+              description: 'e.g. Math + STEAM Impact Aide',
+              validation: (r: any) => r.required(),
+            },
+            {
+              name: 'note',
+              title: 'Detail',
+              type: 'string',
+              description:
+                'Optional, shown in italics after the label — a staff name, or what it covers. No brackets needed.',
+            },
+            {
+              name: 'amount',
+              title: 'Amount (whole dollars)',
+              type: 'number',
+              description: 'No commas or dollar sign.',
+              validation: (r: any) => r.required().min(0).integer(),
+            },
+          ],
+          preview: {
+            select: {label: 'label', note: 'note', amount: 'amount'},
+            prepare({label, note, amount}: any) {
+              return {
+                title: `${label}${note ? ` (${note})` : ''}`,
+                subtitle: '$' + (amount ?? 0).toLocaleString('en-US'),
+              }
+            },
+          },
+        },
+      ],
     }),
     defineField({
       name: 'raised',
@@ -64,9 +103,10 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {year: 'schoolYear', raised: 'raised', goal: 'goal'},
-    prepare({year, raised, goal}) {
+    select: {year: 'schoolYear', raised: 'raised', budget: 'budget'},
+    prepare({year, raised, budget}) {
       const usd = (n: number) => '$' + (n ?? 0).toLocaleString('en-US')
+      const goal = (budget ?? []).reduce((t: number, b: any) => t + (b?.amount ?? 0), 0)
       const pct = goal ? Math.round(((raised ?? 0) / goal) * 100) : 0
       return {title: `${year} campaign`, subtitle: `${usd(raised)} of ${usd(goal)} — ${pct}%`}
     },

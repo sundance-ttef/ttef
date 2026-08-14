@@ -94,9 +94,15 @@ export function eventDate(iso?: string | null, confirmed?: boolean) {
 // Queries
 // ---------------------------------------------------------------------------
 
+export interface BudgetLine {
+  label: string;
+  note?: string | null;
+  amount: number;
+}
+
 export interface Campaign {
   schoolYear: string;
-  goal: number;
+  budget: BudgetLine[];
   raised: number;
   updated: string | null;
   suggestedPerStudent: number;
@@ -143,7 +149,8 @@ export interface VolunteerSignup {
 
 export const getCampaign = () =>
   sanity.fetch<Campaign>(`*[_id == "siteSettings"][0]{
-    schoolYear, goal, raised, "updated": updated, suggestedPerStudent, monthlyPlanMonths
+    schoolYear, budget[]{label, note, amount}, raised,
+    "updated": updated, suggestedPerStudent, monthlyPlanMonths
   }`);
 
 export const getSponsors = () =>
