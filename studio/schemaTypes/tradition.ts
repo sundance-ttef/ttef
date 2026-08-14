@@ -112,12 +112,18 @@ export default defineType({
         'THE FIRST PHOTO IS THE COVER shown on the Events page — drag your best one to the front. Photos fill their tiles and are cropped to fit, so set the hotspot on faces. Leave empty to show placeholders.',
     }),
   ],
-  orderings: [{title: 'School year order', name: 'order', by: [{field: 'order', direction: 'asc'}]}],
+  orderings: [{title: 'School year order', name: 'date', by: [{field: 'date', direction: 'asc'}]}],
   preview: {
-    select: {title: 'title', month: 'monthLabel', org: 'org', media: 'photos.0'},
-    prepare({title, month, org, media}) {
+    select: {title: 'title', date: 'date', confirmed: 'dateConfirmed', org: 'org', media: 'photos.0'},
+    prepare({title, date, confirmed, org, media}) {
       const label = ORGS.find((o) => o.value === org)?.title ?? org
-      return {title, subtitle: `${month} · ${label}`, media}
+      const d = date ? new Date(date + 'T12:00:00') : null
+      const when = d
+        ? confirmed
+          ? d.toLocaleDateString('en-US', {month: 'long', day: 'numeric'})
+          : `${d.toLocaleDateString('en-US', {month: 'long'})} — date TBC`
+        : 'No date'
+      return {title, subtitle: `${when} · ${label}`, media}
     },
   },
 })
