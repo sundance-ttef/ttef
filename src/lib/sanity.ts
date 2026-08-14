@@ -80,6 +80,7 @@ export interface Occurrence {
 
 export interface Tradition {
   title: string;
+  showOnEventsPage?: boolean;
   slug: string;
   monthLabel: string;
   order: number;
@@ -184,8 +185,20 @@ export const getFeatured = async (limit = 3) => {
 
 export const getTraditions = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(order asc){
-    title, "slug": slug.current, monthLabel, order, org, summary, ctaLabel, ctaUrl, photos
+    title, "slug": slug.current, monthLabel, order, org, summary, showOnEventsPage, ctaLabel, ctaUrl, photos
   }`);
+
+/**
+ * The main yearly events: the Events menu and the "Every year at Sundance"
+ * grid, which must always agree. Dine Out Nights is excluded — it keeps its
+ * page but is linked from Support Us, being a fundraiser rather than a
+ * once-a-year event.
+ */
+export const getYearlyEvents = () =>
+  sanity.fetch<Tradition[]>(`*[_type == "tradition" && showOnEventsPage != false]
+    | order(order asc){
+      title, "slug": slug.current, monthLabel, order, org, summary, photos
+    }`);
 
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(

@@ -25,10 +25,10 @@ const here = dirname(fileURLToPath(import.meta.url))
 const IMG = resolve(here, '../../public/img')
 
 /** `_sanityAsset` lets the importer upload a local file and wire up the ref. */
-const img = (rel) => {
+const img = (rel, alt) => {
   const abs = resolve(IMG, rel)
   if (!existsSync(abs)) throw new Error(`seed image missing: ${abs}`)
-  return {_type: 'image', _sanityAsset: `image@file://${abs}`}
+  return {_type: 'image', _sanityAsset: `image@file://${abs}`, ...(alt ? {alt} : {})}
 }
 
 const docs = []
@@ -60,16 +60,25 @@ sponsors.forEach(([id, name, tier, url, logo], i) => {
 // ------------------------------------------------------------- traditions
 // Order is the school year, which is also the order the Events menu uses.
 const traditions = [
-  ['book-fair', 'Book Fair', 'October', 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', ['events/book-fair.jpg']],
+  ['book-fair', 'Book Fair', 'October', 'pac', 'A week of books in the library, with proceeds coming back to Sundance.', [['events/book-fair.jpg', 'Book Fair banner: read more, learn more, dream more']]],
   ['carnival', 'Fall Carnival', 'October', 'pac', 'Games, food, and the biggest family night of the fall.', []],
   ['multicultural-night', 'Multicultural Night', 'January', 'pac', 'Families share the food, dress, music, and traditions of home.', []],
-  ['auction', 'Spring Auction', 'February', 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', ['gala/gala-1.jpg', 'gala/gala-2.jpg', 'gala/gala-3.jpg']],
-  ['fun-run', 'Fun Run', 'March', 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', ['events/fun-run-1.jpg', 'events/fun-run-2.jpg', 'events/fun-run-3.jpg', 'events/fun-run-4.jpg']],
-  ['talent-show', 'Talent Show', 'Spring', 'pac', 'Auditions, rehearsals, and a night on stage.', ['events/talent-show-1.jpg', 'events/talent-show-2.jpg', 'events/talent-show-3.jpg', 'events/talent-show-4.jpg']],
+  ['auction', 'Spring Auction', 'February', 'foundation', 'An evening out for the grown-ups. The 2024 auction raised over $10,500.', [['gala/gala-3.jpg', 'Guests at the 2024 Sundance auction'],
+    ['gala/gala-1.jpg', '2024 Sundance auction, photo 1'],
+    ['gala/gala-2.jpg', '2024 Sundance auction, photo 2']]],
+  ['fun-run', 'Fun Run', 'March', 'foundation', 'Students collect pledges and run. School-wide goals unlock celebrations.', [['events/fun-run-1.jpg', 'Sundance students running in the 2025 Fun Run'],
+    ['events/fun-run-2.jpg', '2025 Sundance Fun Run, photo 2'],
+    ['events/fun-run-3.jpg', '2025 Sundance Fun Run, photo 3'],
+    ['events/fun-run-4.jpg', '2025 Sundance Fun Run, photo 4']]],
+  ['talent-show', 'Talent Show', 'Spring', 'pac', 'Auditions, rehearsals, and a night on stage.', [['events/talent-show-3.jpg', 'Students performing at the 2025 Sundance talent show'],
+    ['events/talent-show-1.jpg', '2025 Sundance talent show, photo 1'],
+    ['events/talent-show-2.jpg', '2025 Sundance talent show, photo 2'],
+    ['events/talent-show-4.jpg', '2025 Sundance talent show, photo 4']]],
   ['senior-clap-out', 'Senior Clap Out', 'June', 'pac', 'Sundance alumni come back to walk the halls one last time.', []],
-  ['dine-out', 'Dine Out Nights', 'Monthly', 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', []],
+  // Linked from Support Us, not Events — it is a fundraiser, not a yearly event.
+  ['dine-out', 'Dine Out Nights', 'Monthly', 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', [], false],
 ]
-traditions.forEach(([slug, title, monthLabel, org, summary, photos], i) => {
+traditions.forEach(([slug, title, monthLabel, org, summary, photos, onEventsPage], i) => {
   docs.push({
     _id: `tradition-${slug}`,
     _type: 'tradition',
@@ -79,7 +88,11 @@ traditions.forEach(([slug, title, monthLabel, org, summary, photos], i) => {
     order: i + 1,
     org,
     summary,
-    ...(photos.length ? {photos: photos.map((p) => ({...img(p), _key: p.replace(/\W/g, '')}))} : {}),
+    showOnEventsPage: onEventsPage !== false,
+    // First photo is the card cover on the events grid.
+    ...(photos.length
+      ? {photos: photos.map(([rel, alt]) => ({...img(rel, alt), _key: rel.replace(/\W/g, '')}))}
+      : {}),
   })
 })
 

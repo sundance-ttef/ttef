@@ -52,6 +52,14 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'showOnEventsPage',
+      title: 'One of the main yearly events?',
+      type: 'boolean',
+      description:
+        'On means it appears in the Events menu and the "Every year at Sundance" grid. Off means the page still exists at its URL but is linked from elsewhere — Dine Out Nights lives under Support Us.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'org',
       title: 'Who runs it',
       type: 'string',
@@ -95,7 +103,7 @@ export default defineType({
         {name: 'alt', type: 'string', title: 'Describe the photo', description: 'Read aloud by screen readers.'},
       ]}],
       description:
-        'Photos fill their tiles and are cropped to fit — set the hotspot on faces. Leave empty to show placeholders.',
+        'THE FIRST PHOTO IS THE COVER shown on the Events page — drag your best one to the front. Photos fill their tiles and are cropped to fit, so set the hotspot on faces. Leave empty to show placeholders.',
     }),
   ],
   orderings: [{title: 'School year order', name: 'order', by: [{field: 'order', direction: 'asc'}]}],

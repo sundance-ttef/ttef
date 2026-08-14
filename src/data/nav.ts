@@ -1,3 +1,5 @@
+import { getYearlyEvents } from '../lib/sanity';
+
 export type NavChild = {
   label: string;
   href: string;
@@ -7,6 +9,13 @@ export type NavChild = {
   overview?: boolean;
 };
 export type NavEntry = { label: string; href: string; children?: NavChild[] };
+
+/**
+ * The Events menu is built from the same Sanity query as the "Every year at
+ * Sundance" grid, so the menu and the page cannot disagree about what a yearly
+ * event is. Renaming an event in the Studio renames it in both places.
+ */
+const yearlyEvents = await getYearlyEvents();
 
 /** The whole site navigation, in one place. */
 export const nav: NavEntry[] = [
@@ -18,26 +27,26 @@ export const nav: NavEntry[] = [
     // in school-year order, the same order the traditions grid uses
     children: [
       { label: 'All events', href: '/events/', overview: true },
-      { label: 'Book Fair', href: '/events/book-fair/', meta: 'October' },
-      { label: 'Fall Carnival', href: '/events/carnival/', meta: 'October' },
-      { label: 'Multicultural Night', href: '/events/multicultural-night/', meta: 'January' },
-      { label: 'Spring Auction', href: '/events/auction/', meta: 'February' },
-      { label: 'Fun Run', href: '/events/fun-run/', meta: 'March' },
-      { label: 'Talent Show', href: '/events/talent-show/', meta: 'Spring' },
-      { label: 'Senior Clap Out', href: '/events/senior-clap-out/', meta: 'June' },
-      { label: 'Dine Out Nights', href: '/events/dine-out/', meta: 'Monthly' },
+      ...yearlyEvents.map((e) => ({
+        label: e.title,
+        href: `/events/${e.slug}/`,
+        meta: e.monthLabel,
+      })),
     ],
   },
   { label: 'Calendar', href: '/calendar/' },
   {
     label: 'Support Us',
     href: '/support/',
-    // Auction, Fun Run and Dine Outs are listed under Events; repeating them here
-    // made the same page appear in two menus.
+    // Auction and Fun Run are listed under Events; repeating them here made the
+    // same page appear in two menus. Dine Out Nights is the other way round —
+    // it is a way to give rather than a yearly event, so it lives only here.
+    // Its URL stays under /events/ because printed material points at it.
     children: [
       { label: 'All the ways to give', href: '/support/', overview: true },
       { label: 'Donate', href: '/donate/', meta: 'Any time' },
       { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
+      { label: 'Dine Out Nights', href: '/events/dine-out/', meta: 'Monthly' },
       { label: 'Red Envelope Campaign', href: '/support/red-envelope/', meta: 'Sep–Nov' },
       { label: 'Corporate Sponsorship', href: '/support/sponsorship/', meta: 'From $250' },
     ],
