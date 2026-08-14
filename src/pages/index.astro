@@ -3,12 +3,15 @@ import Base from '../layouts/Base.astro';
 import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText } from '../data/fundraising';
-import { getUpcomingEvents, orgTag, eventDate } from '../lib/sanity';
+import { getYearlyEvents, orgTag } from '../lib/sanity';
+import { getCalendarEvents, matchEvent, orgOf } from '../lib/calendar';
 
-/* The next few annual events. Day-to-day dates live in Google Calendar, which
-   /calendar/ embeds — keeping a second copy in the CMS meant typing every date
-   twice, with no way to tell which was authoritative. */
-const featured = await getUpcomingEvents(3);
+/* Upcoming dates come from the school's Google Calendar — the one the PAC
+   already keeps up to date and that /calendar/ embeds. Routine staff entries
+   are filtered out so the three cards stay useful to families. A date that
+   matches one of the annual events links to that event's page. */
+const yearly = await getYearlyEvents();
+const upcoming = (await getCalendarEvents({days: 120, includeRoutine: false})).slice(0, 3);
 ---
 
 <Base title="home">
@@ -91,18 +94,21 @@ const featured = await getUpcomingEvents(3);
         <a class="link-more" href="/calendar/">View full calendar &rarr;</a>
       </div>
       <div class="events">
-        {featured.map((e) => {
-          const tag = orgTag(e.org);
-          const when = eventDate(e.date, e.dateConfirmed);
+        {upcoming.map((e) => {
+          const match = matchEvent(e.title, yearly);
+          const tag = orgTag(match?.org ?? orgOf(e.title));
+          const when = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', {
+            weekday: 'short', month: 'short', day: 'numeric',
+          });
           return (
-            <a class="event" href={`/events/${e.slug}/`}>
+            <a class="event" href={match ? `/events/${match.slug}/` : '/calendar/'}>
               <div class="event-body">
                 <div class="event-meta">
                   <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{when.full ?? when.month}</span>
+                  <span class="event-date">{when}{e.time && <> &middot; {e.time}</>}</span>
                 </div>
                 <h3>{e.title}</h3>
-                <p>{e.summary}</p>
+                {match && <p>{match.summary}</p>}
               </div>
             </a>
           );

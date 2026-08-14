@@ -1,6 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
+import { getYearlyEvents, orgTag } from '../lib/sanity';
+import { getCalendarEvents, matchEvent, orgOf, isZoomMeeting } from '../lib/calendar';
+
+/* A scannable list above the month grid. Not duplication for its own sake: the
+   embed is a third-party iframe that reads poorly on a phone and is close to
+   opaque to a screen reader, so this is the accessible, fast path to "what is
+   happening soon". The grid remains for browsing a month. */
+const yearly = await getYearlyEvents();
+const upcoming = (await getCalendarEvents({days: 90})).slice(0, 8);
+const dayLabel = (iso: string) =>
+  new Date(iso + 'T12:00:00').toLocaleDateString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
+  });
 ---
 
 <Base title="Calendar">
@@ -14,6 +27,34 @@ import { org } from '../data/nav';
              straight from the Foundation&rsquo;s own Google Calendar.</p>
         </div>
       </div>
+
+      {upcoming.length > 0 && (
+        <div class="signups-card whats-next">
+          <h3 class="block-title">What&rsquo;s next</h3>
+          <ul class="signup-list">
+            {upcoming.map((e) => {
+              const match = matchEvent(e.title, yearly);
+              const tag = orgTag(match?.org ?? orgOf(e.title));
+              return (
+                <li class="signup-row">
+                  <span class={`owner ${tag.cls}`}>{tag.label}</span>
+                  <div class="signup-body">
+                    <div class="signup-name">
+                      {match ? <a href={`/events/${match.slug}/`}>{e.title}</a> : e.title}
+                    </div>
+                    <div class="signup-desc">{dayLabel(e.date)}{e.time && ` · ${e.time}`}</div>
+                  </div>
+                  {isZoomMeeting(e.title) && (
+                    <a class="signup-cta" href={org.zoom} target="_blank" rel="noopener noreferrer">
+                      Join by Zoom &rarr;
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       <div class="cal-frame">
         <iframe title="Twin Trails Education Foundation calendar" loading="lazy"
