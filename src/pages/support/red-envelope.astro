@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { giving } from '../../data/giving';
 import { askText } from '../../data/fundraising';
 ---
 
@@ -13,7 +14,7 @@ import { askText } from '../../data/fundraising';
           <p>Our biggest fundraiser of the year. One ask that supports both the Foundation and PAC for the entire school year.</p>
         </div>
       </div>
-      <div class="two-col">
+      <div class="two-col two-col--fit">
         <div class="breakdown">
           <h3>How it works</h3>
           <p class="col-p">A red envelope comes home with your Wildcat. Fill in the slip, choose how
@@ -34,8 +35,8 @@ import { askText } from '../../data/fundraising';
             <li><span>Cash, in the red envelope</span><span class="amt">To school</span></li>
           </ul>
           <div class="btn-row">
-            <a class="btn btn-primary" href="/support/red-envelope/">Donate now</a>
-            <a class="btn btn-outline" href="/support/red-envelope/">Set up monthly giving</a>
+            <a class="btn btn-primary" href="/donate/">Donate now</a>
+            <a class="btn btn-outline" href="/donate/">Set up monthly giving</a>
           </div>
         </div>
         <aside class="match-card">
@@ -43,7 +44,7 @@ import { askText } from '../../data/fundraising';
           <h3>Double your gift</h3>
           <p>Many employers match charitable donations &mdash; some at 2:1. It is usually a short
              online form, and it can double what Sundance receives at no extra cost to you.</p>
-          <a class="btn btn-gold" href="/support/red-envelope/">Check your employer</a>
+          <a class="btn btn-gold" href={giving.matchingGifts} target="_blank" rel="noopener noreferrer">Check your employer</a>
           <p class="match-note">Questions about matching? Gautham Jayaram handles them.</p>
         </aside>
       </div>

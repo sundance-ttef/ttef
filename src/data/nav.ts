@@ -37,9 +37,9 @@ export const nav: NavEntry[] = [
     children: [
       { label: 'All the ways to give', href: '/support/', overview: true },
       { label: 'Donate', href: '/donate/', meta: 'Any time' },
+      { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
       { label: 'Red Envelope Campaign', href: '/support/red-envelope/', meta: 'Sep–Nov' },
       { label: 'Corporate Sponsorship', href: '/support/sponsorship/', meta: 'From $250' },
-      { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
     ],
   },
   { label: 'Volunteer', href: '/volunteer/' },

@@ -1307,3 +1307,30 @@
     .ask-actions { flex-direction: column; align-items: stretch; }
     .ask-actions .btn { width: 100%; justify-content: center; }
   }
+
+  /* Open roles now sit under the roster they belong to, rather than in one
+     combined block that repeated the Foundation/PAC split a second time. */
+  .open-inline {
+    margin: 26px 0 8px; padding: 24px 26px 26px;
+    background: var(--surface-2); border-radius: var(--radius);
+    border-left: 3px solid var(--maroon);
+  }
+  .open-inline.p { border-left-color: var(--teal); }
+  .open-inline h4 { font-family: var(--display); font-size: 21px; margin: 0 0 4px; font-weight: 600; }
+  .open-stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+  @media (max-width: 760px) { .open-stack { grid-template-columns: 1fr; } }
+
+  /* PAC's action carries PAC's colour, so a teal-accented block does not end in
+     a maroon button. */
+  .btn-pac {
+    background: var(--teal); color: #fff;
+    box-shadow: 0 3px 14px -3px color-mix(in srgb, var(--teal) 60%, transparent);
+  }
+  .btn-pac:hover { box-shadow: 0 10px 26px -6px color-mix(in srgb, var(--teal) 65%, transparent); }
+  .open-inline h4 { margin-bottom: 14px; }
+
+  /* On a dedicated campaign page the side card should end where its content
+     ends, rather than being stretched to match a much longer neighbour. */
+  .two-col--fit { align-items: start; }
+  .two-col--fit > * { display: block; }
+  .two-col--fit .btn { align-self: auto; }

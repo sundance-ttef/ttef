@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { giving } from '../data/giving';
 import { askText, askMonthlyText } from '../data/fundraising';
 ---
 
@@ -38,25 +39,25 @@ import { askText, askMonthlyText } from '../data/fundraising';
             <div class="give-icon" aria-hidden="true">&#128179;</div>
             <h3>Credit or debit card</h3>
             <p>Fastest, and works from your phone. Processed securely by Square.</p>
-            <a class="btn btn-primary" href="/donate/">Give by card</a>
+            <a class="btn btn-primary" href={giving.square} target="_blank" rel="noopener noreferrer">Give by card</a>
           </div>
           <div class="give-card">
             <div class="give-icon" aria-hidden="true">&#127991;&#65039;</div>
             <h3>PayPal</h3>
             <p>One-time, or spread it across 10 monthly payments of $10, $20, $25, or $50.</p>
-            <a class="btn btn-outline" href="/donate/">Give with PayPal</a>
+            <a class="btn btn-outline" href={giving.paypal} target="_blank" rel="noopener noreferrer">Give with PayPal</a>
           </div>
           <div class="give-card">
             <div class="give-icon" aria-hidden="true">&#128221;</div>
             <h3>Donation form</h3>
             <p>The same form that comes home in the red envelope, filled in online.</p>
-            <a class="btn btn-outline" href="/donate/">Open the form</a>
+            <a class="btn btn-outline" href={giving.donationForm} target="_blank" rel="noopener noreferrer">Open the form</a>
           </div>
           <div class="give-card">
             <div class="give-icon" aria-hidden="true">&#9993;&#65039;</div>
             <h3>Check or cash</h3>
             <p>Payable to Twin Trails Education Foundation. Send it back to school in the red envelope, or mail it.</p>
-            <a class="btn btn-outline" href="/donate/">See the address</a>
+            <a class="btn btn-outline" href="#by-post">See the address</a>
           </div>
       </div>
 
@@ -67,19 +68,19 @@ import { askText, askMonthlyText } from '../data/fundraising';
              gives the Foundation something dependable to plan around. PayPal supports              <b>10 monthly payments</b> at $10, $20, $25, or $50.</p>
           <p class="col-p">{askMonthlyText} a month for ten months is {askText} &mdash; the full suggested gift,
              without a single large payment.</p>
-          <a class="btn btn-primary" href="/donate/">Set up monthly giving</a>
+          <a class="btn btn-primary" href={giving.paypal} target="_blank" rel="noopener noreferrer">Set up monthly giving</a>
         </div>
         <aside class="match-card">
           <div class="match-icon">&#10005;&#65038;2</div>
           <h3>Ask your employer to match</h3>
           <p>Many employers match charitable donations, some at 2:1. It is usually a short online
              form, and it can double what Sundance receives at no extra cost to you.</p>
-          <a class="btn btn-gold" href="/donate/">Check your employer</a>
+          <a class="btn btn-gold" href={giving.matchingGifts} target="_blank" rel="noopener noreferrer">Check your employer</a>
           <p class="match-note">Questions about matching? Gautham Jayaram handles them.</p>
         </aside>
       </div>
 
-      <div class="mail-card">
+      <div class="mail-card" id="by-post">
         <div>
           <h3>Giving by check or cash</h3>
           <p>Make checks payable to <b>Twin Trails Education Foundation</b>. Send it back to

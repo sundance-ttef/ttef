@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { giving } from '../data/giving';
 ---
 
 <Base title="Staff Resources">
@@ -25,7 +26,7 @@ import Base from '../layouts/Base.astro';
            gifts, gift cards, or anything bought with a gift card. Please don&rsquo;t mix personal
            purchases onto a receipt.</p>
         <div class="btn-row">
-          <a class="btn btn-lg btn-primary" href="https://form.jotform.com/261928705657166"
+          <a class="btn btn-lg btn-primary" href={giving.reimbursementForm}
              target="_blank" rel="noopener noreferrer">Submit receipts &rarr;</a>
         </div>
         <p class="form-embed-note">On the live site this form can be embedded directly in the
