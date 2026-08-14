@@ -63,10 +63,13 @@ const localTime = (d: Date, tz: string) =>
 const NOT_HEADLINE = [/^vapa$/i, /^friday flag$/i];
 
 /**
- * Only the Foundation meeting is on Zoom. The PAC meeting that precedes it the
- * same evening is in the library only — that distinction came from the
- * schedule this site replaced, so do not widen it without checking.
+ * How a time slot reads. An all-day event has no clock time, and leaving the
+ * slot blank looks like missing data rather than a deliberate all-day entry —
+ * "No School" and "VAPA" are all-day by nature, not incomplete.
  */
+export const timeLabel = (e: {time: string; allDay: boolean}) =>
+  e.allDay || !e.time ? 'All day' : e.time;
+
 /**
  * Who runs a calendar entry, inferred from its title. The calendar has no
  * owner field, and defaulting everything to "School" mislabels the PAC and

@@ -4,7 +4,7 @@ import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText, raisedText, remainingText, percent } from '../data/fundraising';
 import { getYearlyEvents, orgTag } from '../lib/sanity';
-import { getCalendarEvents, matchEvent, orgOf } from '../lib/calendar';
+import { getCalendarEvents, matchEvent, orgOf, timeLabel } from '../lib/calendar';
 
 /* Upcoming dates come from the school's Google Calendar — the one the PAC
    already keeps up to date and that /calendar/ embeds. Routine staff entries
@@ -105,7 +105,7 @@ const upcoming = (await getCalendarEvents({days: 120, includeRoutine: false})).s
               <div class="event-body">
                 <div class="event-meta">
                   <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{when}{e.time && <> &middot; {e.time}</>}</span>
+                  <span class="event-date">{when} &middot; {timeLabel(e)}</span>
                 </div>
                 <h3>{e.title}</h3>
                 {match && <p>{match.summary}</p>}

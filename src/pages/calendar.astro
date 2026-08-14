@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
 import { getYearlyEvents, orgTag } from '../lib/sanity';
-import { getCalendarEvents, matchEvent, orgOf, isZoomMeeting } from '../lib/calendar';
+import { getCalendarEvents, matchEvent, orgOf, isZoomMeeting, timeLabel } from '../lib/calendar';
 
 /* A scannable list above the month grid. Not duplication for its own sake: the
    embed is a third-party iframe that reads poorly on a phone and is close to
@@ -15,7 +15,8 @@ const chip = (iso: string) => {
   const d = new Date(iso + 'T12:00:00');
   return {
     dow: d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase(),
-    md: d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}),
+    mon: d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase(),
+    day: String(d.getDate()),
   };
 };
 ---
@@ -44,14 +45,15 @@ const chip = (iso: string) => {
                 <li class="cal-row">
                   <div class="cal-date">
                     <span class="cal-dow">{c.dow}</span>
-                    <span class="cal-md">{c.md}</span>
+                    <span class="cal-mon">{c.mon}</span>
+                    <span class="cal-day">{c.day}</span>
                   </div>
                   <div class="cal-body">
                     <div class="cal-name">
                       {match ? <a href={`/events/${match.slug}/`}>{e.title}</a> : e.title}
                     </div>
                     <div class="cal-meta">
-                      {e.time && <span class="cal-time">{e.time}</span>}
+                      <span class="cal-time">{timeLabel(e)}</span>
                       <span class={`owner ${tag.cls}`}>{tag.label}</span>
                     </div>
                   </div>
