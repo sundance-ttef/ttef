@@ -7,6 +7,34 @@ Built with [Astro](https://astro.build) as a static site — real HTML at real U
 no client-side routing, and no JavaScript framework. The only scripts on the page are
 the mobile menu and the sponsor rail; if they fail, every page still works.
 
+## Branches and deploying
+
+`dev` is where work happens. `main` is production.
+
+```sh
+git push origin dev     # free: branch deploys and previews cost 0 credits
+```
+
+Netlify charges **15 credits per production deploy** and nothing for branch
+deploys or deploy previews. So changes are verified on the `dev` preview URL,
+and only reach `main` when a person decides to publish:
+
+```sh
+git checkout main && git merge dev
+git push --no-verify origin main    # spends 15 credits
+```
+
+A `pre-push` hook refuses pushes to `main`; `--no-verify` is the deliberate
+override. Enable it once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+This exists because on 2026-08-14 about 30 production deploys were spent
+previewing a site whose domain was not yet pointed at it, exhausting a month
+of credits in a day. Free previews would have shown exactly the same thing.
+
 ## Running it
 
 ```sh

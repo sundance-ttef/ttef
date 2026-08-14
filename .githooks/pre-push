@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Refuse to push `main`.
+#
+# `main` is the production branch: a push to it spends 15 Netlify credits and
+# publishes to whatever domain is pointed at the site. Branch deploys and
+# deploy previews cost 0 credits, so day-to-day work belongs on `dev` and
+# reaching production should be a deliberate act by a person, not a side
+# effect of an agent finishing a task.
+#
+# On 2026-08-14 roughly 30 production deploys were spent previewing a site
+# that had no production domain yet. This hook exists so that cannot recur.
+#
+# To publish, a human merges dev into main and pushes with:
+#     git push --no-verify origin main
+#
+# Enabled by: git config core.hooksPath .githooks
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      echo ""
+      echo "  BLOCKED: refusing to push to main."
+      echo ""
+      echo "  main is production and each push spends 15 Netlify credits."
+      echo "  Push to dev instead — branch deploys are free:"
+      echo ""
+      echo "      git push origin dev"
+      echo ""
+      echo "  To publish deliberately, a human runs:"
+      echo ""
+      echo "      git push --no-verify origin main"
+      echo ""
+      exit 1
+      ;;
+  esac
+done
+
+exit 0
