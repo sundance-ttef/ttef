@@ -110,15 +110,6 @@ export interface Sponsor {
   logo: SanityImage;
 }
 
-export interface Occurrence {
-  name: string;
-  date: string;
-  time?: string;
-  org: 'pac' | 'foundation' | 'school';
-  description?: string | null;
-  href?: string | null;
-}
-
 export interface Tradition {
   title: string;
   showOnEventsPage?: boolean;
@@ -150,38 +141,6 @@ export interface VolunteerSignup {
 }
 
 
-/**
- * Start time of a free-text time string, in minutes past midnight, for sorting
- * two events that fall on the same day.
- *
- * The meridiem usually belongs to the END of the range — "6:00 – 7:00 PM" means
- * the 6:00 is PM — so the first meridiem appearing anywhere after the opening
- * time is the one that applies. "10:00 AM – 12:00 PM" still reads correctly
- * because its own AM comes first.
- *
- * Anything without a clock time ("Oct 5 – 9", or blank) sorts first, which is
- * where an all-day event belongs.
- */
-export function startMinutes(time?: string | null): number {
-  if (!time) return -1;
-  const m = time.match(/(\d{1,2}):(\d{2})/);
-  if (!m) return -1;
-  let h = parseInt(m[1], 10);
-  const min = parseInt(m[2], 10);
-  const rest = time.slice(m.index! + m[0].length);
-  const mer = (rest.match(/\b([AP])M\b/i) ?? time.match(/\b([AP])M\b/i))?.[1]?.toUpperCase();
-  if (mer === 'P' && h !== 12) h += 12;
-  if (mer === 'A' && h === 12) h = 0;
-  return h * 60 + min;
-}
-
-/** Same day → earlier start time first. Keeps builds deterministic. */
-const byDateThenTime = (a: Occurrence, b: Occurrence) =>
-  a.date === b.date ? startMinutes(a.time) - startMinutes(b.time) : a.date < b.date ? -1 : 1;
-
-/** Today at midnight, so an event happening TODAY still counts as upcoming. */
-const todayISO = () => new Date().toISOString().slice(0, 10);
-
 export const getCampaign = () =>
   sanity.fetch<Campaign>(`*[_id == "siteSettings"][0]{
     schoolYear, goal, raised, "updated": updated, suggestedPerStudent, monthlyPlanMonths
@@ -190,39 +149,6 @@ export const getCampaign = () =>
 export const getSponsors = () =>
   sanity.fetch<Sponsor[]>(`*[_type == "sponsor" && defined(logo.asset)]
     | order(order asc, name asc){ name, tier, url, logo }`);
-
-/**
- * Upcoming only — anything before today drops out with no manual pruning.
- *
- * Two events on the same day are then ordered by start time. `date asc` alone
- * left them shuffling between builds, and `_createdAt` could not break the tie
- * because an import writes every document in one transaction with the same
- * timestamp.
- */
-export const getUpcoming = async (limit = 12) => {
-  const rows = await sanity.fetch<Occurrence[]>(
-    `*[_type == "occurrence" && date >= $today] | order(date asc)[0...$limit]{
-      name, date, time, org, description, "href": tradition->slug.current
-    }`,
-    {today: todayISO(), limit},
-  );
-  return rows.sort(byDateThenTime);
-};
-
-/**
- * The home page's three cards. Featured only, so routine dates like Friday
- * Flag never crowd out the things families actually need to see.
- */
-export const getFeatured = async (limit = 3) => {
-  const rows = await sanity.fetch<Occurrence[]>(
-    `*[_type == "occurrence" && date >= $today && featured == true]
-      | order(date asc)[0...$limit]{
-        name, date, time, org, description, "href": tradition->slug.current
-      }`,
-    {today: todayISO(), limit},
-  );
-  return rows.sort(byDateThenTime);
-};
 
 export const getTraditions = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition"] | order(order asc){
@@ -273,3 +199,22 @@ export const dateChip = (iso: string) => {
     day: String(d.getDate()),
   };
 };
+
+/**
+ * The home page's cards: the next few annual events.
+ *
+ * Day-to-day dates live in Google Calendar, which /calendar/ embeds — keeping a
+ * second copy of them here meant every PTA date had to be typed twice and the
+ * two could disagree. The annual events are the things worth putting on the
+ * front page anyway.
+ *
+ * The school year wraps: once the last event has passed, this fills from the
+ * start of the year again rather than leaving the section empty, which is
+ * correct for events that recur every year.
+ */
+export async function getUpcomingEvents(limit = 3): Promise<Tradition[]> {
+  const all = await getYearlyEvents();
+  const today = new Date().toISOString().slice(0, 10);
+  const ahead = all.filter((e) => e.date && e.date >= today);
+  return [...ahead, ...all.filter((e) => !ahead.includes(e))].slice(0, limit);
+}

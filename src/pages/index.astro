@@ -3,11 +3,12 @@ import Base from '../layouts/Base.astro';
 import { askText } from '../data/fundraising';
 import Sponsors from '../components/Sponsors.astro';
 import { fundraising, goalText } from '../data/fundraising';
-import { getFeatured, orgTag } from '../lib/sanity';
+import { getUpcomingEvents, orgTag, eventDate } from '../lib/sanity';
 
-/* The three cards are curated, not simply the next three dates — otherwise
-   Friday Flag and picture day would push the family events off the page. */
-const featured = await getFeatured(3);
+/* The next few annual events. Day-to-day dates live in Google Calendar, which
+   /calendar/ embeds — keeping a second copy in the CMS meant typing every date
+   twice, with no way to tell which was authoritative. */
+const featured = await getUpcomingEvents(3);
 ---
 
 <Base title="home">
@@ -92,18 +93,16 @@ const featured = await getFeatured(3);
       <div class="events">
         {featured.map((e) => {
           const tag = orgTag(e.org);
-          const when = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', {
-            weekday: 'short', month: 'short', day: 'numeric',
-          });
+          const when = eventDate(e.date, e.dateConfirmed);
           return (
-            <a class="event" href={e.href ? `/events/${e.href}/` : '/calendar/'}>
+            <a class="event" href={`/events/${e.slug}/`}>
               <div class="event-body">
                 <div class="event-meta">
                   <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{when}{e.time && <> &middot; {e.time}</>}</span>
+                  <span class="event-date">{when.full ?? when.month}</span>
                 </div>
-                <h3>{e.name}</h3>
-                <p>{e.description}</p>
+                <h3>{e.title}</h3>
+                <p>{e.summary}</p>
               </div>
             </a>
           );

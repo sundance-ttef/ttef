@@ -1,5 +1,5 @@
 import {defineField, defineType} from 'sanity'
-import {ORGS} from './occurrence'
+import {ORGS} from './orgs'
 
 /**
  * One of the annual events that has its own page — Book Fair, Fall Carnival,

@@ -1,5 +1,5 @@
 import {defineField, defineType} from 'sanity'
-import {ORGS} from './occurrence'
+import {ORGS} from './orgs'
 
 /**
  * A current volunteer sign-up on /volunteer/.

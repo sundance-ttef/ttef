@@ -30,7 +30,6 @@ export default defineConfig({
               .id('siteSettings')
               .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.divider(),
-            S.documentTypeListItem('occurrence').title('Calendar events'),
             S.documentTypeListItem('dineOutNight').title('Dine out nights'),
             S.documentTypeListItem('volunteerSignup').title('Volunteer sign-ups'),
             S.divider(),

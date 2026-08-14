@@ -98,45 +98,6 @@ traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos, onE
   })
 })
 
-// ------------------------------------------------------------- occurrences
-// The school year runs Aug–Jun, so Aug–Dec are 2026 and Jan–Jun are 2027.
-const yearFor = (mon) => (['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'].includes(mon) ? 2027 : 2026)
-const MONTHS = {JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6, JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12}
-const iso = (mon, day) =>
-  `${yearFor(mon)}-${String(MONTHS[mon]).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-
-// [month, day, name, time, org, tradition slug, description (home card only)]
-const occurrences = [
-  ['AUG', 13, 'Back to School Night', '5:30 – 7:00 PM', 'school', null],
-  ['AUG', 21, 'VAPA', '', 'school', null],
-  ['AUG', 28, 'Friday Flag', '8:00 – 8:30 AM', 'school', null],
-  ['SEP', 11, 'Back to School Dance', '5:30 – 7:30 PM', 'pac', null,
-   'The first big family night of the year. Music, dancing, and a chance to meet your Wildcat\u2019s new classmates.'],
-  ['SEP', 14, 'Monthly PAC Meeting', '6:00 – 7:00 PM · Library', 'pac', null],
-  ['SEP', 14, 'Monthly Foundation Meeting', '7:00 – 8:00 PM · Library + Zoom', 'foundation', null,
-   'Second Monday of every month in the Sundance Library, with Zoom. Everyone is welcome, and there\u2019s always an open forum.'],
-  ['SEP', 19, 'Bike Rodeo', '10:00 AM – 12:00 PM', 'pac', null,
-   'A morning of bike safety, skills, and games on campus for riders of every age and confidence level.'],
-  ['SEP', 22, 'Picture Day', '', 'school', null],
-  ['OCT', 5, 'Book Fair — all week', 'Oct 5 – 9', 'pac', 'book-fair'],
-  ['OCT', 12, 'Monthly PAC Meeting', '6:00 – 7:00 PM · Library', 'pac', null],
-  ['OCT', 12, 'Monthly Foundation Meeting', '7:00 – 8:00 PM · Library + Zoom', 'foundation', null],
-  ['OCT', 23, 'Fall Carnival', '5:30 – 7:30 PM', 'pac', 'carnival'],
-]
-occurrences.forEach(([mon, day, name, time, org, tradition, description], i) => {
-  docs.push({
-    _id: `occurrence-${i}`,
-    _type: 'occurrence',
-    name,
-    date: iso(mon, day),
-    ...(time ? {time} : {}),
-    org,
-    // Anything with a home-page blurb is one of the three featured cards.
-    ...(description ? {description, featured: true} : {}),
-    ...(tradition ? {tradition: {_type: 'reference', _ref: `tradition-${tradition}`}} : {}),
-  })
-})
-
 // ----------------------------------------------------------- dine outs
 const dineOuts = [
   ['september', 'September', null, 'Details for this year are still being arranged.', null],
