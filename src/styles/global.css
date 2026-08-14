@@ -614,7 +614,6 @@
     font-size: 13.5px; font-weight: 650; color: var(--ink);
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }
-  .signup-row.is-live { border-color: var(--teal); border-left: 3px solid var(--teal); }
   .signup-cta {
     font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
     padding: 9px 16px; border-radius: 999px; text-decoration: none; white-space: nowrap;
@@ -1234,3 +1233,37 @@
   }
   .signups-card .signup-row { border-color: var(--hairline); }
   .signups-card .open-cta { margin-top: 20px; }
+
+  /* `.event-img img` (0,1,1) outranked `.no-photo` (0,1,0), so the stand-in was
+     cropped by cover instead of fitting. Match specificity and come later. */
+  img.no-photo {
+    width: 100%; height: 100%; object-fit: contain;
+    background: var(--surface); padding: 8%;
+  }
+  /* Real photography fills the card. Bias upward: faces sit above centre, and a
+     dead-centre crop on a portrait shot cuts heads off. */
+  img.event-photo {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 28%;
+  }
+  .event-img { height: 178px; }
+
+  /* Dropdown rows: label left, when-it-happens right. */
+  .nav-menu a {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+  }
+  .menu-meta {
+    font-size: 12px; color: var(--muted); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-menu a:hover .menu-meta { color: var(--maroon); }
+  /* The "all of them" row is a different kind of thing from the items below it. */
+  .nav-menu .menu-overview {
+    font-weight: 650;
+    border-bottom: 1px solid var(--hairline);
+    border-radius: 9px 9px 0 0;
+    margin-bottom: 5px; padding-bottom: 11px;
+  }
+
+  /* Live vs pending sign-ups are already distinguished by the button against the
+     dashed "coming soon" chip; a second signal on the border just read as noise. */
+  .signup-row.is-live { border-color: var(--hairline); }

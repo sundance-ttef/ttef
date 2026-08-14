@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { fundraising, goalText, raisedText, remainingText, percent } from '../../data/fundraising';
+import { populatedTiers, sponsorsIn } from '../../data/sponsors';
 ---
 
 <Base title="Support Us" darkTop>
@@ -92,26 +93,18 @@ import { fundraising, goalText, raisedText, remainingText, percent } from '../..
         <a class="btn btn-gold" href="/support/">Become a sponsor</a>
       </div>
       <div class="tier-row">
-        <div class="tier platinum">
-          <div class="tier-head"><span class="tier-name">Platinum</span><span class="tier-rule"></span></div>
-          <div class="marquee"><div class="marquee-track">
-            <a href="https://thebarronteam.com" target="_blank" rel="noopener noreferrer"><img src="/img/sp-barron.png" alt="The Barron Team"></a>
-          </div></div>
-        </div>
-        <div class="tier gold">
-          <div class="tier-head"><span class="tier-name">Gold</span><span class="tier-rule"></span></div>
-          <div class="marquee"><div class="marquee-track">
-            <a href="https://www.drmelanieorthodontics.com/" target="_blank" rel="noopener noreferrer"><img src="/img/sp-dmo.png" alt="Dr. Melanie Orthodontics"></a>
-            <a href="https://smilephr.com" target="_blank" rel="noopener noreferrer"><img src="/img/sp-smilephr.png" alt="Smile PHR"></a>
-            <a href="https://www.carmelmtndentalcare.com/" target="_blank" rel="noopener noreferrer"><img src="/img/sp-cmdc.png" alt="Carmel Mountain Dental Care"></a>
-          </div></div>
-        </div>
-        <div class="tier silver">
-          <div class="tier-head"><span class="tier-name">Silver</span><span class="tier-rule"></span></div>
-          <div class="marquee"><div class="marquee-track">
-            <a href="https://kappelrealtygroup.com" target="_blank" rel="noopener noreferrer"><img src="/img/sp-kappel.png" alt="Kappel Realty Group"></a>
-          </div></div>
-        </div>
+        {populatedTiers.map((t) => (
+          <div class={`tier ${t.key}`}>
+            <div class="tier-head"><span class="tier-name">{t.label}</span><span class="tier-rule"></span></div>
+            <div class="marquee"><div class="marquee-track">
+              {sponsorsIn(t.key).map((sp) => (
+                <a href={sp.url} target="_blank" rel="noopener noreferrer">
+                  <img src={sp.logo} alt={sp.name} loading="lazy" />
+                </a>
+              ))}
+            </div></div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -125,7 +118,7 @@ import { fundraising, goalText, raisedText, remainingText, percent } from '../..
           <p>Sponsorships run the full school year and start at $250. Every level puts your
              business in front of 415 Sundance families.</p>
         </div>
-        <a class="btn btn-lg btn-gold" href="/contact/" data-contact="foundation">Become a sponsor</a>
+        <a class="btn btn-lg btn-gold" href="/contact/?to=sponsorship" >Become a sponsor</a>
       </div>
 
       <div class="tier-table-wrap">

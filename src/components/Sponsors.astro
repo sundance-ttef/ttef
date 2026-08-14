@@ -1,6 +1,8 @@
 ---
 /* Home-page sponsor rail: auto-advances, and is a real scroll region the
    visitor can drag, swipe, wheel, or arrow through. */
+import { sponsors, tiers } from '../data/sponsors';
+const tierLabel = (t: string) => tiers.find((x) => x.key === t)?.label ?? t;
 ---
 
 <section class="sponsors sponsor-strip" id="sponsors-home">
@@ -17,31 +19,13 @@
         <button class="rail-btn rail-prev" type="button" aria-label="Previous sponsors">&#8249;</button>
         <div class="sponsor-scroller" tabindex="0" role="region" aria-label="Our corporate sponsors">
           <div class="scroller-track strip-track">
-            <a class="strip-item t-platinum" href="https://thebarronteam.com" target="_blank" rel="noopener noreferrer">
-              <span class="tier-tab" aria-hidden="true">Platinum</span>
-              <span class="strip-logo"><img src="/img/sp-barron.png" alt="The Barron Team"></span>
-              <span class="sr">The Barron Team &mdash; Platinum sponsor</span>
-            </a>
-            <a class="strip-item t-gold" href="https://www.drmelanieorthodontics.com/" target="_blank" rel="noopener noreferrer">
-              <span class="tier-tab" aria-hidden="true">Gold</span>
-              <span class="strip-logo"><img src="/img/sp-dmo.png" alt="Dr. Melanie Orthodontics"></span>
-              <span class="sr">Dr. Melanie Orthodontics &mdash; Gold sponsor</span>
-            </a>
-            <a class="strip-item t-gold" href="https://smilephr.com" target="_blank" rel="noopener noreferrer">
-              <span class="tier-tab" aria-hidden="true">Gold</span>
-              <span class="strip-logo"><img src="/img/sp-smilephr.png" alt="Smile PHR"></span>
-              <span class="sr">Smile PHR &mdash; Gold sponsor</span>
-            </a>
-            <a class="strip-item t-gold" href="https://www.carmelmtndentalcare.com/" target="_blank" rel="noopener noreferrer">
-              <span class="tier-tab" aria-hidden="true">Gold</span>
-              <span class="strip-logo"><img src="/img/sp-cmdc.png" alt="Carmel Mountain Dental Care"></span>
-              <span class="sr">Carmel Mountain Dental Care &mdash; Gold sponsor</span>
-            </a>
-            <a class="strip-item t-silver" href="https://kappelrealtygroup.com" target="_blank" rel="noopener noreferrer">
-              <span class="tier-tab" aria-hidden="true">Silver</span>
-              <span class="strip-logo"><img src="/img/sp-kappel.png" alt="Kappel Realty Group"></span>
-              <span class="sr">Kappel Realty Group &mdash; Silver sponsor</span>
-            </a>
+            {sponsors.map((s) => (
+              <a class={`strip-item t-${s.tier}`} href={s.url} target="_blank" rel="noopener noreferrer">
+                <span class="tier-tab" aria-hidden="true">{tierLabel(s.tier)}</span>
+                <span class="strip-logo"><img src={s.logo} alt={s.name} loading="lazy" /></span>
+                <span class="sr">{s.name} &mdash; {tierLabel(s.tier)} sponsor</span>
+              </a>
+            ))}
           </div>
         </div>
         <button class="rail-btn rail-next" type="button" aria-label="More sponsors">&#8250;</button>

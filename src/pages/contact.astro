@@ -35,6 +35,7 @@ import Base from '../layouts/Base.astro';
               <option value="either">Either &mdash; not sure</option>
               <option value="foundation">The Foundation &mdash; donating, sponsorship, funding</option>
               <option value="pac">PAC &mdash; events and activities</option>
+              <option value="sponsorship">Corporate sponsorship</option>
             </select>
           </label>
           <label>Message<textarea name="message" rows="5" required placeholder="How can we help?"></textarea></label>
@@ -56,3 +57,11 @@ import Base from '../layouts/Base.astro';
     </div>
   </section>
 </Base>
+
+<script>
+  // Sponsorship and volunteer CTAs link here with ?to=..., so nobody lands on a
+  // blank dropdown after clicking "Become a sponsor".
+  const to = new URLSearchParams(location.search).get('to');
+  const sel = document.getElementById('contact-to') as HTMLSelectElement | null;
+  if (to && sel && [...sel.options].some((o) => o.value === to)) sel.value = to;
+</script>

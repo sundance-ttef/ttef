@@ -24,8 +24,15 @@ const isActive = (href: string) =>
             </button>
             <div class="nav-menu" role="menu">
               {item.children.map((child) => (
-                <a href={child.href} role="menuitem"
-                   aria-current={pathname === child.href ? 'page' : undefined}>{child.label}</a>
+                <a
+                  href={child.href}
+                  role="menuitem"
+                  class={child.overview ? 'menu-overview' : undefined}
+                  aria-current={pathname === child.href ? 'page' : undefined}
+                >
+                  <span>{child.label}</span>
+                  {child.meta && <span class="menu-meta">{child.meta}</span>}
+                </a>
               ))}
             </div>
           </div>

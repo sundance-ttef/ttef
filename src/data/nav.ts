@@ -1,4 +1,11 @@
-export type NavChild = { label: string; href: string };
+export type NavChild = {
+  label: string;
+  href: string;
+  /** Shown right-aligned in the dropdown — when in the school year this happens. */
+  meta?: string;
+  /** The "all of them" entry, set apart at the top of its menu. */
+  overview?: boolean;
+};
 export type NavEntry = { label: string; href: string; children?: NavChild[] };
 
 /** The whole site navigation, in one place. */
@@ -8,16 +15,17 @@ export const nav: NavEntry[] = [
   {
     label: 'Events',
     href: '/events/',
+    // in school-year order, the same order the traditions grid uses
     children: [
-      { label: 'Events overview', href: '/events/' },
-      { label: 'Book Fair', href: '/events/book-fair/' },
-      { label: 'Fall Carnival', href: '/events/carnival/' },
-      { label: 'Multicultural Night', href: '/events/multicultural-night/' },
-      { label: 'Spring Auction', href: '/support/auction/' },
-      { label: 'Fun Run', href: '/support/fun-run/' },
-      { label: 'Talent Show', href: '/events/talent-show/' },
-      { label: 'Senior Clap Out', href: '/events/senior-clap-out/' },
-      { label: 'Dine Out Nights', href: '/support/dine-out/' },
+      { label: 'All events', href: '/events/', overview: true },
+      { label: 'Book Fair', href: '/events/book-fair/', meta: 'October' },
+      { label: 'Fall Carnival', href: '/events/carnival/', meta: 'October' },
+      { label: 'Multicultural Night', href: '/events/multicultural-night/', meta: 'January' },
+      { label: 'Spring Auction', href: '/support/auction/', meta: 'February' },
+      { label: 'Fun Run', href: '/support/fun-run/', meta: 'March' },
+      { label: 'Talent Show', href: '/events/talent-show/', meta: 'Spring' },
+      { label: 'Senior Clap Out', href: '/events/senior-clap-out/', meta: 'June' },
+      { label: 'Dine Out Nights', href: '/support/dine-out/', meta: 'Monthly' },
     ],
   },
   { label: 'Calendar', href: '/calendar/' },
@@ -26,12 +34,12 @@ export const nav: NavEntry[] = [
     label: 'Support Us',
     href: '/support/',
     children: [
-      { label: 'Support overview', href: '/support/' },
-      { label: 'Donate', href: '/donate/' },
-      { label: 'Red Envelope Campaign', href: '/support/red-envelope/' },
-      { label: 'Spring Auction', href: '/support/auction/' },
-      { label: 'Fun Run', href: '/support/fun-run/' },
-      { label: 'Dine Out Nights', href: '/support/dine-out/' },
+      { label: 'All the ways to give', href: '/support/', overview: true },
+      { label: 'Donate', href: '/donate/', meta: 'Any time' },
+      { label: 'Red Envelope Campaign', href: '/support/red-envelope/', meta: 'Sep–Nov' },
+      { label: 'Spring Auction', href: '/support/auction/', meta: 'February' },
+      { label: 'Fun Run', href: '/support/fun-run/', meta: 'March' },
+      { label: 'Dine Out Nights', href: '/support/dine-out/', meta: 'Monthly' },
     ],
   },
   { label: 'Volunteer', href: '/volunteer/' },
