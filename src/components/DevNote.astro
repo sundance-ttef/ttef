@@ -1,9 +1,0 @@
----
-/**
- * An inline note for whoever is building the site. Like <Needs>, it is emitted
- * only in dev — `astro build` drops it entirely, so it can never reach a visitor.
- */
-const show = import.meta.env.DEV;
----
-
-{show && <p class="placeholder-flag"><slot /></p>}
