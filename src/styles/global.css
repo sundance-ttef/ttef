@@ -809,6 +809,11 @@
        row widening the document; measured before at root scrollWidth 2951
        against a 1200 viewport. */
     max-width: 100%; overflow: hidden;
+    /* Room for the hover state. A card lifts 2px and gains a shadow, and
+       overflow clips at the PADDING box — with none, the lift moved the card
+       straight into the clip edge and sheared its top off. Padding gives the
+       lift somewhere to go; margin would not, being outside the clip. */
+    padding-block: 12px;
     /* A moving row always has a partial tile at each end. Fading the edges
        makes that read as "there is more", rather than as a card sliced off.
        
@@ -1387,12 +1392,16 @@
 
   /* Open roles now sit under the roster they belong to, rather than in one
      combined block that repeated the Foundation/PAC split a second time. */
+  /* Each roster's open positions carry that org's colour in the FILL, not only
+     in the border. Both blocks used --surface-sunken, which is pink-tinted, so
+     PAC's read as maroon-washed while claiming a teal edge — the one place on
+     the page where the org colours said two different things at once. */
   .open-inline {
     margin: 26px 0 8px; padding: 24px 26px 26px;
-    background: var(--surface-sunken); border-radius: var(--radius);
+    background: var(--maroon-tint); border-radius: var(--radius);
     border-left: 3px solid var(--maroon);
   }
-  .open-inline.p { border-left-color: var(--teal); }
+  .open-inline.p { background: var(--teal-soft); border-left-color: var(--teal); }
   .open-inline h4 { font-family: var(--display); font-size: var(--fs-2xl); margin: 0 0 4px; font-weight: 600; }
   .open-stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
   @media (max-width: 760px) { .open-stack { grid-template-columns: 1fr; } }
