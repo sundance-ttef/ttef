@@ -377,20 +377,6 @@
     color: var(--maroon);
   }
 
-  .also-fund {
-    margin-top: 38px; padding: 30px 34px; border-radius: var(--radius);
-    background: var(--surface); border: 1px solid var(--hairline); box-shadow: var(--shadow);
-  }
-  .also-fund h3 { font-size: var(--fs-xl); margin-bottom: 16px; }
-  .also-fund ul {
-    list-style: none; padding: 0; margin: 0;
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px 34px;
-  }
-  .also-fund li { position: relative; padding-left: 24px; font-size: var(--fs-md); color: var(--muted); }
-  .also-fund li::before {
-    content: ""; position: absolute; left: 2px; top: .6em;
-    width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
-  }
 
   .funding { display: grid; grid-template-columns: 1.25fr 1fr; gap: 44px; align-items: start; margin-top: 48px; }
   .breakdown {
@@ -824,11 +810,17 @@
        against a 1200 viewport. */
     max-width: 100%; overflow: hidden;
     /* A moving row always has a partial tile at each end. Fading the edges
-       makes that read as "there is more", rather than as a card sliced off. */
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 56px,
-                                        #000 calc(100% - 56px), transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 56px,
-                                #000 calc(100% - 56px), transparent 100%);
+       makes that read as "there is more", rather than as a card sliced off.
+       
+       The fade must stay NARROWER than the 46px tier tab. At 56px it was wider,
+       so a card entering the zone lost its whole tier label while its logo was
+       still fully readable — and since the row scrolls left, every card exits
+       that way. The tier is the one thing this wall exists to show, so it can
+       not be the first thing the fade eats. */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px,
+                                        #000 calc(100% - 22px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 22px,
+                                #000 calc(100% - 22px), transparent 100%);
   }
   .supporter-marquee {
     display: flex; width: max-content;
@@ -1192,8 +1184,6 @@
     section { padding-block: 48px; }
     .fundraisers { grid-template-columns: 1fr; }
     .staff { grid-template-columns: 1fr; }
-    .also-fund ul { grid-template-columns: 1fr; }
-    .also-fund { padding: 24px 22px; }
     .give-actions { flex-direction: column; align-items: stretch; width: 100%; }
     .give-actions .btn .btn { justify-content: center; width: 100%; }
     /* hero stays a single compact row so the bubbles still clear the fold */
@@ -1526,6 +1516,13 @@
 .tagaby-band h2 { color: #fff; font-size: var(--fs-section); margin: 6px 0 10px; }
 .tagaby-band p { color: rgba(255, 255, 255, .9); font-size: var(--fs-md); max-width: 62ch; }
 .tagaby-band b { color: #fff; }
+/* Maroon on teal is two dark colours: the white label is perfectly legible at
+   10.9:1, but the button's EDGE sits at 1.2–2.9:1 against the band, and WCAG
+   wants 3:1 for a control's shape. `.btn` already reserves a 2px transparent
+   border, so tinting it costs no layout and gives the shape an edge to read.
+   Near-solid white rather than a soft tint: the button sits at the LIGHT end of
+   the gradient, where anything under .85 alpha falls back below 3:1. */
+.tagaby-band .btn-primary { border-color: rgba(255, 255, 255, .9); }
 
 @media (max-width: 760px) {
   .tagaby-band { padding-block: 48px; }
@@ -1574,3 +1571,25 @@
 
 @media (max-width: 860px) { .tag-steps { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .tag-steps { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------------------
+   /impact/ — the things funded beyond the four staff positions.
+   These were a bulleted list in a white box, the flattest block on a page whose
+   whole job is to show what the money does. Cards, in the same language as the
+   staff above, because they are the same kind of fact.
+
+   Maroon and never teal: teal means PAC on this site, and these are
+   Foundation-funded — the same reason the staff cards do not alternate.
+   --------------------------------------------------------------------------- */
+.also-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+.also-card {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-top: 4px solid var(--maroon); border-radius: var(--radius-md);
+  padding: 20px 22px 22px; box-shadow: var(--shadow);
+}
+.also-icon { font-size: 26px; line-height: 1; }
+.also-name {
+  font-family: var(--display); font-size: var(--fs-xl); margin-top: 10px;
+  line-height: 1.2; color: var(--ink);
+}
+.also-card p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }

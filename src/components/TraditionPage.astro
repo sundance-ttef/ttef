@@ -84,7 +84,10 @@ const photos = ev.photos ?? [];
 
     {!body && (
       <div class="coming-soon">
-        <div class="cs-icon" aria-hidden="true">&#128197;</div>
+        {/* A calendar means "go and find the date". Showing one on an event
+            whose date is printed at the top of this very page contradicts it —
+            the thing still being worked out is the write-up, not the date. */}
+        <div class="cs-icon" aria-hidden="true">{when.confirmed ? '\u{1F4DD}' : '\u{1F4C5}'}</div>
         <h3>Details coming soon</h3>
         {/* A confirmed date is printed at the top of this page, so telling
             someone to go and look it up on the calendar reads as though the

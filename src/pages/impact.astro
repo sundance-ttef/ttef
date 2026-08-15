@@ -3,6 +3,21 @@ import Base from '../layouts/Base.astro';
 import { fundraising, budget, goalText, raisedText, percent } from '../data/fundraising';
 
 const usd = (n: number) => '$' + n.toLocaleString('en-US');
+
+/* The things funded beyond the four staff positions. These were a bulleted
+   list in a white box — the flattest block on a page whose whole job is to
+   show what the money does. They are cards now, in the same language as the
+   staff above, because they are the same kind of fact.
+
+   Maroon, NOT teal: on this site teal means PAC, and colouring these teal
+   would say the PAC funds them when the Foundation does. */
+const alsoFund = [
+  {icon: '\u{1F52C}', name: 'Science lab', note: 'Hands-on science for every grade.'},
+  {icon: '\u{1F3B5}', name: 'Music, choir & performances', note: 'Classes, choir, and grade-level shows.'},
+  {icon: '\u{1F4D6}', name: 'Impact reading program', note: 'Targeted support for readers who need it.'},
+  {icon: '\u{1F4BB}', name: 'Educational software', note: 'The subscriptions classrooms use daily.'},
+  {icon: '\u{270F}\u{FE0F}', name: 'Classroom supplies', note: 'The extras teachers would otherwise buy themselves.'},
+];
 ---
 
 <Base title="Our Impact">
@@ -36,15 +51,15 @@ const usd = (n: number) => '$' + n.toLocaleString('en-US');
         </div>
       </div>
 
-      <div class="also-fund">
-        <h3>Additional items we cover</h3>
-        <ul>
-          <li>Science lab</li>
-          <li>Music program, choir, music classes, and grade level performances</li>
-          <li>Impact reading program</li>
-          <li>Educational software subscriptions</li>
-          <li>Additional supplies for classrooms</li>
-        </ul>
+      <h3 class="block-title spaced">Additional items we cover</h3>
+      <div class="also-grid">
+        {alsoFund.map((item) => (
+          <div class="also-card">
+            <div class="also-icon" aria-hidden="true">{item.icon}</div>
+            <div class="also-name">{item.name}</div>
+            <p>{item.note}</p>
+          </div>
+        ))}
       </div>
 
       <div class="funding">
