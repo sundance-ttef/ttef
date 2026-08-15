@@ -611,9 +611,16 @@
   .person-name { font-weight: 650; font-size: var(--fs-md); }
   .person-role { font-size: var(--fs-xs); color: var(--muted); }
 
+  /* A wash from PAC's colour to the Foundation's, because BOTH meet that
+     evening — teal top-left to maroon bottom-right, in the order the meetings
+     run (6:00 PAC, 7:00 Foundation). A flat card in either colour would hand
+     the evening to one of them. */
   .meeting-card {
     margin-top: 28px; padding: 30px 34px; border-radius: var(--radius);
-    background: var(--surface); border: 1px solid var(--hairline); box-shadow: var(--shadow);
+    background:
+      linear-gradient(155deg, var(--teal-light) 0%, var(--surface) 55%,
+                              var(--maroon-tint) 78%, var(--maroon-tint-2) 100%);
+    border: 1px solid var(--hairline); box-shadow: var(--shadow);
     display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap;
   }
   .meeting-card h3 { font-size: var(--fs-3xl); margin: 6px 0 8px; }
