@@ -36,11 +36,35 @@ export default defineConfig({
               .id('siteSettings')
               .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.divider(),
-            S.documentTypeListItem('dineOutNight').title('Dine out nights'),
+            /* An explicit ordering, because a plain type list falls back to
+               newest-created — which for a schedule is no order at all. Sorted
+               the way the page sorts: position in the school year first, then
+               date, since a month that is not booked yet has no date to sort by
+               and month NAMES sort April before February before January. */
+            S.listItem()
+              .title('Dine out nights')
+              .id('dineOutNights')
+              .schemaType('dineOutNight')
+              .child(
+                S.documentTypeList('dineOutNight')
+                  .title('Dine out nights')
+                  .defaultOrdering([
+                    {field: 'order', direction: 'asc'},
+                    {field: 'date', direction: 'asc'},
+                  ]),
+              ),
             S.documentTypeListItem('volunteerSignup').title('Volunteer sign-ups'),
             S.divider(),
             S.documentTypeListItem('tradition').title('Recurring events'),
-            S.documentTypeListItem('oneOffEvent').title('One-off events'),
+            S.listItem()
+              .title('One-off events')
+              .id('oneOffEvents')
+              .schemaType('oneOffEvent')
+              .child(
+                S.documentTypeList('oneOffEvent')
+                  .title('One-off events')
+                  .defaultOrdering([{field: 'date', direction: 'desc'}]),
+              ),
             S.documentTypeListItem('sponsor').title('Sponsors'),
             S.divider(),
             // Split the same way the About page is: one folder per roster, so
