@@ -49,6 +49,7 @@ export const nav: NavEntry[] = [
       // top-level nav when it became a header button.
       { label: 'Volunteer', href: '/volunteer/', meta: 'Give time' },
       { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
+      { label: 'Tagaby Tags', href: '/tagaby/', meta: '20% back' },
       { label: 'Red Envelope Campaign', href: '/red-envelope/', meta: 'Sep–Nov' },
       { label: 'Corporate Sponsorship', href: '/sponsorship/', meta: 'From $250' },
     ],

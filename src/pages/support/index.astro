@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { askText } from '../../data/fundraising';
 import { fundraising, goalText, raisedText, remainingText, percent } from '../../data/fundraising';
 import { populatedTiers, sponsorsIn } from '../../data/sponsors';
+import TagabyBand from '../../components/TagabyBand.astro';
 ---
 
 <Base title="Support Us" darkTop>
@@ -81,6 +82,8 @@ import { populatedTiers, sponsorsIn } from '../../data/sponsors';
       </div>
     </div>
   </section>
+
+  <TagabyBand />
 
   <!-- SPONSORS -->
   <section class="supporters" id="supporters">
