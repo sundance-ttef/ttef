@@ -130,18 +130,24 @@ export default defineType({
             .replace(/-+$/, ''),
         maxLength: 60,
       },
-      // A warning rather than an error: an unbooked series slot is a perfectly
-      // valid document and has to stay publishable without a url.
+      /**
+       * An ERROR once the event is booked, not a warning.
+       *
+       * As a warning this was publishable, and a booked night published without
+       * a url silently gets no page at all — the schedule shows the card, the
+       * card does not link anywhere, and nothing anywhere says why. That
+       * happened on the first night that was ever filled in. An unbooked slot
+       * is still perfectly publishable without a url, because it has no date
+       * and no name to build one from.
+       */
       validation: (r) =>
-        r
-          .custom((slug: {current?: string} | undefined, context) => {
-            const doc = context.document as {date?: string; title?: string} | undefined
-            if (doc?.date && doc?.title && !slug?.current) {
-              return 'This event has a date and a name, so it can have its own page — press Generate to give it one.'
-            }
-            return true
-          })
-          .warning(),
+        r.custom((slug: {current?: string} | undefined, context) => {
+          const doc = context.document as {date?: string; title?: string} | undefined
+          if (doc?.date && doc?.title && !slug?.current) {
+            return 'This event has a date and a name, so it needs a URL to have a page — press Generate.'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'where',
