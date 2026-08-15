@@ -32,6 +32,13 @@ const fullTitle = title === 'home' ? `${org.name}` : `${title} — ${org.name}`;
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    {/* Without an explicit share image, iMessage and friends guess — and pick
+        the biggest image on the page (the Tagaby graphic once). The card is
+        the white logo on the maroon band gradient, 1200×630. Absolute URL is
+        hardcoded because Astro.site is unset and the domain is the decided
+        one even before it is pointed. */}
+    <meta property="og:image" content="https://twintrailsfoundation.org/img/og-share.png" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <Header />
