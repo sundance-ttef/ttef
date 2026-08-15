@@ -42,13 +42,19 @@ export default defineType({
       description:
         'Set by the folder this was created in. A night in a series is listed on that series\u2019 page and its url sits underneath it; an event with no series stands on its own and appears in no grid and no menu.',
       /**
-       * Shown but not editable, for the same reason `org` is on boardPosition:
-       * the sidebar folder already decided this and pre-fills it, so asking
-       * again was a question with a known answer — and an answerable one, which
-       * meant a wrong click could file a night into a folder the editor was not
-       * looking at, where they would never find it again.
+       * Read-only, for the same reason `org` is on boardPosition: the sidebar
+       * folder already decided this and pre-fills it, so asking again was a
+       * question with a known answer — and an answerable one, which meant a
+       * wrong click could file a night into a folder the editor was not looking
+       * at, where they would never find it again.
+       *
+       * And hidden outright on a one-off, where it is empty AND unchangeable:
+       * a read-only field showing nothing is a row that answers no question and
+       * offers no action. On a night in a series it stays visible, because
+       * there it does say something — which series.
        */
       readOnly: true,
+      hidden: ({document}) => !(document as {series?: unknown} | undefined)?.series,
     }),
     defineField({
       name: 'month',
