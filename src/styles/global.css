@@ -611,35 +611,13 @@
   .person-name { font-weight: 650; font-size: var(--fs-md); }
   .person-role { font-size: var(--fs-xs); color: var(--muted); }
 
-  /* A wash from the Foundation's colour to PAC's, because BOTH meet here. A
-     flat teal or maroon card would hand the evening to one of them. */
   .meeting-card {
     margin-top: 28px; padding: 30px 34px; border-radius: var(--radius);
-    background:
-      linear-gradient(118deg, var(--maroon-tint) 0%, var(--surface) 40%,
-                              var(--surface) 60%, var(--teal-soft) 100%);
-    border: 1px solid var(--hairline); box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--hairline); box-shadow: var(--shadow);
     display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap;
   }
   .meeting-card h3 { font-size: var(--fs-3xl); margin: 6px 0 8px; }
   .meeting-card p { font-size: var(--fs-md); color: var(--muted); max-width: 62ch; }
-
-  /* The two times, which are the actual content. They were buried mid-sentence;
-     as chips they are scannable, and each carries its own org's colour rather
-     than the card carrying one for both. */
-  .meeting-times { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0 14px; }
-  .meeting-time {
-    display: flex; flex-direction: column; gap: 3px; padding: 11px 18px;
-    background: var(--surface); border: 1px solid var(--hairline);
-    border-left: 3px solid var(--maroon); border-radius: var(--radius-md);
-  }
-  .meeting-time.p { border-left-color: var(--teal); }
-  .mt-when { font-family: var(--display); font-size: var(--fs-2xl); line-height: 1; color: var(--maroon); }
-  .meeting-time.p .mt-when { color: var(--teal); }
-  .mt-who {
-    font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .13em;
-    text-transform: uppercase; color: var(--muted);
-  }
 
   .events-3 { grid-template-columns: repeat(3, 1fr); }
   .event-static { cursor: default; }
@@ -1633,13 +1611,3 @@
   line-height: 1.2; color: var(--ink);
 }
 .also-card p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }
-
-/* The band /impact/ sits its "additional items" on, so the page is not one
-   unbroken column of white cards on the same ground. Maroon-tinted, not teal:
-   the Foundation funds these, and teal means PAC on this site. */
-.also-band { background: var(--maroon-tint); padding-block: 56px; }
-.also-band .block-title { margin-bottom: 20px; }
-/* The band already separates this from what came before, so the section after
-   it does not need a full 68px on top of the band's own 56 — stacked, the two
-   left a 116px void above the breakdown. */
-.impact-funding { padding-top: 44px; }
