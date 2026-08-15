@@ -51,7 +51,16 @@ const alsoFund = [
         </div>
       </div>
 
-      <h3 class="block-title spaced">Additional items we cover</h3>
+    </div>
+  </section>
+
+  {/* A full-width band, so the page is not one unbroken column of white cards
+      on the same ground. Closing the wrap and opening a section is what makes
+      the stripe reach the edges — a background on the block alone would stop
+      at the content width. */}
+  <section class="also-band">
+    <div class="wrap">
+      <h3 class="block-title">Additional items we cover</h3>
       <div class="also-grid">
         {alsoFund.map((item) => (
           <div class="also-card">
@@ -61,6 +70,11 @@ const alsoFund = [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <section class="impact-funding">
+    <div class="wrap">
 
       <div class="funding">
         <div class="breakdown">

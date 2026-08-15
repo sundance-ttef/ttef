@@ -3,17 +3,40 @@
  * The standing invitation to the monthly meetings, shown on both /about/ and
  * /calendar/. Shared rather than copied so the times and the Zoom link cannot
  * end up saying different things on two pages.
+ *
+ * The two times are the actual content, so they are the thing that carries the
+ * colour: PAC's in teal, the Foundation's in maroon, the same coding used for
+ * every other org-owned thing on the site. That is also why the CARD is not
+ * teal — both orgs meet here, and tinting the whole block either colour would
+ * hand the evening to one of them. The wash runs maroon to teal for the same
+ * reason.
  */
 import { org } from '../data/nav';
+
+/* In the order they happen, which is also the order the sentence used to
+   name them. */
+const meetings = [
+  {cls: 'p', when: '6:00 PM', who: 'PAC'},
+  {cls: 'f', when: '7:00 PM', who: 'Foundation'},
+];
 ---
 
 <div class="meeting-card">
-  <div>
+  <div class="meeting-body">
     <p class="eyebrow">Everyone is welcome</p>
     <h3>Monthly meetings, second Monday</h3>
-    <p>PAC meets at 6:00&nbsp;PM and the Foundation at 7:00&nbsp;PM in the Sundance Library,
-       with Zoom for anyone who can&rsquo;t make it in person. Every meeting includes an
-       open forum.</p>
+
+    <div class="meeting-times">
+      {meetings.map((m) => (
+        <div class={`meeting-time ${m.cls}`}>
+          <span class="mt-when">{m.when}</span>
+          <span class="mt-who">{m.who}</span>
+        </div>
+      ))}
+    </div>
+
+    <p>Both in the <b>Sundance Library</b>, with Zoom for anyone who can&rsquo;t make it in
+       person. Every meeting includes an open forum.</p>
   </div>
   <a class="btn btn-primary" href={org.zoom} target="_blank" rel="noopener noreferrer">Join the Zoom meeting</a>
 </div>
