@@ -40,17 +40,14 @@ export const nav: NavEntry[] = [
   {
     label: 'Support Us',
     href: '/support/',
-    // Auction and Fun Run are listed under Events; repeating them here made the
-    // same page appear in two menus. Dine Out Nights is the other way round —
-    // it is a way to give rather than a yearly event, so it lives only here.
-    // Its URL stays under /events/ because printed material points at it.
+    // Auction, Fun Run and Dine Out Nights are listed under Events; repeating
+    // them here made the same page appear in two menus.
     children: [
       { label: 'All the ways to give', href: '/support/', overview: true },
       { label: 'Donate', href: '/donate/', meta: 'Any time' },
       // Giving time counts as supporting the school, and Volunteer left the
       // top-level nav when it became a header button.
       { label: 'Volunteer', href: '/volunteer/', meta: 'Give time' },
-      { label: 'Dine Out Nights', href: '/events/dine-out/', meta: 'Monthly' },
       { label: 'Spirit Wear Store', href: '/shop/', meta: 'Wildcat gear' },
       { label: 'Red Envelope Campaign', href: '/red-envelope/', meta: 'Sep–Nov' },
       { label: 'Corporate Sponsorship', href: '/sponsorship/', meta: 'From $250' },

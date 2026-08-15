@@ -99,6 +99,9 @@ const traditions = [
     ['events/talent-show-2.jpg', '2025 Sundance talent show, photo 2'],
     ['events/talent-show-4.jpg', '2025 Sundance talent show, photo 4']]],
   ['senior-clap-out', 'Senior Clap Out', '2027-06-01', true, 'pac', 'Sundance alumni come back to walk the halls one last time.', []],
+  // Monthly rather than annual: it has a date every month, so it carries no
+  // single date and sorts last. Its own page lists each night.
+  ['dine-out', 'Dine Out Nights', null, false, 'pac', 'Eat out on a set night and the restaurant sends a share back to Sundance.', []],
 ]
 traditions.forEach(([slug, title, date, dateConfirmed, org, summary, photos]) => {
   docs.push({
