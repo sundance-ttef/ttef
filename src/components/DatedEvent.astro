@@ -49,7 +49,7 @@ const past = (event.date ?? '') < new Date().toISOString().slice(0, 10);
     )}
 
     {photo && (
-      <div class="de-photo">
+      <div class="flyer-frame">
         <img src={photo} alt={event.title ?? 'Event photo'} />
       </div>
     )}

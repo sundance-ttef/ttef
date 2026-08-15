@@ -145,6 +145,19 @@ export default defineType({
       validation: (r) => r.uri({scheme: ['http', 'https']}),
     }),
     defineField({
+      name: 'flyer',
+      title: 'Flyer',
+      type: 'image',
+      hidden: hiddenOnCustomPages,
+      description:
+        'THIS year\u2019s poster, shown below the details above. It is displayed whole and never cropped, so a portrait flyer keeps its header and its QR code. Different from the two other pictures here: the Events page photo is the card on /events/, and the gallery below is previous years.',
+      options: {hotspot: true},
+      fields: [
+        {name: 'alt', type: 'string', title: 'Describe the flyer',
+         description: 'Read aloud by screen readers. Say what it announces.'},
+      ],
+    }),
+    defineField({
       name: 'coverImage',
       title: 'Photo for the Events page',
       type: 'image',

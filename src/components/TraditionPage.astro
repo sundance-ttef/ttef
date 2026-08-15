@@ -21,6 +21,10 @@ const whenText = traditionWhen(ev).full;
    numbers — "details coming soon" replaces the body only, never the page. */
 const body = ev.body?.length ? toHTML(ev.body) : null;
 const photos = ev.photos ?? [];
+
+/* This year's poster, shown whole under the write-up. A flyer IS the details,
+   so an event that has one is not "coming soon" even with no body text. */
+const flyer = imageUrl(ev.flyer, 900);
 ---
 
 <section>
@@ -45,6 +49,12 @@ const photos = ev.photos ?? [];
     ) : null}
 
     {body && <div class="event-body-copy" set:html={body} />}
+
+    {flyer && (
+      <div class="flyer-frame">
+        <img src={flyer} alt={ev.flyer?.alt ?? `${ev.title} flyer`} />
+      </div>
+    )}
 
     {ev.milestones?.length ? (
       <div class="breakdown mt">
@@ -82,7 +92,7 @@ const photos = ev.photos ?? [];
       </div>
     ) : null}
 
-    {!body && (
+    {!body && !flyer && (
       <div class="coming-soon">
         {/* A calendar means "go and find the date". Showing one on an event
             whose date is printed at the top of this very page contradicts it —

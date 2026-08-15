@@ -191,6 +191,7 @@ export interface Tradition {
   milestones?: Milestone[];
   photosTitle?: string | null;
   body?: any[];
+  flyer?: SanityImage;
   slug: string;
   date?: string | null;
   month?: string | null;
@@ -279,7 +280,7 @@ export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
       title, "slug": slug.current, month, cadence, date, org, summary,
-      coverImage, stats, milestones, photosTitle, body, ctaLabel, ctaUrl, photos
+      coverImage, flyer, stats, milestones, photosTitle, body, ctaLabel, ctaUrl, photos
     }`,
     {slug},
   );

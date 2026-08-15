@@ -1485,13 +1485,16 @@
 
 /* A flyer is portrait and a photo is landscape, so the frame sizes to whatever
    it is given rather than forcing one shape. Capping the HEIGHT keeps a tall
-   flyer from filling the screen without cropping a word off it. */
-.de-photo {
+   flyer from filling the screen without cropping a word off it.
+
+   Shared by a dated event's photo and a recurring event's flyer: same job,
+   same rule, so the two cannot drift. */
+.flyer-frame {
   display: flex; justify-content: center;
   background: var(--surface-sunken); border-radius: var(--radius);
   overflow: hidden; margin-bottom: 28px;
 }
-.de-photo img { display: block; max-width: 100%; max-height: 620px; width: auto; height: auto; }
+.flyer-frame img { display: block; max-width: 100%; max-height: 620px; width: auto; height: auto; }
 
 .de-back { margin-top: 34px; font-size: var(--fs-sm); font-weight: 650; }
 .de-back a { color: var(--maroon); }
