@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {SCHOOL_MONTHS} from './months'
 
 /**
  * One thing that happens on one date and has its own page.
@@ -20,12 +21,6 @@ import {defineField, defineType} from 'sanity'
  * of the event — which is what lets a one-off have a real page without
  * cluttering the Events grid with every ad-hoc thing that ever happened.
  */
-
-/** August–June, matching SCHOOL_MONTHS in src/lib/sanity.ts. */
-const SCHOOL_MONTHS = [
-  'August', 'September', 'October', 'November', 'December',
-  'January', 'February', 'March', 'April', 'May', 'June',
-]
 
 /**
  * A one-off has no series to hold an unbooked placeholder slot, so the

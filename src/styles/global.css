@@ -1087,47 +1087,53 @@
   .coming-soon p { font-size: var(--fs-md); color: var(--muted); max-width: 56ch; margin: 0 auto; }
   .cs-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
 
-  .dine-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  /* Dine out nights: portrait flyers, three across, no card chrome.
+     The flyers are 8.5x11 portrait. The card used to be a landscape tile with
+     the image cropped to fill it, which cut the top and bottom off every one —
+     including the header and the QR code, the two parts that matter. The image
+     now keeps its own proportions inside a portrait frame and is never cut,
+     and the border and shadow are gone so the wall reads as flyers rather than
+     as boxes. */
+  .dine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-items: start; }
   .dine-card {
-    display: flex; gap: 0; overflow: hidden;
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    display: block; overflow: visible;
+    background: none; border: 0; border-radius: 0; box-shadow: none;
   }
   .dine-photo {
-    flex: 0 0 132px; background: var(--surface-sunken); display: grid; place-items: center;
-    border-right: 1px dashed var(--hairline); padding: 10px; text-align: center;
+    width: 100%; aspect-ratio: 3 / 4; padding: 0;
+    background: var(--surface-sunken); border: 0; border-radius: var(--radius);
+    display: block; overflow: hidden;
   }
-  /* Photo tiles: the image fills its tile. `height: 100%` on a grid item
-     resolves against the row track, and that track is auto-sized to the image
-     itself — so a tall photo grew the track to its natural height and was then
-     cropped by the tile's overflow:hidden. Taking the image out of flow gives
-     it a definite box to fill. The "photo coming soon" placeholder keeps
-     `contain` so its art is never cut. */
+  /* `contain`, not `cover`: a flyer with any words on it must never be cropped.
+     The frame is a fixed portrait box so the three columns stay level, and a
+     flyer that is not exactly 3:4 sits on the sunken background rather than
+     losing its edges. */
   .dine-photo, .gal-item, .ps-item { position: relative; }
   .dine-photo img, .gal-item img, .ps-item img {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover;
   }
+  .dine-photo img { object-fit: contain; }
   .dine-photo img.no-photo, .gal-item img.no-photo, .ps-item img.no-photo {
     object-fit: contain;
   }
   .dine-photo span {
     font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
   }
-  .dine-body { padding: 18px 20px; flex: 1; }
+  .dine-body { padding: 14px 2px 0; }
   .dine-date {
     font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--maroon);
   }
   .dine-name { font-family: var(--display); font-size: var(--fs-2xl); margin-top: 3px; }
-  .dine-card.is-next { border-color: var(--teal); border-left: 3px solid var(--teal); }
-  .dine-card.is-past { opacity: .72; }
+  /* With no border to tint, "next up" is carried by its own label. */
+  .dine-card.is-next .dine-date { color: var(--teal); }
+  .dine-card.is-past { opacity: .6; }
   .dine-body p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }
   .dine-link { display: inline-block; margin-top: 10px; font-size: var(--fs-sm); font-weight: 650; color: var(--maroon); }
 
-  @media (max-width: 860px) { .dine-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) { .dine-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
   @media (max-width: 520px) {
-    .dine-card { flex-direction: column; }
-    .dine-photo { flex-basis: 96px; border-right: 0; border-bottom: 1px dashed var(--hairline); }
+    .dine-grid { grid-template-columns: 1fr; }
     .coming-soon { padding: 38px 22px; }
     .cs-actions .btn { width: 100%; justify-content: center; }
   }
@@ -1463,8 +1469,9 @@
 /* A booked night's card becomes a link. Inherit the colour so the card does not
    turn link-blue, and match the lift the Events cards already use. */
 .dine-card.is-link { cursor: pointer; color: inherit; text-decoration: none; }
-.dine-card.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.dine-card.is-link:hover .dine-link { text-decoration: underline; }
+/* No border or shadow left to lift, so the hover is on the flyer itself. */
+.dine-card.is-link:hover .dine-photo { opacity: .88; }
+.dine-card.is-link:hover .dine-name { text-decoration: underline; }
 
 /* The date is the headline fact on a dated event's page — it is what the page
    IS — so it is set larger than the lead paragraph it sits in. */
@@ -1506,17 +1513,28 @@
 /* The share, stated the way the suggested gift is: the figure carries the
    weight and the explanation sits beside it. */
 .tag-give {
-  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 38px; flex-wrap: wrap;
   background: var(--gold-soft); border: 1px solid var(--gold);
-  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 34px;
+  border-radius: var(--radius); padding: 28px 30px; margin-bottom: 34px;
 }
+.tag-give-figure { flex: 0 0 auto; }
 .tag-give-amount {
-  font-family: var(--display); font-size: var(--fs-5xl); font-weight: 700;
-  color: var(--gold-ink-2); line-height: 1;
+  font-family: var(--display); font-size: var(--fs-6xl); font-weight: 700;
+  color: var(--gold-ink-2); line-height: .95; margin: 0;
 }
-.tag-give-copy { flex: 1; min-width: 260px; }
-.tag-give-copy b { display: block; margin-bottom: 4px; }
-.tag-give-copy p { font-size: var(--fs-sm); color: var(--muted); margin: 0; }
+/* Tight to the figure above it: the two lines are one sentence and have to
+   read as one, so the claim hangs off the number rather than floating. */
+.tag-give-claim {
+  font-size: var(--fs-2xl); font-family: var(--display);
+  color: var(--ink); margin: 2px 0 0; max-width: 30ch; line-height: 1.2;
+}
+/* A measure, not the full width of the page — the band is wide and the copy
+   ran edge to edge in a single line. */
+.tag-give-copy {
+  flex: 1; min-width: 280px;
+  font-size: var(--fs-sm); color: var(--muted); margin: 0;
+  max-width: 52ch; line-height: 1.55;
+}
 
 .tag-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .tag-step {

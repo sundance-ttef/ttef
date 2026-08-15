@@ -42,7 +42,7 @@ const steps = [
           <p class="eyebrow">PAC &middot; A way to give</p>
           <h2>Help reduce Lost &amp; Found</h2>
           <p>Each year Sundance donates nearly <b>800 unclaimed Lost &amp; Found items</b>.
-             Personalised tags from Tagaby help get more of those belongings back to the
+             Personalized tags from Tagaby help get more of those belongings back to the
              children they belong to.</p>
         </div>
         <a class="btn btn-lg btn-primary" href={TAGABY_URL} target="_blank" rel="noopener noreferrer">
@@ -50,14 +50,21 @@ const steps = [
         </a>
       </div>
 
+      {/* The figure sits directly ABOVE its own clause, not beside it. Laid out
+          side by side, "20%" and "of profits comes back…" are one sentence with
+          a wide gap dropped into the middle of it, and the eye has to jump the
+          gap to finish the phrase. */}
       <div class="tag-give">
-        <div class="tag-give-amount">20%</div>
-        <div class="tag-give-copy">
-          <b>of profits comes back to the Sundance PAC</b>
-          <p>We&rsquo;re proud to partner with Tagaby. Tag kits start at $5, so it is an easy way to
-             label your child&rsquo;s things, cut down on waste, and support the school at the same
-             time.</p>
+        {/* The figure and its clause are ONE block. Split across the band's two
+            columns they were one sentence with a wide gap dropped into the
+            middle of it, and the eye had to jump the gap to finish the phrase. */}
+        <div class="tag-give-figure">
+          <p class="tag-give-amount">20%</p>
+          <p class="tag-give-claim">of profits comes back to the Sundance PAC</p>
         </div>
+        <p class="tag-give-copy">We&rsquo;re proud to partner with Tagaby. Tag kits start at $5,
+           so it is an easy way to label your child&rsquo;s things, cut down on waste, and
+           support the school at the same time.</p>
       </div>
 
       <h3 class="block-title spaced">How it works</h3>

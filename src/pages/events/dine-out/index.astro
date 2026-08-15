@@ -39,7 +39,10 @@ const nextIndex = nights.findIndex((n) => !n.date || n.date >= today);
       <h3 class="block-title">This year&rsquo;s schedule</h3>
       <div class="dine-grid">
         {nights.map((n, i) => {
-          const photo = imageUrl(n.photo, 520, 380);
+          /* Width only — passing a height crops at the CDN, and these are
+             portrait flyers, so a landscape crop cut the header and the QR
+             code off before the image ever reached the page. */
+          const photo = imageUrl(n.photo, 560);
           const dayLabel = n.date
             ? new Date(n.date + 'T12:00:00').toLocaleDateString('en-US', {
                 weekday: 'short', month: 'short', day: 'numeric',

@@ -61,7 +61,7 @@ export default defineConfig({
               ),
             S.documentTypeListItem('volunteerSignup').title('Volunteer sign-ups'),
             S.divider(),
-            S.documentTypeListItem('tradition').title('Annual events'),
+            S.documentTypeListItem('tradition').title('Recurring events'),
             S.listItem()
               .title('One-off events')
               .id('oneOffEvents')

@@ -1,5 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {ORGS} from './orgs'
+import {SCHOOL_MONTHS} from './months'
 
 /**
  * Events whose page is hand-built in `src/pages/` rather than rendered from
@@ -41,7 +42,7 @@ const hiddenOnCustomPages = ({document}: {document?: unknown}) =>
  */
 export default defineType({
   name: 'tradition',
-  title: 'Event page',
+  title: 'Recurring event',
   type: 'document',
   fields: [
     defineField({
@@ -81,12 +82,7 @@ export default defineType({
       type: 'string',
       description:
         'The month this event falls in most years. This is what orders the Events menu and the grid, and it is what visitors see until a date is set.',
-      options: {
-        list: [
-          'August', 'September', 'October', 'November', 'December',
-          'January', 'February', 'March', 'April', 'May', 'June',
-        ],
-      },
+      options: {list: SCHOOL_MONTHS},
       // Only an annual event falls in a month. This used to carry a "Monthly"
       // option, which put a CADENCE in a list of months — the sort then needed
       // a sentinel to lift it, and the date field had to inspect a month value
@@ -229,7 +225,12 @@ export default defineType({
         'The photos shown low on the event page, under the title above. The header image is separate — these do not need to include it. Photos fill their tiles and are cropped to fit, so set the hotspot on faces.',
     }),
   ],
-  orderings: [{title: 'School year order', name: 'month', by: [{field: 'month', direction: 'asc'}]}],
+  /* No custom ordering. The one that used to be here was called "School year
+     order" but sorted by the month NAME, so it listed April, August, December,
+     February — the exact bug the shared month list exists to prevent, sitting
+     in the file that defines it. Real school-year order is cadence first and
+     then a position in SCHOOL_MONTHS, which a Sanity ordering cannot express,
+     so the site sorts it and the Studio does not pretend to. */
   preview: {
     select: {title: 'title', month: 'month', date: 'date', org: 'org', cadence: 'cadence', media: 'coverImage'},
     prepare({title, month, date, org, cadence, media}) {
