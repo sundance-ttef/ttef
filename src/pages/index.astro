@@ -138,18 +138,24 @@ import UpcomingEvents from '../components/UpcomingEvents.astro';
 
   {/* A way to give by SHOPPING, so it sits with the ask rather than on the
       sponsor wall below — sponsors gave us money, Tagaby is something to go
-      and do. Compact on purpose: the front page is already carrying the
-      campaign, the events and the sponsors. */}
-  <section class="tagaby-teaser">
+      and do.
+
+      Its own deep-teal band for two reasons. It sat on --surface-sunken, the
+      SAME fill the sponsor section uses, so the two ran together as one block.
+      And Tagaby's wordmark is white, so it is invisible on any light fill and
+      needs a dark one to be legible at all. Teal rather than maroon because
+      this is PAC's, and because the ask directly above is already maroon. */}
+  <section class="tagaby-band">
     <div class="wrap">
-      <div class="teaser-inner">
-        <div>
-          <p class="eyebrow">PAC &middot; Tagaby</p>
+      <div class="tagaby-inner">
+        <img class="tagaby-logo" src="/img/tagaby.png" alt="Tagaby" width="807" height="315" />
+        <div class="tagaby-copy">
+          <p class="eyebrow">PAC &middot; A way to give</p>
           <h2>Help reduce Lost &amp; Found</h2>
           <p>Sundance donates nearly <b>800 unclaimed items</b> every year. Tagaby tags help
              them find their way home &mdash; and <b>20% of profits</b> comes back to the PAC.</p>
         </div>
-        <a class="btn btn-lg btn-primary" href="/tagaby/">How Tagaby works</a>
+        <a class="btn btn-lg btn-gold" href="/tagaby/">How Tagaby works</a>
       </div>
     </div>
   </section>

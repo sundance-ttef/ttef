@@ -70,7 +70,8 @@ export default defineConfig({
                 S.documentTypeList('datedEvent')
                   .title('One-off events')
                   .filter('_type == "datedEvent" && !defined(series)')
-                  .defaultOrdering([{field: 'date', direction: 'desc'}]),
+                  .defaultOrdering([{field: 'date', direction: 'desc'}])
+                  .initialValueTemplates([S.initialValueTemplateItem('datedEvent-one-off')]),
               ),
             S.documentTypeListItem('sponsor').title('Sponsors'),
             S.divider(),
@@ -116,7 +117,7 @@ export default defineConfig({
        * parameterised template below is unaffected — it takes an argument, so
        * it never appears in the global menu anyway.
        */
-      ...prev.filter((t) => !['siteSettings', 'boardPosition'].includes(t.schemaType)),
+      ...prev.filter((t) => !['siteSettings', 'boardPosition', 'datedEvent'].includes(t.schemaType)),
       {
         id: 'datedEvent-in-series',
         title: 'Dated event in a series',
@@ -125,6 +126,15 @@ export default defineConfig({
         value: ({seriesId}: {seriesId: string}) => ({
           series: {_type: 'reference', _ref: seriesId},
         }),
+      },
+      {
+        // A dated event with no series: the folder is the only way to make one,
+        // now that `series` is read-only and a globally created event would be
+        // stuck with whatever the default happened to be.
+        id: 'datedEvent-one-off',
+        title: 'One-off event',
+        schemaType: 'datedEvent',
+        value: {},
       },
       {
         id: 'boardPosition-in-org',

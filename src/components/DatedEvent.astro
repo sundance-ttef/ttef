@@ -21,7 +21,9 @@ interface Props {
 const { event, back } = Astro.props;
 
 const tag = event.seriesOrg ? orgTag(event.seriesOrg) : null;
-const photo = imageUrl(event.photo, 1040, 620);
+/* Width only. Passing a height crops at the CDN, and these are portrait
+   flyers — this is the page where the whole flyer matters most. */
+const photo = imageUrl(event.photo, 900);
 const past = (event.date ?? '') < new Date().toISOString().slice(0, 10);
 ---
 

@@ -1484,11 +1484,15 @@
   font-size: var(--fs-sm); color: var(--gold-ink-2);
 }
 
+/* A flyer is portrait and a photo is landscape, so the frame sizes to whatever
+   it is given rather than forcing one shape. Capping the HEIGHT keeps a tall
+   flyer from filling the screen without cropping a word off it. */
 .de-photo {
-  border: 1px solid var(--hairline); border-radius: var(--radius);
+  display: flex; justify-content: center;
+  background: var(--surface-sunken); border-radius: var(--radius);
   overflow: hidden; margin-bottom: 28px;
 }
-.de-photo img { display: block; width: 100%; height: auto; }
+.de-photo img { display: block; max-width: 100%; max-height: 620px; width: auto; height: auto; }
 
 .de-back { margin-top: 34px; font-size: var(--fs-sm); font-weight: 650; }
 .de-back a { color: var(--maroon); }
@@ -1507,8 +1511,27 @@
    specificity.
    --------------------------------------------------------------------------- */
 
-/* The home-page band, matching the Spirit Wear teaser it sits near. */
-.tagaby-teaser { padding-block: 72px; background: var(--surface-sunken); }
+/* The home-page band. Deep teal because this is PAC's, because the ask above
+   it is already maroon, and because Tagaby's wordmark is white — on the sunken
+   fill this used to share with the sponsor section it was both invisible and
+   indistinguishable from the sponsors. */
+.tagaby-band {
+  background: linear-gradient(140deg, var(--teal-deep) 0%, var(--teal) 70%, var(--teal-mid) 100%);
+  color: #fff; padding-block: 64px;
+}
+.tagaby-inner { display: flex; align-items: center; gap: 38px; flex-wrap: wrap; }
+.tagaby-logo { width: 186px; height: auto; flex: 0 0 auto; }
+.tagaby-copy { flex: 1; min-width: 300px; }
+.tagaby-band .eyebrow { color: var(--teal-light); }
+.tagaby-band h2 { color: #fff; font-size: var(--fs-section); margin: 6px 0 10px; }
+.tagaby-band p { color: rgba(255, 255, 255, .9); font-size: var(--fs-md); max-width: 62ch; }
+.tagaby-band b { color: #fff; }
+
+@media (max-width: 760px) {
+  .tagaby-band { padding-block: 48px; }
+  .tagaby-inner { gap: 24px; }
+  .tagaby-logo { width: 150px; }
+}
 
 /* The share, stated the way the suggested gift is: the figure carries the
    weight and the explanation sits beside it. */

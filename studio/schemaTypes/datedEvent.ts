@@ -36,11 +36,19 @@ export default defineType({
   fields: [
     defineField({
       name: 'series',
-      title: 'Part of a series',
+      title: 'Series',
       type: 'reference',
       to: [{type: 'tradition'}],
       description:
-        'Dine Out Nights, for one of the monthly nights. Leave EMPTY for a one-off event — it will get its own page but will not appear on the Events page or in the Events menu.',
+        'Set by the folder this was created in. A night in a series is listed on that series\u2019 page and its url sits underneath it; an event with no series stands on its own and appears in no grid and no menu.',
+      /**
+       * Shown but not editable, for the same reason `org` is on boardPosition:
+       * the sidebar folder already decided this and pre-fills it, so asking
+       * again was a question with a known answer — and an answerable one, which
+       * meant a wrong click could file a night into a folder the editor was not
+       * looking at, where they would never find it again.
+       */
+      readOnly: true,
     }),
     defineField({
       name: 'month',
