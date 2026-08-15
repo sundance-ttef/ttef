@@ -24,6 +24,9 @@ git checkout main && git merge dev
 git push --no-verify origin main    # spends 15 credits
 ```
 
+Or open a pull request from `dev` to `main`: the preview build is free, and
+merging triggers the production deploy.
+
 A `pre-push` hook refuses pushes to `main`; `--no-verify` is the deliberate
 override. Enable it once per clone:
 
@@ -68,10 +71,17 @@ to Sanity: no runtime dependency, no per-visitor API cost, and the site keeps se
 if Sanity is down. The trade-off is that publishing does not change the site until a
 rebuild runs.
 
-A Sanity webhook triggers that rebuild. **It currently points at the `dev` branch
-build hook**, because branch deploys cost 0 Netlify credits while a production deploy
-costs 15 — and before launch nobody is reading the production site anyway. **At launch,
-repoint it at the `main` build hook**, or publishing will never reach the live site.
+A Sanity webhook triggers that rebuild. The site has two Netlify build hooks:
+
+| Hook | Branch | Used |
+|---|---|---|
+| `Sanity publish dev` | `dev` | now — rebuilds the preview, free |
+| `Sanity publish` | `main` | **at launch** — rebuilds the live site, 15 credits |
+
+The webhook currently points at the `dev` one, because before launch nobody is reading
+the production site. **At launch, repoint it at the `main` hook** — otherwise publishing
+in the Studio will never reach the live site. Keep both hooks; the main one is not dead,
+it is the one you switch to.
 The webhook excludes drafts, so typing in the Studio does not trigger builds, and
 Sanity batches per transaction rather than per document.
 
