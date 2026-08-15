@@ -1490,11 +1490,17 @@
    Shared by a dated event's photo and a recurring event's flyer: same job,
    same rule, so the two cannot drift. */
 .flyer-frame {
-  display: flex; justify-content: center;
-  background: var(--surface-sunken); border-radius: var(--radius);
-  overflow: hidden; margin-bottom: 28px;
+  /* No fill and no frame — just the flyer, centred. A portrait flyer in a
+     full-width box left the surface showing as two grey bars down the sides,
+     which read as a border the flyer did not have. The rounding moves onto the
+     image itself so the flyer keeps the site's soft corners without sitting in
+     a box. */
+  display: flex; justify-content: center; margin-bottom: 28px;
 }
-.flyer-frame img { display: block; max-width: 100%; max-height: 620px; width: auto; height: auto; }
+.flyer-frame img {
+  display: block; max-width: 100%; max-height: 620px; width: auto; height: auto;
+  border-radius: var(--radius);
+}
 
 .de-back { margin-top: 34px; font-size: var(--fs-sm); font-weight: 650; }
 .de-back a { color: var(--maroon); }
