@@ -1,115 +1,66 @@
 ---
-/* Home-page sponsor rail: auto-advances, and is a real scroll region the
-   visitor can drag, swipe, wheel, or arrow through. */
+/**
+ * The home-page sponsor rail.
+ *
+ * This was a JavaScript marquee: it measured tile widths, cloned tiles until
+ * the row was wide enough to loop, and animated scrollLeft each frame. That is
+ * three things that can fail before a logo ever appears — and it did fail,
+ * invisibly, for a real visitor whose browser had not loaded the images the
+ * script was measuring.
+ *
+ * It is now a CSS animation over a row that is duplicated HERE, at build time.
+ * No measuring, no cloning, no scroll position, no script at all: if the CSS
+ * animation does not run, the sponsors are simply a static row, which is a
+ * perfectly good outcome. The duplicate is aria-hidden so a screen reader
+ * hears each sponsor once.
+ */
 import { sponsors, tiers } from '../data/sponsors';
+
 const tierLabel = (t: string) => tiers.find((x) => x.key === t)?.label ?? t;
+/* Two passes of the same list, so translating by exactly -50% loops seamlessly. */
+const passes = [
+  { key: 'a', hidden: false },
+  { key: 'b', hidden: true },
+];
 ---
 
 <section class="sponsors sponsor-strip" id="sponsors-home">
-    <div class="wrap">
-      <div class="sec-head">
-        <div>
-          <p class="eyebrow">Thank you</p>
-          <h2>Our corporate sponsors</h2>
-          <p>Local businesses who fund Sundance directly. Sponsorships start at $250.</p>
-        </div>
-        <a class="btn btn-gold" href="/sponsorship/">Become a sponsor</a>
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Thank you</p>
+        <h2>Our corporate sponsors</h2>
+        <p>Local businesses who fund Sundance directly. Sponsorships start at $250.</p>
       </div>
-      <div class="sponsor-rail">
-        <button class="rail-btn rail-prev" type="button" aria-label="Previous sponsors">&#8249;</button>
-        <div class="sponsor-scroller" tabindex="0" role="region" aria-label="Our corporate sponsors">
-          <div class="scroller-track strip-track">
+      <a class="btn btn-gold" href="/sponsorship/">Become a sponsor</a>
+    </div>
+
+    <div class="sponsor-rail">
+      <div class="sponsor-marquee">
+        {passes.map((pass) => (
+          <div class="strip-track" aria-hidden={pass.hidden ? 'true' : undefined}>
             {sponsors.map((s) => (
-              <a class={`strip-item t-${s.tier}`} href={s.url} target="_blank" rel="noopener noreferrer">
+              <a
+                class={`strip-item t-${s.tier}`}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabindex={pass.hidden ? -1 : undefined}
+              >
                 <span class="tier-tab" aria-hidden="true">{tierLabel(s.tier)}</span>
-                <span class="strip-logo"><img src={s.logo} alt={s.name} decoding="async" /></span>
-                <span class="sr">{s.name} &mdash; {tierLabel(s.tier)} sponsor</span>
+                {/* The name is the alt text rather than a separate visually
+                    hidden span, so a logo that fails to load — blocked CDN,
+                    slow connection, image host down — leaves the sponsor's
+                    name on screen instead of an empty box. */}
+                <span class="strip-logo">
+                  <img src={s.logo} alt={`${s.name} — ${tierLabel(s.tier)} sponsor`}
+                       decoding="async" width="250" height="92" />
+                </span>
               </a>
             ))}
           </div>
-        </div>
-        <button class="rail-btn rail-next" type="button" aria-label="More sponsors">&#8250;</button>
+        ))}
       </div>
     </div>
-  </section>
-
-<script>
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const sc = document.querySelector<HTMLElement>('.sponsor-scroller');
-  const track = sc?.querySelector<HTMLElement>('.scroller-track');
-
-  if (sc && track) {
-    /* The clone count is decided by measuring the track, so it has to be
-       measured AFTER the logos have a size. Firefox will not fetch a lazy
-       below-the-fold image at all, which left this measuring empty tiles. */
-    await Promise.all(
-      [...track.querySelectorAll('img')].map((im) =>
-        im.complete ? null : new Promise((r) => {
-          im.addEventListener('load', r, { once: true });
-          im.addEventListener('error', r, { once: true });
-        })
-      )
-    );
-
-    // repeat until the row is comfortably wider than the viewport, so the loop is seamless
-    let guard = 0;
-    while (track.scrollWidth < sc.clientWidth * 1.6 && guard++ < 8) {
-      Array.from(track.children).forEach((node) => {
-        if ((node as HTMLElement).dataset.clone) return;
-        const c = node.cloneNode(true) as HTMLElement;
-        c.dataset.clone = '1';
-        c.setAttribute('aria-hidden', 'true');
-        c.tabIndex = -1;
-        c.querySelectorAll('a, img').forEach((el) => ((el as HTMLElement).tabIndex = -1));
-        track.appendChild(c);
-      });
-    }
-
-    const half = () => track.scrollWidth / 2;
-    let paused = false;
-    let idle: number | undefined;
-    const hold = (ms = 2500) => {
-      paused = true;
-      window.clearTimeout(idle);
-      idle = window.setTimeout(() => (paused = false), ms);
-    };
-
-    sc.addEventListener('pointerenter', () => { paused = true; window.clearTimeout(idle); });
-    sc.addEventListener('pointerleave', () => (paused = false));
-    sc.addEventListener('focusin', () => { paused = true; window.clearTimeout(idle); });
-    sc.addEventListener('focusout', () => (paused = false));
-    ['wheel', 'touchstart', 'pointerdown'].forEach((ev) =>
-      sc.addEventListener(ev, () => hold(), { passive: true })
-    );
-
-    const step = () => {
-      const card = track.querySelector<HTMLElement>('.strip-item');
-      return card ? card.getBoundingClientRect().width + 20 : 300;
-    };
-    document.querySelector('.rail-prev')?.addEventListener('click', () => {
-      hold(4000); sc.scrollBy({ left: -step(), behavior: 'smooth' });
-    });
-    document.querySelector('.rail-next')?.addEventListener('click', () => {
-      hold(4000); sc.scrollBy({ left: step(), behavior: 'smooth' });
-    });
-
-    if (!reduced) {
-      // scrollLeft reads back rounded, so `+= 0.45` would be discarded each frame.
-      // Track the position as a float and assign it.
-      let pos = (sc.scrollLeft = 1);
-      sc.addEventListener('scroll', () => {
-        if (paused && Math.abs(sc.scrollLeft - pos) > 2) pos = sc.scrollLeft;
-      }, { passive: true });
-      const tick = () => {
-        if (!paused) {
-          pos += 0.45;
-          const h = half();
-          if (h > 0 && pos >= h) pos -= h;
-          sc.scrollLeft = pos;
-        }
-        requestAnimationFrame(tick);
-      };
-      tick();
-    }
-  }
-</script>
+  </div>
+</section>

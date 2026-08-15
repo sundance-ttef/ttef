@@ -45,6 +45,12 @@ export default defineType({
       description: 'Leave empty to show "Coming soon".',
     }),
     defineField({
+      name: 'location',
+      title: 'Where',
+      type: 'string',
+      description: 'Address or cross-streets, so families know which branch to go to.',
+    }),
+    defineField({
       name: 'blurb',
       title: 'Details',
       type: 'text',
@@ -59,7 +65,7 @@ export default defineType({
     }),
     defineField({
       name: 'photo',
-      title: 'Photo or flyer',
+      title: 'Flyer or photo',
       type: 'image',
       description:
         'Fills a wide tile and is cropped to fit, so keep the important part centred. Leave empty to show the placeholder.',

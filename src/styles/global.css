@@ -817,29 +817,30 @@
   /* tier colours read as the metals themselves, so they never collide with
      the maroon=Foundation / teal=PAC meaning used elsewhere */
   .sponsor-rail {
-    display: flex; align-items: center; gap: 10px;
-    /* the inner scroller alone did not stop the track from widening the document
-       (measured: root scrollWidth 2951 vs 1200 viewport). Clip at the rail. */
+    /* Clips the moving row. The rail — not the inner track — is what stops the
+       row widening the document; measured before at root scrollWidth 2951
+       against a 1200 viewport. */
     max-width: 100%; overflow: hidden;
   }
-  .sponsor-scroller {
-    flex: 1; min-width: 0; overflow-x: auto; overflow-y: hidden;
-    scrollbar-width: none; -ms-overflow-style: none;
-    padding-block: 14px 20px; margin-block: -14px -20px;
-    /* overflow alone did not stop this scroller widening the document (root
-       scrollWidth measured 2951 against a 1200 viewport). Containment does. */
-    contain: paint;
+  .sponsor-marquee {
+    display: flex; width: max-content;
+    animation: sponsor-scroll 42s linear infinite;
   }
-  .sponsor-scroller::-webkit-scrollbar { display: none; }
-  .sponsor-scroller:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; border-radius: var(--radius); }
-  .scroller-track { display: flex; gap: 20px; width: max-content; align-items: center; }
-  .rail-btn {
-    flex: 0 0 44px; height: 44px; border-radius: 50%; cursor: pointer;
-    background: var(--surface); border: 1px solid var(--hairline); color: var(--maroon);
-    font-size: var(--fs-2xl); line-height: 1; display: grid; place-items: center;
-    transition: border-color .15s, box-shadow .15s, transform .15s;
+  /* Pausing on hover lets someone actually read a logo they noticed. */
+  .sponsor-rail:hover .sponsor-marquee,
+  .sponsor-rail:focus-within .sponsor-marquee { animation-play-state: paused; }
+  @keyframes sponsor-scroll {
+    from { transform: translateX(0); }
+    /* exactly one pass of the list, so the loop has no seam */
+    to { transform: translateX(-50%); }
   }
-  .rail-btn:hover { border-color: var(--maroon); box-shadow: var(--shadow); transform: scale(1.06); }
+  /* No animation: a static row of sponsors, which is a fine outcome. */
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-marquee { animation: none; }
+    .sponsor-rail { overflow-x: auto; }
+  }
+  .strip-track { display: flex; gap: 20px; padding-right: 20px; align-items: center; }
+
 
   .strip-track .strip-item {
     /* the tiered wall's card padding must not reach these cards */
@@ -869,8 +870,7 @@
     .strip-track .tier-tab { flex-basis: 34px; font-size: var(--fs-3xs); letter-spacing: .16em; }
     .strip-track .strip-logo { padding: 14px 20px; }
     .strip-track .strip-logo img { max-height: 66px; max-width: 172px; }
-    .rail-btn { flex-basis: 38px; height: 38px; font-size: var(--fs-xl); }
-    .sponsor-rail { gap: 6px; }
+      .sponsor-rail { gap: 6px; }
   }
 
   /* gold marks sponsorship throughout: the gold CTA, the platinum tier, this band */

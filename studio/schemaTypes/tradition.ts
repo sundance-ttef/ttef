@@ -45,6 +45,9 @@ export default defineType({
         list: [
           'August', 'September', 'October', 'November', 'December',
           'January', 'February', 'March', 'April', 'May', 'June',
+          // For events that recur through the year rather than falling in one
+          // month. These sort last on the Events page and have no single date.
+          'Monthly',
         ],
       },
       validation: (r) => r.required(),
@@ -56,6 +59,8 @@ export default defineType({
       options: {dateFormat: 'ddd, MMM D, YYYY'},
       description:
         'Leave EMPTY until the date is actually settled — the page then shows the month and "date to be announced". Do not put a guess here: a specific day on the page is one families will plan around. A date left over from a previous school year is ignored automatically.',
+      // A monthly event has many dates, not one, so the field is meaningless.
+      hidden: ({document}) => (document as any)?.month === 'Monthly',
     }),
     defineField({
       name: 'org',
