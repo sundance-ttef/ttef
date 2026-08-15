@@ -34,10 +34,12 @@ const fullTitle = title === 'home' ? `${org.name}` : `${title} — ${org.name}`;
     <meta property="og:type" content="website" />
     {/* Without an explicit share image, iMessage and friends guess — and pick
         the biggest image on the page (the Tagaby graphic once). The card is
-        the white logo on the maroon band gradient, 1200×630. Absolute URL is
-        hardcoded because Astro.site is unset and the domain is the decided
-        one even before it is pointed. */}
-    <meta property="og:image" content="https://twintrailsfoundation.org/img/og-share.png" />
+        the white logo on the maroon band gradient, 1200×630. It lives on the
+        Netlify URL, not the public domain: the domain still serves the old
+        WordPress site, so an image URL on it 404s and the scraper falls back
+        to guessing again. The Netlify URL resolves today and keeps resolving
+        after the domain is pointed. */}
+    <meta property="og:image" content="https://sundance-ttef.netlify.app/img/og-share.png" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
