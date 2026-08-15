@@ -48,6 +48,23 @@ const flyer = imageUrl(ev.flyer, 900);
       </div>
     ) : null}
 
+    {photos.length ? (
+      <>
+        {/* The heading is the editor's, not the code's. It was hardcoded as
+            "Photos from previous years" with a separate caption field below —
+            and every event had already filled that caption with a title
+            ("2026 Book Fair"), which is what it was really for. */}
+        <h3 class="block-title spaced">{ev.photosTitle?.trim() || 'Photos'}</h3>
+        <div class="gallery">
+          {photos.map((p) => (
+            <div class="gal-item">
+              <img src={imageUrl(p, 560, 420)} alt={p?.alt ?? ev.title} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </>
+    ) : null}
+
     {body && <div class="event-body-copy" set:html={body} />}
 
     {flyer && (
@@ -65,23 +82,6 @@ const flyer = imageUrl(ev.flyer, 900);
           ))}
         </ul>
       </div>
-    ) : null}
-
-    {photos.length ? (
-      <>
-        {/* The heading is the editor's, not the code's. It was hardcoded as
-            "Photos from previous years" with a separate caption field below —
-            and every event had already filled that caption with a title
-            ("2026 Book Fair"), which is what it was really for. */}
-        <h3 class="block-title spaced">{ev.photosTitle?.trim() || 'Photos'}</h3>
-        <div class="gallery">
-          {photos.map((p) => (
-            <div class="gal-item">
-              <img src={imageUrl(p, 560, 420)} alt={p?.alt ?? ev.title} loading="lazy" />
-            </div>
-          ))}
-        </div>
-      </>
     ) : null}
 
     {ev.ctaLabel && ev.ctaUrl ? (
