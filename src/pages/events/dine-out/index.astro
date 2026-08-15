@@ -13,9 +13,9 @@
  * /events/dine-out/index.html — so the redirects pointing here are unaffected.
  */
 import Base from '../../../layouts/Base.astro';
-import { getSeriesEvents, imageUrl, isBooked } from '../../../lib/sanity';
+import { getDineOutNights, imageUrl, isBooked } from '../../../lib/sanity';
 
-const nights = await getSeriesEvents('dine-out');
+const nights = await getDineOutNights();
 
 /* "Next up" is the first night that has not happened yet — derived, not stored,
    so nobody has to move a flag every month. A night with no date sorts last and

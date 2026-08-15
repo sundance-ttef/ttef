@@ -24,17 +24,16 @@
 import Base from '../../layouts/Base.astro';
 import TraditionPage from '../../components/TraditionPage.astro';
 import DatedEvent from '../../components/DatedEvent.astro';
-import { getTraditions, getTradition, getOneOffEvents, isBooked } from '../../lib/sanity';
+import { getTraditions, getTradition, getOneOffEvents } from '../../lib/sanity';
 
 export async function getStaticPaths() {
   const [traditions, oneOffs] = await Promise.all([getTraditions(), getOneOffEvents()]);
-  const booked = oneOffs.filter(isBooked);
 
   /* A one-off sharing a slug with an annual event would collide as an opaque
      Astro duplicate-route error. Name the offender instead — and let the
      tradition win, since its url is the one on the printed QR codes. */
   const taken = new Set(traditions.map((t) => t.slug));
-  for (const e of booked) {
+  for (const e of oneOffs) {
     if (taken.has(e.slug!)) {
       throw new Error(
         `The one-off event "${e.title}" uses the url "${e.slug}", which is already an annual event. Give it a different URL in the Studio.`,
@@ -45,7 +44,7 @@ export async function getStaticPaths() {
 
   return [
     ...traditions.map((t) => ({ params: { slug: t.slug }, props: { oneOff: null } })),
-    ...booked.map((e) => ({ params: { slug: e.slug! }, props: { oneOff: e } })),
+    ...oneOffs.map((e) => ({ params: { slug: e.slug! }, props: { oneOff: e } })),
   ];
 }
 
@@ -60,6 +59,6 @@ if (!oneOff && !ev) throw new Error(`No event in Sanity with slug "${slug}"`);
 
 <Base title={oneOff ? oneOff.title! : ev!.title}>
   {oneOff
-    ? <DatedEvent event={oneOff} back={{ href: '/events/', label: 'All events' }} />
+    ? <DatedEvent event={oneOff} eyebrow="Event" back={{ href: '/events/', label: 'All events' }} />
     : <TraditionPage event={ev!} />}
 </Base>

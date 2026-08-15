@@ -12,10 +12,10 @@
  */
 import Base from '../../../layouts/Base.astro';
 import DatedEvent from '../../../components/DatedEvent.astro';
-import { getSeriesEvents, isBooked } from '../../../lib/sanity';
+import { getDineOutNights, isBooked } from '../../../lib/sanity';
 
 export async function getStaticPaths() {
-  const nights = (await getSeriesEvents('dine-out')).filter(isBooked);
+  const nights = (await getDineOutNights()).filter(isBooked);
 
   /* Two nights sharing a url would collide here as an opaque Astro duplicate
      route error, so name the offender instead. Sanity's slug field checks
@@ -37,5 +37,11 @@ const { event } = Astro.props;
 ---
 
 <Base title={`${event.title} — Dine Out Night`}>
-  <DatedEvent event={event} back={{ href: '/events/dine-out/', label: 'All Dine Out Nights' }} />
+  <DatedEvent
+    event={event}
+    {/* A real "·", not &middot;. This is a JS string prop, not markup, so an
+        entity here is escaped on the way out and renders as literal text. */}
+    eyebrow="PAC · Dine Out Nights"
+    back={{ href: '/events/dine-out/', label: 'All Dine Out Nights' }}
+  />
 </Base>

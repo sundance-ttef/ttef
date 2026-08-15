@@ -203,38 +203,28 @@ export interface Tradition {
 }
 
 /**
- * One thing that happens on one date and has its own page — a dine out night,
- * or a one-off event.
+ * The shape a dated event's PAGE needs, whatever kind it is.
  *
- * The counterpart to `Tradition`. A tradition's identity is its NAME and its
- * date is this year's detail; a dated event's identity is its DATE, which is
- * why the date leads its url and why a stale date must NOT be hidden here the
- * way `eventWhen` hides one on a tradition.
- *
- * `seriesSlug` is set when the event belongs to a run of them (Dine Out
- * Nights) and empty when it is a one-off. That single field decides both where
- * the page lives and whether anything lists it.
+ * A dine out night and a one-off are separate document types — see the schemas
+ * for why — but they render the same page, so both queries project into this
+ * one display contract and one component draws it.
  */
 export interface DatedEvent {
   title: string | null;
   slug: string | null;
-  month: string | null;
   date: string | null;
   where: string | null;
   summary: string | null;
   link: string | null;
   photo: SanityImage;
-  seriesSlug: string | null;
-  seriesTitle: string | null;
-  seriesOrg: Tradition["org"] | null;
 }
 
-/**
- * One seat on a roster. The SEAT is the record; the person is an attribute of
- * it, because the board's structure outlasts any individual holding a place in
- * it. An empty `holder` is what makes a seat open — see `boardPosition` in the
- * Studio schema for why that is one field rather than two lists.
- */
+/** A night in the monthly run. `month` carries a slot that is not booked yet. */
+export interface DineOutNight extends DatedEvent {
+  month: string;
+  order: number;
+}
+
 export interface BoardPosition {
   role: string;
   org: 'pac' | 'foundation';
@@ -295,45 +285,43 @@ export const getTradition = (slug: string) =>
   );
 
 const DATED_EVENT_FIELDS = `
-  title, "slug": slug.current, month, date, where, summary, link, photo,
-  "seriesSlug": series->slug.current, "seriesTitle": series->title,
-  "seriesOrg": series->org
+  title, "slug": slug.current, date, where, summary, link, photo
 `;
 
 /**
- * The events in one series, in school-year order.
+ * The year's dine out nights, in school-year order.
  *
- * Ordered by `order` first and `date` second, not by date alone: an unbooked
- * slot has no date, and a slot that sorted by its month NAME would put April
+ * Ordered by `order` first and `date` second, not by date alone: a slot that is
+ * not booked has no date, and one sorted by its month NAME would put April
  * before February before January.
  */
-export const getSeriesEvents = (series: string) =>
-  sanity.fetch<DatedEvent[]>(
-    `*[_type == "datedEvent" && series->slug.current == $series]
-      | order(order asc, date asc){${DATED_EVENT_FIELDS}}`,
-    {series},
+export const getDineOutNights = () =>
+  sanity.fetch<DineOutNight[]>(
+    `*[_type == "dineOutNight"] | order(order asc, date asc){${DATED_EVENT_FIELDS}, month, order}`,
   );
 
 /**
  * One-off events — a page each, deliberately listed nowhere.
  *
- * These are reached only by a link someone places by hand, which is the point:
- * an ad-hoc event can have a real page to put on a flyer without every ad-hoc
- * event that ever happened piling up on the Events grid.
+ * Reached only by a link someone places by hand, which is the point: an ad-hoc
+ * event can have a real page to print without every ad-hoc event that ever
+ * happened piling up on the Events grid.
  */
 export const getOneOffEvents = () =>
   sanity.fetch<DatedEvent[]>(
-    `*[_type == "datedEvent" && !defined(series)]
-      | order(date desc){${DATED_EVENT_FIELDS}}`,
+    `*[_type == "oneOffEvent"] | order(date desc){${DATED_EVENT_FIELDS}}`,
   );
 
 /**
- * Whether a dated event has its own page.
+ * Whether a dine out night has its own page.
  *
- * It needs all three: a name and a date because otherwise the page has nothing
- * on it, and a url because that is what the page is built at. An unbooked slot
- * in a series has none of them and correctly gets no page — a link that leads
- * to "to be announced" is worse than no link.
+ * It needs all three: a restaurant and a date because otherwise the page has
+ * nothing on it, and a url because that is what the page is built at. A slot
+ * that is not booked has none of them and correctly gets no page — a link that
+ * leads to "to be announced" is worse than no link.
+ *
+ * A one-off needs no such check: its date, name and url are all required, so
+ * one cannot exist unbooked.
  */
 export const isBooked = (e: DatedEvent) => Boolean(e.slug && e.date && e.title);
 

@@ -2,25 +2,26 @@
 /**
  * The page body for one dated event — a dine out night, or a one-off.
  *
- * Shared by both routes so the two never drift: a night lives under its series
- * at /events/dine-out/<url>/ and a one-off sits at /events/<url>/, but they are
- * the same thing and read the same way.
+ * Shared by both routes so the two never drift: a dine out night lives at
+ * /events/dine-out/<url>/ and a one-off at /events/<url>/. They are separate
+ * document types, because they are filled in by different people thinking about
+ * different things, but they render identically.
  *
  * Unlike an annual event's page, this one never hides a date for being in the
  * past. The date is what the page IS — suppressing it on a night that has
  * already happened would leave a page about nothing.
  */
-import { fullDate, imageUrl, orgTag } from '../lib/sanity';
+import { fullDate, imageUrl } from '../lib/sanity';
 import type { DatedEvent } from '../lib/sanity';
 
 interface Props {
   event: DatedEvent;
+  /** e.g. "PAC · Dine Out Nights". The caller knows what kind of event this is. */
+  eyebrow: string;
   back: { href: string; label: string };
 }
 
-const { event, back } = Astro.props;
-
-const tag = event.seriesOrg ? orgTag(event.seriesOrg) : null;
+const { event, eyebrow, back } = Astro.props;
 /* Width only. Passing a height crops at the CDN, and these are portrait
    flyers — this is the page where the whole flyer matters most. */
 const photo = imageUrl(event.photo, 900);
@@ -31,12 +32,7 @@ const past = (event.date ?? '') < new Date().toISOString().slice(0, 10);
   <div class="wrap">
     <div class="sec-head page-head">
       <div>
-        <p class="eyebrow">
-          {tag && <span>{tag.label}</span>}
-          {tag && event.seriesTitle && <span> &middot; </span>}
-          {event.seriesTitle && <span>{event.seriesTitle}</span>}
-          {!tag && !event.seriesTitle && <span>Event</span>}
-        </p>
+        <p class="eyebrow">{eyebrow}</p>
         <h2>{event.title}</h2>
         {/* Whitespace before an expression is trimmed at a line break, so the
             date and the location are assembled as elements rather than as
