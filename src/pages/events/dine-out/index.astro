@@ -1,0 +1,77 @@
+---
+/**
+ * Dine Out Nights — the series page.
+ *
+ * This file is hand-built and shadows the generic `events/[slug].astro` route,
+ * because the `tradition` document with slug "dine-out" exists only to put the
+ * series in the Events grid and the Events menu. Astro gives a static route
+ * precedence over a dynamic one, which is what makes that work.
+ *
+ * It lives in a directory rather than as `dine-out.astro` so that the nights
+ * themselves can sit beside it at `[slug].astro`. The built path is identical
+ * either way — Astro's default `directory` build format already emitted
+ * /events/dine-out/index.html — so the redirects pointing here are unaffected.
+ */
+import Base from '../../../layouts/Base.astro';
+import { getSeriesEvents, imageUrl, isBooked } from '../../../lib/sanity';
+
+const nights = await getSeriesEvents('dine-out');
+
+/* "Next up" is the first night that has not happened yet — derived, not stored,
+   so nobody has to move a flag every month. A night with no date sorts last and
+   counts as upcoming, which is right: an unscheduled month is still to come. */
+const today = new Date().toISOString().slice(0, 10);
+const nextIndex = nights.findIndex((n) => !n.date || n.date >= today);
+---
+
+<Base title="Dine Out Nights">
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">PAC &middot; Monthly</p>
+          <h2>Dine Out Nights</h2>
+          <p>Eat at a local restaurant on the right night, and a portion of your check comes
+             back to Sundance. No coupon, no sign-up &mdash; just show up.</p>
+        </div>
+      </div>
+
+      <h3 class="block-title">This year&rsquo;s schedule</h3>
+      <div class="dine-grid">
+        {nights.map((n, i) => {
+          const photo = imageUrl(n.photo, 520, 380);
+          const dayLabel = n.date
+            ? new Date(n.date + 'T12:00:00').toLocaleDateString('en-US', {
+                weekday: 'short', month: 'short', day: 'numeric',
+              })
+            : null;
+          /* A night gets its own page only once it is booked. An unbooked month
+             is still a real card — it tells families a night is coming — but
+             linking it would lead to a page that says nothing. */
+          const href = isBooked(n) ? `/events/dine-out/${n.slug}/` : null;
+          const cls = `dine-card${i === nextIndex ? ' is-next' : i < nextIndex ? ' is-past' : ''}`;
+          const inner = (
+            <>
+              <div class="dine-photo">
+                {photo
+                  ? <img src={photo} alt={`${n.title ?? n.month} dine out night`} loading="lazy" />
+                  : <img class="no-photo" src="/img/no-photo.png" alt="Photo coming soon" loading="lazy" />}
+              </div>
+              <div class="dine-body">
+                <div class="dine-date">
+                  {dayLabel ?? n.month}{i === nextIndex && <> &middot; next up</>}
+                </div>
+                <div class="dine-name">{n.title ?? 'Coming soon'}</div>
+                {n.summary && <p>{n.summary}</p>}
+                {href && <span class="dine-link">See the details &rarr;</span>}
+              </div>
+            </>
+          );
+          return href
+            ? <a class={`${cls} is-link`} href={href}>{inner}</a>
+            : <div class={cls}>{inner}</div>;
+        })}
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,83 @@
+---
+/**
+ * Tagaby — a way to give by shopping, not a sponsor.
+ *
+ * Deliberately NOT on the sponsor wall. A sponsor gives money and is thanked
+ * with a logo; Tagaby is the other direction — families buy something and a
+ * share comes back. That is the same shape as Dine Out Nights, so it lives
+ * with the ways to give. Filing it under sponsors would read as "this business
+ * donated" rather than "go and do this", and would sit paying sponsors beside
+ * a shop link.
+ *
+ * The six steps are rebuilt as markup rather than dropping in the flyer image:
+ * the flyer is text baked into a JPEG, which is unreadable on a phone and
+ * invisible to screen readers and search. The flyer stays a print handout.
+ *
+ * No referral link — the plain address is what we have. If Tagaby later gives
+ * us a referral URL, it goes in ONE place: TAGABY_URL below.
+ */
+import Base from '../layouts/Base.astro';
+
+const TAGABY_URL = 'https://tagaby.com';
+
+/* The order matters — it is the story of one lost water bottle coming home. */
+const steps = [
+  {icon: '🎒', title: 'You tag your items', copy: 'Stick a Tagaby label on backpacks, lunch boxes, water bottles, jackets.'},
+  {icon: '❓', title: 'An item goes missing', copy: 'It ends up in a classroom, on a field, or in the Lost &amp; Found bin.'},
+  {icon: '👀', title: 'Someone finds it', copy: 'A student, a teacher, or a parent picks it up.'},
+  {icon: '📱', title: 'They scan the tag', copy: 'The tag carries a QR code. Any phone camera reads it — no app needed.'},
+  {icon: '✉️', title: 'You get an email', copy: 'It tells you where the item is, without showing anyone your details.'},
+  {icon: '🎉', title: 'You get it back', copy: 'Instead of it joining the pile that gets donated at the end of the year.'},
+];
+---
+
+<Base
+  title="Tagaby"
+  description="Label your child's belongings with Tagaby tags — 20% of profits comes back to the Sundance PAC, and fewer items end up in Lost & Found."
+>
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">PAC &middot; A way to give</p>
+          <h2>Help reduce Lost &amp; Found</h2>
+          <p>Each year Sundance donates nearly <b>800 unclaimed Lost &amp; Found items</b>.
+             Personalised tags from Tagaby help get more of those belongings back to the
+             children they belong to.</p>
+        </div>
+        <a class="btn btn-lg btn-primary" href={TAGABY_URL} target="_blank" rel="noopener noreferrer">
+          Visit Tagaby
+        </a>
+      </div>
+
+      <div class="tag-give">
+        <div class="tag-give-amount">20%</div>
+        <div class="tag-give-copy">
+          <b>of profits comes back to the Sundance PAC</b>
+          <p>We&rsquo;re proud to partner with Tagaby. Tag kits start at $5, so it is an easy way to
+             label your child&rsquo;s things, cut down on waste, and support the school at the same
+             time.</p>
+        </div>
+      </div>
+
+      <h3 class="block-title spaced">How it works</h3>
+      <div class="tag-steps">
+        {steps.map((s, i) => (
+          <div class="tag-step">
+            <div class="tag-step-icon" aria-hidden="true">{s.icon}</div>
+            <div class="tag-step-num">Step {i + 1}</div>
+            <h4>{s.title}</h4>
+            <p set:html={s.copy} />
+          </div>
+        ))}
+      </div>
+
+      <div class="cs-actions mt">
+        <a class="btn btn-lg btn-primary" href={TAGABY_URL} target="_blank" rel="noopener noreferrer">
+          Get tags at tagaby.com
+        </a>
+        <a class="btn btn-outline" href="/support/">Other ways to give</a>
+      </div>
+    </div>
+  </section>
+</Base>

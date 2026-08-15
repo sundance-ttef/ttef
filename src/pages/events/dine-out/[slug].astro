@@ -1,0 +1,41 @@
+---
+/**
+ * One dine out night, at /events/dine-out/<url>/.
+ *
+ * Nested under the series rather than sitting flat at /events/<url>/ so the
+ * path says what the thing is, and so trimming the last segment lands on the
+ * schedule it belongs to.
+ *
+ * Only BOOKED nights get built — see `isBooked`. An unbooked month is a real
+ * card on the schedule but has no date, no venue and no url, so there is
+ * nothing to put on a page for it.
+ */
+import Base from '../../../layouts/Base.astro';
+import DatedEvent from '../../../components/DatedEvent.astro';
+import { getSeriesEvents, isBooked } from '../../../lib/sanity';
+
+export async function getStaticPaths() {
+  const nights = (await getSeriesEvents('dine-out')).filter(isBooked);
+
+  /* Two nights sharing a url would collide here as an opaque Astro duplicate
+     route error, so name the offender instead. Sanity's slug field checks
+     uniqueness as you type, but a slug can still be set by an import. */
+  const seen = new Set<string>();
+  for (const n of nights) {
+    if (seen.has(n.slug!)) {
+      throw new Error(
+        `Two dine out nights share the url "${n.slug}". Give one of them a different URL in the Studio.`,
+      );
+    }
+    seen.add(n.slug!);
+  }
+
+  return nights.map((event) => ({ params: { slug: event.slug! }, props: { event } }));
+}
+
+const { event } = Astro.props;
+---
+
+<Base title={`${event.title} — Dine Out Night`}>
+  <DatedEvent event={event} back={{ href: '/events/dine-out/', label: 'All Dine Out Nights' }} />
+</Base>

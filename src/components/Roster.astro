@@ -1,0 +1,95 @@
+---
+/**
+ * One org's whole section of the About page — its roster and its open seats.
+ *
+ * All three blocks come from the SAME list of positions, split by whether
+ * anyone holds them. That is the point of the model: a seat cannot be filled
+ * and advertised as vacant at the same time, because it is one record and the
+ * holder's name is the only thing that decides which block it lands in.
+ *
+ * Two tiers among the filled seats, which is the design the hand-written
+ * version already had: the officers as large cards, everyone else as a compact
+ * list. The markup and classes here are unchanged from when it was typed out.
+ */
+import { imageUrl, initials, isOpen } from '../lib/sanity';
+import type { BoardPosition } from '../lib/sanity';
+
+interface Props {
+  title: string;
+  year: string;
+  org: 'foundation' | 'pac';
+  positions: BoardPosition[];
+  /** Where "Ask about a role" goes, and which colour the button takes. */
+  contactHref: string;
+  buttonClass: string;
+}
+
+const { title, year, org, positions, contactHref, buttonClass } = Astro.props;
+
+/* The org's letter is the CSS hook the roster colours key off: maroon for the
+   Foundation, teal for PAC. */
+const cls = org === 'pac' ? 'p' : 'f';
+
+const mine = positions.filter((p) => p.org === org);
+const filled = mine.filter((p) => !isOpen(p));
+const leaders = filled.filter((p) => p.featured);
+const rest = filled.filter((p) => !p.featured);
+const open = mine.filter(isOpen);
+---
+
+<h3 class="roster-title">{title} <span>{year}</span></h3>
+
+{leaders.length > 0 && (
+  <div class="leaders">
+    {leaders.map((p) => {
+      const photo = imageUrl(p.photo, 208, 208);
+      return (
+        <div class={`leader ${cls}`}>
+          <div class={`leader-photo${photo ? ' has-photo' : ''}`}>
+            {photo
+              ? <img src={photo} alt={p.holder!} />
+              : <span>Photo<br />needed</span>}
+            <span class="leader-initials">{initials(p.holder!)}</span>
+          </div>
+          <div class="leader-body">
+            <div class="leader-role">{p.role}</div>
+            <div class="leader-name">{p.holder}</div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
+
+{rest.length > 0 && (
+  <div class="roster">
+    {rest.map((p) => (
+      <div class="person">
+        <div class={`avatar ${cls}`}>{initials(p.holder!)}</div>
+        <div>
+          <div class="person-name">{p.holder}</div>
+          {/* Plain text, not set:html — roles hold real "·" and "&" characters
+              rather than entities, so nothing here can inject markup. */}
+          <div class="person-role">{p.role}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+{open.length > 0 && (
+  <div class={`open-inline ${cls}`}>
+    <h4>Open positions</h4>
+    <div class="open-stack">
+      {open.map((p) => (
+        <div class="open-role">
+          <div class="open-name">{p.role}</div>
+          {/* A seat can open before anyone has written up what it involves, so
+              the description is optional and the row degrades to the role. */}
+          {p.description && <div class="open-desc">{p.description}</div>}
+        </div>
+      ))}
+    </div>
+    <a class={`btn btn-lg ${buttonClass}`} href={contactHref}>Ask about a role</a>
+  </div>
+)}

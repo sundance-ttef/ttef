@@ -1,120 +1,65 @@
 ---
 /**
- * Every annual event page, from one layout.
+ * Every event page that lives directly under /events/, from one route.
  *
- * These were seven near-identical files that drifted: five were the same
- * placeholder shell, two had hand-built stats and galleries, and NONE of them
- * rendered the photos editors had uploaded — Book Fair had two and Fun Run
- * four, sitting invisible in the CMS. One route means a new event added in the
- * Studio gets a real page with no code, and a change to the layout reaches
- * every event at once.
+ * Two different things land here, and the props say which:
  *
- * The URL comes from the event's slug, so the paths printed on flyers and
- * pointed at by the old-site redirects keep working.
+ *   a TRADITION — Book Fair, Fall Carnival, the Auction. Identified by name,
+ *     recurs every year, listed on the Events grid and in the Events menu.
+ *     These were once seven near-identical files that drifted: five were the
+ *     same placeholder shell, two had hand-built stats and galleries, and NONE
+ *     rendered the photos editors had uploaded. One route means a new event
+ *     added in the Studio gets a real page with no code.
+ *
+ *   a ONE-OFF dated event — identified by its date, happens once, listed
+ *     nowhere. It has a page so there is something to put on a flyer; it stays
+ *     off the Events grid so ad-hoc things do not pile up there.
+ *
+ * A dated event that belongs to a SERIES does not come here — it nests under
+ * its series instead, at /events/dine-out/<url>/.
+ *
+ * The URL comes from the slug, so the paths printed on flyers and pointed at by
+ * the old-site redirects keep working.
  */
 import Base from '../../layouts/Base.astro';
-import { getTraditions, getTradition, eventWhen, orgTag, imageUrl } from '../../lib/sanity';
-import { toHTML } from '@portabletext/to-html';
+import TraditionPage from '../../components/TraditionPage.astro';
+import DatedEvent from '../../components/DatedEvent.astro';
+import { getTraditions, getTradition, getOneOffEvents, isBooked } from '../../lib/sanity';
 
 export async function getStaticPaths() {
-  const events = await getTraditions();
-  return events.map((e) => ({ params: { slug: e.slug } }));
+  const [traditions, oneOffs] = await Promise.all([getTraditions(), getOneOffEvents()]);
+  const booked = oneOffs.filter(isBooked);
+
+  /* A one-off sharing a slug with an annual event would collide as an opaque
+     Astro duplicate-route error. Name the offender instead — and let the
+     tradition win, since its url is the one on the printed QR codes. */
+  const taken = new Set(traditions.map((t) => t.slug));
+  for (const e of booked) {
+    if (taken.has(e.slug!)) {
+      throw new Error(
+        `The one-off event "${e.title}" uses the url "${e.slug}", which is already an annual event. Give it a different URL in the Studio.`,
+      );
+    }
+    taken.add(e.slug!);
+  }
+
+  return [
+    ...traditions.map((t) => ({ params: { slug: t.slug }, props: { oneOff: null } })),
+    ...booked.map((e) => ({ params: { slug: e.slug! }, props: { oneOff: e } })),
+  ];
 }
 
+const { oneOff } = Astro.props;
 const { slug } = Astro.params;
-const ev = await getTradition(slug!);
-if (!ev) throw new Error(`No event in Sanity with slug "${slug}"`);
 
-const tag = orgTag(ev.org);
-const when = eventWhen(ev.month, ev.date);
-const whenText =
-  when.full ?? (when.month ? `${when.month} — date to be announced` : 'Date to be announced');
-
-/* An event with no write-up yet still shows its date, its photos and its
-   numbers — "details coming soon" replaces the body only, never the page. */
-const body = ev.body?.length ? toHTML(ev.body) : null;
-const photos = ev.photos ?? [];
+/* Only the tradition needs a second fetch: its page uses fields the grid query
+   does not select. A one-off arrives whole in props. */
+const ev = oneOff ? null : await getTradition(slug!);
+if (!oneOff && !ev) throw new Error(`No event in Sanity with slug "${slug}"`);
 ---
 
-<Base title={ev.title}>
-  <section>
-    <div class="wrap">
-      <div class="sec-head page-head">
-        <div>
-          <p class="eyebrow">{tag.label} &middot; {whenText}</p>
-          <h2>{ev.title}</h2>
-          <p>{ev.summary}</p>
-        </div>
-      </div>
-
-      {ev.stats?.length ? (
-        <div class="stat-row">
-          {ev.stats.map((s) => (
-            <div class="stat">
-              <div class="stat-num">{s.value}</div>
-              <div class="stat-label">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {body && <div class="event-body-copy" set:html={body} />}
-
-
-
-      {ev.milestones?.length ? (
-        <div class="breakdown mt">
-          <h3>What we unlock together</h3>
-          <ul class="fund-list">
-            {ev.milestones.map((m) => (
-              <li><span>{m.label}</span><span class="amt">{m.amount}</span></li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      {photos.length ? (
-        <>
-          <h3 class="block-title spaced">Photos from previous years</h3>
-          <div class="gallery">
-            {photos.map((p) => (
-              <div class="gal-item">
-                <img src={imageUrl(p, 560, 420)} alt={p?.alt ?? ev.title} loading="lazy" />
-              </div>
-            ))}
-          </div>
-          {ev.photosCaption && <p class="ps-caption">{ev.photosCaption}</p>}
-        </>
-      ) : null}
-
-      {ev.ctaLabel && ev.ctaUrl ? (
-        <div class="cs-actions mt">
-          <a class="btn btn-lg btn-primary" href={ev.ctaUrl} target="_blank" rel="noopener noreferrer">
-            {ev.ctaLabel}
-          </a>
-        </div>
-      ) : null}
-
-      {!body && (
-        <div class="coming-soon">
-          <div class="cs-icon" aria-hidden="true">&#128197;</div>
-          <h3>Details coming soon</h3>
-          {/* A confirmed date is printed at the top of this page, so telling
-              someone to go and look it up on the calendar reads as though the
-              date above were not real. The two states say different things. */}
-          {when.confirmed ? (
-            <p>The date is set &mdash; we&rsquo;re still finalising the rest, and will post
-               full details here as soon as we have them.</p>
-          ) : (
-            <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
-               we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
-          )}
-          <div class="cs-actions">
-            {!when.confirmed && <a class="btn btn-primary" href="/calendar/">See the calendar</a>}
-            <a class={`btn ${when.confirmed ? 'btn-primary' : 'btn-outline'}`} href="/volunteer/">Help run it</a>
-          </div>
-        </div>
-      )}
-    </div>
-  </section>
+<Base title={oneOff ? oneOff.title! : ev!.title}>
+  {oneOff
+    ? <DatedEvent event={oneOff} back={{ href: '/events/', label: 'All events' }} />
+    : <TraditionPage event={ev!} />}
 </Base>

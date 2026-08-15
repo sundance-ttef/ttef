@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getYearlyEvents, imageUrl, orgTag, eventWhen } from '../../lib/sanity';
+import { getYearlyEvents, imageUrl, orgTag, traditionWhen } from '../../lib/sanity';
 
 /* Events is now only about the main yearly events. The upcoming-dates list and
    the dine-out teaser moved off: dates live on /calendar/, and Dine Out Nights
@@ -24,7 +24,6 @@ const events = await getYearlyEvents();
         {events.map((e) => {
           const tag = orgTag(e.org);
           const cover = imageUrl(e.coverImage, 560, 380);
-          const when = eventWhen(e.month, e.date);
           return (
             <a class="event event-static is-link" href={`/events/${e.slug}/`}>
               <div class="event-img is-placeholder">
@@ -35,7 +34,7 @@ const events = await getYearlyEvents();
               <div class="event-body">
                 <div class="event-meta">
                   <span class={`owner ${tag.cls}`}>{tag.label}</span>
-                  <span class="event-date">{when.month}</span>
+                  <span class="event-date">{traditionWhen(e).short}</span>
                 </div>
                 <h3>{e.title}</h3>
                 <p>{e.summary}</p>

@@ -320,8 +320,10 @@
   section { padding-block: 68px; }
   .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; flex-wrap: wrap; }
   .sec-head h2 { font-size: var(--fs-section); letter-spacing: -.015em; }
-  .impact .sec-head h2 { font-size: var(--fs-display); }
-  .impact .sec-head p { font-size: var(--fs-lg); }
+  /* /impact/ once marked its page title as a SECTION head and then overrode it
+     to --fs-display, making it larger than every real page title on the site.
+     It now uses .page-head like every other page, so the two overrides that
+     compensated for the wrong wrapper are gone. */
   .sec-head p { color: var(--muted); font-size: var(--fs-md); margin-top: 7px; max-width: 56ch; }
   .link-more { font-size: var(--fs-sm); font-weight: 600; color: var(--maroon); text-decoration: none; white-space: nowrap; }
   .link-more:hover { text-decoration: underline; }
@@ -440,7 +442,7 @@
   }
 
   /* sponsors */
-  .sponsors { background: var(--surface-sunken); }
+  .supporters { background: var(--surface-sunken); }
   .tier-row { display: flex; flex-direction: column; gap: 30px; }
   .tier-head {
     display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
@@ -816,7 +818,7 @@
   .strip-track { gap: 20px; align-items: center; }
   /* tier colours read as the metals themselves, so they never collide with
      the maroon=Foundation / teal=PAC meaning used elsewhere */
-  .sponsor-rail {
+  .supporter-rail {
     /* Clips the moving row. The rail — not the inner track — is what stops the
        row widening the document; measured before at root scrollWidth 2951
        against a 1200 viewport. */
@@ -828,13 +830,13 @@
     mask-image: linear-gradient(90deg, transparent 0, #000 56px,
                                 #000 calc(100% - 56px), transparent 100%);
   }
-  .sponsor-marquee {
+  .supporter-marquee {
     display: flex; width: max-content;
     animation: sponsor-scroll 42s linear infinite;
   }
   /* Pausing on hover lets someone actually read a logo they noticed. */
-  .sponsor-rail:hover .sponsor-marquee,
-  .sponsor-rail:focus-within .sponsor-marquee { animation-play-state: paused; }
+  .supporter-rail:hover .supporter-marquee,
+  .supporter-rail:focus-within .supporter-marquee { animation-play-state: paused; }
   @keyframes sponsor-scroll {
     from { transform: translateX(0); }
     /* exactly one pass of the list, so the loop has no seam */
@@ -842,8 +844,8 @@
   }
   /* No animation: a static row of sponsors, which is a fine outcome. */
   @media (prefers-reduced-motion: reduce) {
-    .sponsor-marquee { animation: none; }
-    .sponsor-rail { overflow-x: auto; }
+    .supporter-marquee { animation: none; }
+    .supporter-rail { overflow-x: auto; }
   }
   .strip-track { display: flex; gap: 20px; padding-right: 20px; align-items: center; }
 
@@ -876,18 +878,18 @@
     .strip-track .tier-tab { flex-basis: 34px; font-size: var(--fs-3xs); letter-spacing: .16em; }
     .strip-track .strip-logo { padding: 14px 20px; }
     .strip-track .strip-logo img { max-height: 66px; max-width: 172px; }
-      .sponsor-rail { gap: 6px; }
+      .supporter-rail { gap: 6px; }
   }
 
   /* gold marks sponsorship throughout: the gold CTA, the platinum tier, this band */
-  .sponsor-program {
+  .supporter-program {
     background: linear-gradient(170deg, var(--gold-soft) 0%, var(--ground) 100%);
     border-top: 1px solid var(--hairline); padding-block: 76px;
   }
   /* `contain: paint` is what actually stops the 720px table inflating the
      document — overflow-x:auto scrolls the table but its min-content width
      still leaked out, leaving ~280px of dead space to the right of every
-     narrow viewport. Same fix as .sponsor-scroller. */
+     narrow viewport. Same fix as .supporter-scroller. */
   .tier-table-wrap {
     overflow-x: auto; contain: paint;
     border-radius: var(--radius); box-shadow: var(--shadow);
@@ -941,7 +943,7 @@
 
   @media (max-width: 760px) {
     .addon-list { grid-template-columns: 1fr; }
-    .sponsor-program { padding-block: 56px; }
+    .supporter-program { padding-block: 56px; }
   }
 
   .progress-wide.on-dark {
@@ -968,10 +970,10 @@
   .bar-lg { height: 18px; margin-top: 16px; }
 
   .spiritwear { padding-block: 72px; background: var(--surface-sunken); }
-  #page-support .sponsors { background: var(--ground); }
+  #page-support .supporters { background: var(--ground); }
   /* Spirit Wear and the sponsor wall share a tint, so they read as one slab
      without an explicit separator between them */
-  .spiritwear + .sponsors {
+  .spiritwear + .supporters {
     border-top: 1px solid var(--hairline);
     padding-block: 72px;
   }
@@ -1306,10 +1308,10 @@
   .btn-shop:hover {
     border-color: var(--maroon); background: var(--hover-bg-brand); transform: translateY(-1px);
   }
-  .sponsorship-page { border-top: 0; padding-top: 0; }
-  .sponsor-close { padding-block: 64px 84px; text-align: center; }
-  .sponsor-close h3 { font-size: var(--fs-section); }
-  .sponsor-close p { font-size: var(--fs-md); color: var(--muted); max-width: 60ch; margin: 12px auto 0; }
+  .supporter-page { border-top: 0; padding-top: 0; }
+  .supporter-close { padding-block: 64px 84px; text-align: center; }
+  .supporter-close h3 { font-size: var(--fs-section); }
+  .supporter-close p { font-size: var(--fs-md); color: var(--muted); max-width: 60ch; margin: 12px auto 0; }
   @media (max-width: 860px) { .amount-grid--three { grid-template-columns: 1fr; } }
 
   /* The two-column pairs (monthly giving / employer match, and their siblings on
@@ -1451,3 +1453,83 @@
 .sg-copy { flex: 1; min-width: 260px; }
 .sg-copy b { display: block; margin-bottom: 4px; }
 .sg-copy p { font-size: var(--fs-sm); color: var(--muted); margin: 0; }
+
+/* ---------------------------------------------------------------------------
+   Dated events — one dine out night, or a one-off.
+   Appended at the end deliberately: this file is long and flat, so a rule
+   added earlier loses to a later one at equal specificity.
+   --------------------------------------------------------------------------- */
+
+/* A booked night's card becomes a link. Inherit the colour so the card does not
+   turn link-blue, and match the lift the Events cards already use. */
+.dine-card.is-link { cursor: pointer; color: inherit; text-decoration: none; }
+.dine-card.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.dine-card.is-link:hover .dine-link { text-decoration: underline; }
+
+/* The date is the headline fact on a dated event's page — it is what the page
+   IS — so it is set larger than the lead paragraph it sits in. */
+.de-when { font-size: var(--fs-lg); }
+.de-when strong { color: var(--ink); }
+
+.de-past {
+  background: var(--gold-soft); border: 1px solid var(--gold);
+  border-radius: var(--radius); padding: 12px 16px; margin-bottom: 28px;
+  font-size: var(--fs-sm); color: var(--gold-ink-2);
+}
+
+.de-photo {
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  overflow: hidden; margin-bottom: 28px;
+}
+.de-photo img { display: block; width: 100%; height: auto; }
+
+.de-back { margin-top: 34px; font-size: var(--fs-sm); font-weight: 650; }
+.de-back a { color: var(--maroon); }
+
+/* A featured board member with a real headshot. Without one the circle keeps
+   its dashed "photo needed" placeholder, which is what the whole roster showed
+   before the headshots existed — so a roster can be corrected without them. */
+.leader-photo.has-photo { border-style: solid; border-color: var(--hairline); background: none; }
+.leader-photo.has-photo img {
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;
+}
+
+/* ---------------------------------------------------------------------------
+   Tagaby — a way to give by shopping. Appended at the end deliberately: this
+   file is long and flat, so a rule added earlier loses to a later one at equal
+   specificity.
+   --------------------------------------------------------------------------- */
+
+/* The home-page band, matching the Spirit Wear teaser it sits near. */
+.tagaby-teaser { padding-block: 72px; background: var(--surface-sunken); }
+
+/* The share, stated the way the suggested gift is: the figure carries the
+   weight and the explanation sits beside it. */
+.tag-give {
+  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
+  background: var(--gold-soft); border: 1px solid var(--gold);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 34px;
+}
+.tag-give-amount {
+  font-family: var(--display); font-size: var(--fs-5xl); font-weight: 700;
+  color: var(--gold-ink-2); line-height: 1;
+}
+.tag-give-copy { flex: 1; min-width: 260px; }
+.tag-give-copy b { display: block; margin-bottom: 4px; }
+.tag-give-copy p { font-size: var(--fs-sm); color: var(--muted); margin: 0; }
+
+.tag-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.tag-step {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 22px 24px; border-top: 3px solid var(--teal);
+}
+.tag-step-icon { font-size: 30px; line-height: 1; }
+.tag-step-num {
+  margin-top: 12px; font-size: var(--fs-2xs); font-weight: 700;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
+}
+.tag-step h4 { font-family: var(--display); font-size: var(--fs-xl); margin-top: 4px; }
+.tag-step p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+@media (max-width: 860px) { .tag-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .tag-steps { grid-template-columns: 1fr; } }

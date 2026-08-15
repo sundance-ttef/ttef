@@ -85,20 +85,45 @@ export const SCHOOL_MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
 ];
 
-/**
- * Monthly events lead the list: they are happening all year, so they are always
- * the most immediately relevant thing on the page, where a single-month event
- * may be ten months away. Anything with an unrecognised month sorts last.
- */
+/** Anything with an unrecognised month sorts last. */
 const monthIndex = (m?: string | null) => {
-  if (m === 'Monthly') return -1;
   const i = SCHOOL_MONTHS.indexOf(m ?? '');
   return i === -1 ? 99 : i;
 };
 
-/** School-year order: by month, then by date within a month. */
+/** Whether this happens once a year, as opposed to running through it. */
+const isAnnual = (e: Tradition) => (e.cadence ?? 'annual') === 'annual';
+
+/**
+ * School-year order, with recurring events first.
+ *
+ * They lead because they are happening all year, so they are always the most
+ * immediately relevant thing on the page, where a single-month event may be ten
+ * months away. This used to be a -1 returned from the month lookup for a magic
+ * "Monthly" month; now the cadence says it outright, and a month is only ever
+ * a month.
+ */
 export const bySchoolYear = (a: Tradition, b: Tradition) =>
-  monthIndex(a.month) - monthIndex(b.month) || (a.date ?? '').localeCompare(b.date ?? '');
+  Number(isAnnual(a)) - Number(isAnnual(b)) ||
+  monthIndex(a.month) - monthIndex(b.month) ||
+  (a.date ?? '').localeCompare(b.date ?? '') ||
+  a.title.localeCompare(b.title);
+
+/**
+ * How an entry's timing reads, in the two lengths the site needs.
+ *
+ * `short` goes in the tight places — a card's meta line, a menu row — where
+ * "October — date to be announced" would not fit and the month alone is enough.
+ * `full` is the page's own eyebrow, where the missing date is worth saying.
+ *
+ * A recurring event uses its cadence for both and is never described as
+ * awaiting a date, because it is not waiting on one.
+ */
+export const traditionWhen = (e: Tradition) => {
+  if (!isAnnual(e)) return {short: 'Monthly', full: 'Monthly'};
+  const when = eventWhen(e.month, e.date);
+  return {short: when.month ?? '', full: when.label};
+};
 
 /**
  * How an event's timing should read.
@@ -114,14 +139,19 @@ export const bySchoolYear = (a: Tradition, b: Tradition) =>
  */
 export function eventWhen(month?: string | null, iso?: string | null) {
   const usable = Boolean(iso) && schoolYearOf(iso!) === currentSchoolYear();
+  const monthLabel =
+    month ?? (iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-US', {month: 'long'}) : null);
+  const full = usable
+    ? new Date(iso! + 'T12:00:00').toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric',
+      })
+    : null;
   return {
-    month: month ?? (iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-US', {month: 'long'}) : null),
-    full: usable
-      ? new Date(iso! + 'T12:00:00').toLocaleDateString('en-US', {
-          weekday: 'long', month: 'long', day: 'numeric',
-        })
-      : null,
+    month: monthLabel,
+    full,
     confirmed: usable,
+    /** The one string a page prints for a DATED event's timing. */
+    label: full ?? (monthLabel ? `${monthLabel} — date to be announced` : 'Date to be announced'),
   };
 }
 
@@ -159,11 +189,12 @@ export interface Tradition {
   coverImage?: SanityImage;
   stats?: Stat[];
   milestones?: Milestone[];
-  photosCaption?: string | null;
+  photosTitle?: string | null;
   body?: any[];
   slug: string;
   date?: string | null;
   month?: string | null;
+  cadence?: 'annual' | 'monthly';
   org: 'pac' | 'foundation' | 'school';
   summary: string;
   ctaLabel?: string | null;
@@ -171,13 +202,47 @@ export interface Tradition {
   photos?: SanityImage[];
 }
 
-export interface DineOutNight {
-  month: string;
+/**
+ * One thing that happens on one date and has its own page — a dine out night,
+ * or a one-off event.
+ *
+ * The counterpart to `Tradition`. A tradition's identity is its NAME and its
+ * date is this year's detail; a dated event's identity is its DATE, which is
+ * why the date leads its url and why a stale date must NOT be hidden here the
+ * way `eventWhen` hides one on a tradition.
+ *
+ * `seriesSlug` is set when the event belongs to a run of them (Dine Out
+ * Nights) and empty when it is a one-off. That single field decides both where
+ * the page lives and whether anything lists it.
+ */
+export interface DatedEvent {
+  title: string | null;
+  slug: string | null;
+  month: string | null;
   date: string | null;
-  restaurant: string | null;
-  blurb: string | null;
+  where: string | null;
+  summary: string | null;
   link: string | null;
   photo: SanityImage;
+  seriesSlug: string | null;
+  seriesTitle: string | null;
+  seriesOrg: Tradition["org"] | null;
+}
+
+/**
+ * One seat on a roster. The SEAT is the record; the person is an attribute of
+ * it, because the board's structure outlasts any individual holding a place in
+ * it. An empty `holder` is what makes a seat open — see `boardPosition` in the
+ * Studio schema for why that is one field rather than two lists.
+ */
+export interface BoardPosition {
+  role: string;
+  org: 'pac' | 'foundation';
+  holder: string | null;
+  photo: SanityImage;
+  featured: boolean;
+  order: number;
+  description: string | null;
 }
 
 export interface VolunteerSignup {
@@ -202,20 +267,20 @@ export const getSponsors = () =>
 /** Every annual event, in school-year order. Used to build the page routes. */
 export const getTraditions = () =>
   sanity.fetch<Tradition[]>(`*[_type == "tradition"]{
-    title, "slug": slug.current, month, date, org, summary, ctaLabel, ctaUrl, photos
+    title, "slug": slug.current, month, cadence, date, org, summary, ctaLabel, ctaUrl, photos
   }`);
 
 /**
- * The annual events: the Events menu and the grid, which must always agree.
+ * Every entry on the Events page and in the Events menu, which must always agree.
  *
- * Dine Out Nights is deliberately NOT one of these. It is a monthly fundraiser
- * with its own page and its own document type, linked from Support Us — it was
- * briefly modelled as an annual event with a "not really an annual event"
- * toggle, which is a sign the type was wrong rather than the data.
+ * Dine Out Nights IS one of these — it is a card and a menu item like any
+ * other. What it is not is annual, and that is said by its `cadence` rather
+ * than by a "not really an annual event" toggle or a fake month. The nights
+ * themselves are `datedEvent`s pointing back at it.
  */
 export const getYearlyEvents = async () => {
   const rows = await sanity.fetch<Tradition[]>(`*[_type == "tradition"]{
-    title, "slug": slug.current, month, date, org, summary, coverImage
+    title, "slug": slug.current, month, cadence, date, org, summary, coverImage
   }`);
   return rows.sort(bySchoolYear);
 };
@@ -223,15 +288,100 @@ export const getYearlyEvents = async () => {
 export const getTradition = (slug: string) =>
   sanity.fetch<Tradition | null>(
     `*[_type == "tradition" && slug.current == $slug][0]{
-      title, "slug": slug.current, month, date, org, summary,
-      coverImage, stats, milestones, photosCaption, body, ctaLabel, ctaUrl, photos
+      title, "slug": slug.current, month, cadence, date, org, summary,
+      coverImage, stats, milestones, photosTitle, body, ctaLabel, ctaUrl, photos
     }`,
     {slug},
   );
 
-export const getDineOutNights = () =>
-  sanity.fetch<DineOutNight[]>(`*[_type == "dineOutNight"]
-    | order(order asc){ month, date, restaurant, blurb, link, photo }`);
+const DATED_EVENT_FIELDS = `
+  title, "slug": slug.current, month, date, where, summary, link, photo,
+  "seriesSlug": series->slug.current, "seriesTitle": series->title,
+  "seriesOrg": series->org
+`;
+
+/**
+ * The events in one series, in school-year order.
+ *
+ * Ordered by `order` first and `date` second, not by date alone: an unbooked
+ * slot has no date, and a slot that sorted by its month NAME would put April
+ * before February before January.
+ */
+export const getSeriesEvents = (series: string) =>
+  sanity.fetch<DatedEvent[]>(
+    `*[_type == "datedEvent" && series->slug.current == $series]
+      | order(order asc, date asc){${DATED_EVENT_FIELDS}}`,
+    {series},
+  );
+
+/**
+ * One-off events — a page each, deliberately listed nowhere.
+ *
+ * These are reached only by a link someone places by hand, which is the point:
+ * an ad-hoc event can have a real page to put on a flyer without every ad-hoc
+ * event that ever happened piling up on the Events grid.
+ */
+export const getOneOffEvents = () =>
+  sanity.fetch<DatedEvent[]>(
+    `*[_type == "datedEvent" && !defined(series)]
+      | order(date desc){${DATED_EVENT_FIELDS}}`,
+  );
+
+/**
+ * Whether a dated event has its own page.
+ *
+ * It needs all three: a name and a date because otherwise the page has nothing
+ * on it, and a url because that is what the page is built at. An unbooked slot
+ * in a series has none of them and correctly gets no page — a link that leads
+ * to "to be announced" is worse than no link.
+ */
+export const isBooked = (e: DatedEvent) => Boolean(e.slug && e.date && e.title);
+
+/**
+ * "Wednesday, September 3, 2026".
+ *
+ * Unlike `eventWhen`, this never suppresses a date for being in a past school
+ * year. A tradition with last year's date is showing a stale detail; a dated
+ * event IS its date, so hiding it would leave the page describing nothing.
+ */
+export const fullDate = (iso: string) =>
+  new Date(iso + 'T12:00:00').toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+  });
+
+/**
+ * Every seat on both rosters, filled or open, in the order the About page
+ * shows them.
+ *
+ * Sorted by `order` and never by name: a roster is ranked, not alphabetical,
+ * and a name sort would put the Treasurer above the President. `role` only
+ * breaks a tie between two seats given the same number by mistake, so the page
+ * is at least stable rather than arbitrary.
+ */
+export const getBoardPositions = () =>
+  sanity.fetch<BoardPosition[]>(`*[_type == "boardPosition"]
+    | order(order asc, role asc){ role, org, holder, photo, featured, order, description }`);
+
+/**
+ * A seat is open when nobody holds it. `featured` is deliberately not consulted:
+ * an open seat has no name and no face, so there is nothing to put on a large
+ * card and it belongs in the open list whatever its ranking says.
+ */
+export const isOpen = (p: BoardPosition) => !p.holder;
+
+/**
+ * "Aram Chia Sarafian" → "AC".
+ *
+ * The first letter of the first two words, which is what the hand-written
+ * roster used. Derived rather than stored: an initials field would be one more
+ * thing to keep in step with the name, and it can only ever disagree.
+ */
+export const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
 
 export const getVolunteerSignups = () =>
   sanity.fetch<VolunteerSignup[]>(`*[_type == "volunteerSignup"]

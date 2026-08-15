@@ -2,6 +2,12 @@
 import Base from '../layouts/Base.astro';
 import { org } from '../data/nav';
 import MeetingCard from '../components/MeetingCard.astro';
+import Roster from '../components/Roster.astro';
+import { getBoardPositions } from '../lib/sanity';
+
+/* Both rosters come from one query and each Roster picks out its own seats —
+   two queries would be two round trips for one small list. */
+const board = await getBoardPositions();
 ---
 
 <Base title="About Us">
@@ -11,8 +17,8 @@ import MeetingCard from '../components/MeetingCard.astro';
         <div>
           <p class="eyebrow">About us</p>
           <h2>Who we are</h2>
-          <p>The Twin Trails Education Foundation and the Parent Activities Committee, and how
-             they work together for Sundance Elementary.</p>
+          <p>The Twin Trails Education Foundation (Foundation) and the Parent Activities
+             Committee (PAC) work together to support Sundance Elementary.</p>
         </div>
       </div>
 
@@ -35,227 +41,11 @@ import MeetingCard from '../components/MeetingCard.astro';
 
       <MeetingCard />
 
-      <h3 class="roster-title">Foundation Board <span>2026&ndash;27</span></h3>
-        <div class="leaders">
-          <div class="leader f">
-            <div class="leader-photo"><span>Photo<br>needed</span><span class="leader-initials">SW</span></div>
-            <div class="leader-body">
-              <div class="leader-role">President</div>
-              <div class="leader-name">Stephanie Warner</div>
-            </div>
-          </div>
-          <div class="leader f">
-            <div class="leader-photo"><span>Photo<br>needed</span><span class="leader-initials">TR</span></div>
-            <div class="leader-body">
-              <div class="leader-role">Vice President</div>
-              <div class="leader-name">Terri Ramundo</div>
-            </div>
-          </div>
-        </div>
-      <div class="roster">
-        <div class="person">
-          <div class="avatar f">JB</div>
-          <div>
-            <div class="person-name">Jacquelyn Benton</div>
-            <div class="person-role">Secretary &amp; PAC Vice President</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">AK</div>
-          <div>
-            <div class="person-name">Anita Kane</div>
-            <div class="person-role">Treasurer</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">MM</div>
-          <div>
-            <div class="person-name">Michele Miller</div>
-            <div class="person-role">Principal (ex officio)</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">AC</div>
-          <div>
-            <div class="person-name">Aram Chia Sarafian</div>
-            <div class="person-role">Technology</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">MB</div>
-          <div>
-            <div class="person-name">Mamta Behl</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">JC</div>
-          <div>
-            <div class="person-name">Jacki Congdon</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">KH</div>
-          <div>
-            <div class="person-name">Katrina Hale</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">RH</div>
-          <div>
-            <div class="person-name">Ryan Hunt</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">GJ</div>
-          <div>
-            <div class="person-name">Gautham Jayaram</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">MO</div>
-          <div>
-            <div class="person-name">Mario Olivotto</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">MP</div>
-          <div>
-            <div class="person-name">Manisha Patel</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar f">MP</div>
-          <div>
-            <div class="person-name">Marija Petrovic</div>
-            <div class="person-role">Board Member</div>
-          </div>
-        </div>
-      </div>
+      <Roster title="Foundation Board" year="2026–27" org="foundation" positions={board}
+              contactHref="/contact/?to=foundation" buttonClass="btn-primary" />
 
-      <div class="open-inline f">
-        <h4>Open positions</h4>
-        <div class="open-stack">
-          <div class="open-role">
-            <div class="open-name">Co-Treasurer</div>
-            <div class="open-desc">Manage and oversee finances alongside the Treasurer.</div>
-          </div>
-          <div class="open-role">
-            <div class="open-name">Red Envelope Co-Chair</div>
-            <div class="open-desc">Co-chair the direct-ask campaign, 6&ndash;8 weeks in the fall.</div>
-          </div>
-          <div class="open-role">
-            <div class="open-name">Corporate Sponsorship</div>
-            <div class="open-desc">Manage sponsorships and business relationships.</div>
-          </div>
-        </div>
-        <a class="btn btn-lg btn-primary" href="/contact/?to=foundation">Ask about a role</a>
-      </div>
-
-      <h3 class="roster-title">PAC Chairs <span>2026&ndash;27</span></h3>
-        <div class="leaders">
-          <div class="leader p">
-            <div class="leader-photo"><span>Photo<br>needed</span><span class="leader-initials">CH</span></div>
-            <div class="leader-body">
-              <div class="leader-role">PAC President</div>
-              <div class="leader-name">Chantal Hebert</div>
-            </div>
-          </div>
-          <div class="leader p">
-            <div class="leader-photo"><span>Photo<br>needed</span><span class="leader-initials">TG</span></div>
-            <div class="leader-body">
-              <div class="leader-role">PAC Vice President</div>
-              <div class="leader-name">Theresa Gantan-Soliven</div>
-            </div>
-          </div>
-        </div>
-      <div class="roster">
-        <div class="person">
-          <div class="avatar p">JB</div>
-          <div>
-            <div class="person-name">Jacque Benton</div>
-            <div class="person-role">Fall Carnival Chair</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">LS</div>
-          <div>
-            <div class="person-name">Lauren Schwartz</div>
-            <div class="person-role">Fall Carnival Co-Chair</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">NM</div>
-          <div>
-            <div class="person-name">Nicole Martin</div>
-            <div class="person-role">Dances</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">JH</div>
-          <div>
-            <div class="person-name">Jamie Harris</div>
-            <div class="person-role">Book Fair</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">AI</div>
-          <div>
-            <div class="person-name">Amaity Irani</div>
-            <div class="person-role">Spirit Wear</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">CT</div>
-          <div>
-            <div class="person-name">Caitlin Taifehesmatian</div>
-            <div class="person-role">Giving Tree &middot; Room Parent Coordinator</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">NC</div>
-          <div>
-            <div class="person-name">Nicole Chia Sarafian</div>
-            <div class="person-role">Picture Days &middot; Spirit Days &middot; Yearbook Chair</div>
-          </div>
-        </div>
-        <div class="person">
-          <div class="avatar p">JT</div>
-          <div>
-            <div class="person-name">Jenna Tompson</div>
-            <div class="person-role">Yearbook Co-Chair</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="open-inline p">
-        <h4>Open positions</h4>
-        <div class="open-stack">
-          <div class="open-role">
-            <div class="open-name">Senior Clapout</div>
-            <div class="open-desc">Coordinate alumni seniors returning to walk the halls, early June.</div>
-          </div>
-          <div class="open-role">
-            <div class="open-name">Hospitality</div>
-            <div class="open-desc">Support staff appreciation moments through the year.</div>
-          </div>
-          <div class="open-role">
-            <div class="open-name">Winterfest</div>
-            <div class="open-desc">Plan and run the December family evening.</div>
-          </div>
-          <div class="open-role">
-            <div class="open-name">Secretary</div>
-            <div class="open-desc">Keep notes and records for PAC.</div>
-          </div>
-        </div>
-        <a class="btn btn-lg btn-pac" href="/contact/?to=pac">Ask about a role</a>
-      </div>
+      <Roster title="PAC Chairs" year="2026–27" org="pac" positions={board}
+              contactHref="/contact/?to=pac" buttonClass="btn-pac" />
 
     </div>
   </section>

@@ -1,13 +1,15 @@
 import siteSettings from './siteSettings'
 import sponsor from './sponsor'
-import dineOutNight from './dineOutNight'
+import boardPosition from './boardPosition'
+import datedEvent from './datedEvent'
 import tradition from './tradition'
 import volunteerSignup from './volunteerSignup'
 
 export const schemaTypes = [
   siteSettings,
   tradition,
-  dineOutNight,
+  datedEvent,
+  boardPosition,
   sponsor,
   volunteerSignup,
 ]

@@ -2,8 +2,32 @@ import {defineField, defineType} from 'sanity'
 import {ORGS} from './orgs'
 
 /**
- * One of the annual events that has its own page — Book Fair, Fall Carnival,
- * the Auction, and so on.
+ * Events whose page is hand-built in `src/pages/` rather than rendered from
+ * this document by `events/[slug].astro`.
+ *
+ * Their entry here exists only to APPEAR — it is what puts the event in the
+ * Events grid and the Events menu — so the fields that only the generic layout
+ * reads render nowhere for them. Hiding those stops an editor writing a
+ * write-up, uploading a gallery, or setting a button that silently never
+ * shows up. Only the fields the grid and the menu use stay visible: name, url,
+ * month, date, who runs it, summary, and the Events-page photo.
+ *
+ * Astro gives a static route precedence over a dynamic one, which is what lets
+ * the hand-built file win. Adding a page here means adding its slug here too.
+ */
+const CUSTOM_PAGE_SLUGS = ['dine-out']
+
+const hiddenOnCustomPages = ({document}: {document?: unknown}) =>
+  CUSTOM_PAGE_SLUGS.includes(
+    (document as {slug?: {current?: string}} | undefined)?.slug?.current ?? '',
+  )
+
+/**
+ * One entry on the Events page and in the Events menu — Book Fair, Fall
+ * Carnival, the Auction, Dine Out Nights.
+ *
+ * `cadence` is what separates them: an annual event falls in one month of the
+ * year, and anything else runs through it and leads the list.
  *
  * The page LAYOUTS stay in code: the talent show has a photo strip, the
  * auction a gallery, dine-out a list, and those were designed individually.
@@ -17,7 +41,7 @@ import {ORGS} from './orgs'
  */
 export default defineType({
   name: 'tradition',
-  title: 'Annual event',
+  title: 'Event page',
   type: 'document',
   fields: [
     defineField({
@@ -36,6 +60,22 @@ export default defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'cadence',
+      title: 'How often it happens',
+      type: 'string',
+      description:
+        'An annual event falls in one month of the year. A monthly one runs through the year and leads the Events page and menu, because something happening all year is always more immediately relevant than something ten months away.',
+      options: {
+        list: [
+          {title: 'Once a year', value: 'annual'},
+          {title: 'Every month', value: 'monthly'},
+        ],
+        layout: 'radio',
+      },
+      validation: (r) => r.required(),
+      initialValue: 'annual',
+    }),
+    defineField({
       name: 'month',
       title: 'Month it happens',
       type: 'string',
@@ -45,13 +85,19 @@ export default defineType({
         list: [
           'August', 'September', 'October', 'November', 'December',
           'January', 'February', 'March', 'April', 'May', 'June',
-          // For events that recur through the year rather than falling in one
-          // month. These lead the Events page — they are happening all year —
-          // and carry no single date.
-          'Monthly',
         ],
       },
-      validation: (r) => r.required(),
+      // Only an annual event falls in a month. This used to carry a "Monthly"
+      // option, which put a CADENCE in a list of months — the sort then needed
+      // a sentinel to lift it, and the date field had to inspect a month value
+      // to know it was meaningless. One honest field removed all three.
+      hidden: ({document}) => (document as any)?.cadence !== 'annual',
+      validation: (r) =>
+        r.custom((month, context) => {
+          const doc = context.document as {cadence?: string} | undefined
+          if (doc?.cadence === 'annual' && !month) return 'An annual event needs the month it falls in.'
+          return true
+        }),
     }),
     defineField({
       name: 'date',
@@ -60,8 +106,8 @@ export default defineType({
       options: {dateFormat: 'ddd, MMM D, YYYY'},
       description:
         'Leave EMPTY until the date is actually settled — the page then shows the month and "date to be announced". Do not put a guess here: a specific day on the page is one families will plan around. A date left over from a previous school year is ignored automatically.',
-      // A monthly event has many dates, not one, so the field is meaningless.
-      hidden: ({document}) => (document as any)?.month === 'Monthly',
+      // Anything recurring has many dates, not one, so the field is meaningless.
+      hidden: ({document}) => (document as any)?.cadence !== 'annual',
     }),
     defineField({
       name: 'org',
@@ -83,6 +129,7 @@ export default defineType({
       name: 'body',
       title: 'Page details',
       type: 'array',
+      hidden: hiddenOnCustomPages,
       of: [{type: 'block'}],
       description:
         'The main content of the event page. Leave empty and the page shows "details coming soon".',
@@ -91,12 +138,14 @@ export default defineType({
       name: 'ctaLabel',
       title: 'Button label',
       type: 'string',
+      hidden: hiddenOnCustomPages,
       description: 'e.g. "Register your student". Leave empty for no button.',
     }),
     defineField({
       name: 'ctaUrl',
       title: 'Button link',
       type: 'url',
+      hidden: hiddenOnCustomPages,
       validation: (r) => r.uri({scheme: ['http', 'https']}),
     }),
     defineField({
@@ -115,6 +164,7 @@ export default defineType({
       name: 'stats',
       title: 'Headline numbers',
       type: 'array',
+      hidden: hiddenOnCustomPages,
       description:
         'The two or three figures worth putting at the top of the page — what was raised, the goal, when doors open. Leave empty and the row is not shown.',
       of: [
@@ -138,6 +188,7 @@ export default defineType({
       name: 'milestones',
       title: 'Goal milestones',
       type: 'array',
+      hidden: hiddenOnCustomPages,
       description:
         'What unlocks at what total, e.g. "Pie in the Face" at $25,000. Shown as a list. Leave empty and the section is not shown.',
       of: [
@@ -159,30 +210,38 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'photosCaption',
-      title: 'Photo caption',
+      name: 'photosTitle',
+      title: 'Photos title',
       type: 'string',
-      description: 'Optional line under the photos, e.g. "Last year\u2019s talent show."',
+      hidden: hiddenOnCustomPages,
+      description:
+        'The heading shown ABOVE the gallery, e.g. "2026 Book Fair". Leave empty and it just reads "Photos".',
     }),
     defineField({
       name: 'photos',
-      title: 'Photos from previous years',
+      title: 'Photo gallery',
       type: 'array',
+      hidden: hiddenOnCustomPages,
       of: [{type: 'image', options: {hotspot: true}, fields: [
         {name: 'alt', type: 'string', title: 'Describe the photo', description: 'Read aloud by screen readers.'},
       ]}],
       description:
-        'A gallery of past years, shown low on the event page. The header image above is separate — these do not need to include it. Photos fill their tiles and are cropped to fit, so set the hotspot on faces.',
+        'The photos shown low on the event page, under the title above. The header image is separate — these do not need to include it. Photos fill their tiles and are cropped to fit, so set the hotspot on faces.',
     }),
   ],
   orderings: [{title: 'School year order', name: 'month', by: [{field: 'month', direction: 'asc'}]}],
   preview: {
-    select: {title: 'title', month: 'month', date: 'date', org: 'org', media: 'coverImage'},
-    prepare({title, month, date, org, media}) {
+    select: {title: 'title', month: 'month', date: 'date', org: 'org', cadence: 'cadence', media: 'coverImage'},
+    prepare({title, month, date, org, cadence, media}) {
       const label = ORGS.find((o) => o.value === org)?.title ?? org
-      const when = date
-        ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month: 'long', day: 'numeric'})
-        : `${month ?? 'No month'} — date to be announced`
+      // A recurring event is described by its cadence, never by a date it is
+      // waiting on — it is not waiting on one.
+      const when =
+        cadence === 'monthly'
+          ? 'Monthly'
+          : date
+            ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month: 'long', day: 'numeric'})
+            : `${month ?? 'No month'} — date to be announced`
       return {title, subtitle: `${when} · ${label}`, media}
     },
   },

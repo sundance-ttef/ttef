@@ -1,0 +1,106 @@
+---
+/**
+ * The page body for one annual event.
+ *
+ * Lifted out of `events/[slug].astro` unchanged when that route also took on
+ * one-off dated events: the route is now a router that picks a body, and this
+ * is the body it picks for a `tradition`.
+ */
+import { eventWhen, traditionWhen, orgTag, imageUrl } from '../lib/sanity';
+import type { Tradition } from '../lib/sanity';
+import { toHTML } from '@portabletext/to-html';
+
+interface Props { event: Tradition }
+const { event: ev } = Astro.props;
+
+const tag = orgTag(ev.org);
+const when = eventWhen(ev.month, ev.date);
+const whenText = traditionWhen(ev).full;
+
+/* An event with no write-up yet still shows its date, its photos and its
+   numbers — "details coming soon" replaces the body only, never the page. */
+const body = ev.body?.length ? toHTML(ev.body) : null;
+const photos = ev.photos ?? [];
+---
+
+<section>
+  <div class="wrap">
+    <div class="sec-head page-head">
+      <div>
+        <p class="eyebrow">{tag.label} &middot; {whenText}</p>
+        <h2>{ev.title}</h2>
+        <p>{ev.summary}</p>
+      </div>
+    </div>
+
+    {ev.stats?.length ? (
+      <div class="stat-row">
+        {ev.stats.map((s) => (
+          <div class="stat">
+            <div class="stat-num">{s.value}</div>
+            <div class="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    ) : null}
+
+    {body && <div class="event-body-copy" set:html={body} />}
+
+    {ev.milestones?.length ? (
+      <div class="breakdown mt">
+        <h3>What we unlock together</h3>
+        <ul class="fund-list">
+          {ev.milestones.map((m) => (
+            <li><span>{m.label}</span><span class="amt">{m.amount}</span></li>
+          ))}
+        </ul>
+      </div>
+    ) : null}
+
+    {photos.length ? (
+      <>
+        {/* The heading is the editor's, not the code's. It was hardcoded as
+            "Photos from previous years" with a separate caption field below —
+            and every event had already filled that caption with a title
+            ("2026 Book Fair"), which is what it was really for. */}
+        <h3 class="block-title spaced">{ev.photosTitle?.trim() || 'Photos'}</h3>
+        <div class="gallery">
+          {photos.map((p) => (
+            <div class="gal-item">
+              <img src={imageUrl(p, 560, 420)} alt={p?.alt ?? ev.title} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </>
+    ) : null}
+
+    {ev.ctaLabel && ev.ctaUrl ? (
+      <div class="cs-actions mt">
+        <a class="btn btn-lg btn-primary" href={ev.ctaUrl} target="_blank" rel="noopener noreferrer">
+          {ev.ctaLabel}
+        </a>
+      </div>
+    ) : null}
+
+    {!body && (
+      <div class="coming-soon">
+        <div class="cs-icon" aria-hidden="true">&#128197;</div>
+        <h3>Details coming soon</h3>
+        {/* A confirmed date is printed at the top of this page, so telling
+            someone to go and look it up on the calendar reads as though the
+            date above were not real. The two states say different things. */}
+        {when.confirmed ? (
+          <p>The date is set &mdash; we&rsquo;re still finalising the rest, and will post
+             full details here as soon as we have them.</p>
+        ) : (
+          <p>We&rsquo;re finalising this year&rsquo;s plans. Check the calendar for the date, and
+             we&rsquo;ll post full details here as soon as they&rsquo;re set.</p>
+        )}
+        <div class="cs-actions">
+          {!when.confirmed && <a class="btn btn-primary" href="/calendar/">See the calendar</a>}
+          <a class={`btn ${when.confirmed ? 'btn-primary' : 'btn-outline'}`} href="/volunteer/">Help run it</a>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
