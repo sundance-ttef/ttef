@@ -85,7 +85,13 @@ export const SCHOOL_MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
 ];
 
+/**
+ * Monthly events lead the list: they are happening all year, so they are always
+ * the most immediately relevant thing on the page, where a single-month event
+ * may be ten months away. Anything with an unrecognised month sorts last.
+ */
 const monthIndex = (m?: string | null) => {
+  if (m === 'Monthly') return -1;
   const i = SCHOOL_MONTHS.indexOf(m ?? '');
   return i === -1 ? 99 : i;
 };

@@ -46,7 +46,8 @@ export default defineType({
           'August', 'September', 'October', 'November', 'December',
           'January', 'February', 'March', 'April', 'May', 'June',
           // For events that recur through the year rather than falling in one
-          // month. These sort last on the Events page and have no single date.
+          // month. These lead the Events page — they are happening all year —
+          // and carry no single date.
           'Monthly',
         ],
       },

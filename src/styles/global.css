@@ -1279,11 +1279,17 @@
   }
   .nav-menu a:hover .menu-meta { color: var(--maroon); }
   /* The "all of them" row is a different kind of thing from the items below it. */
+  /* Same rounding as every other item in the menu — it was square along the
+     bottom, which read as a mis-drawn box rather than a highlighted entry.
+     The separator is its own rule below so the corners stay round. */
   .nav-menu .menu-overview {
     font-weight: 650;
+    border-radius: var(--radius-sm);
+    margin-bottom: 9px; position: relative;
+  }
+  .nav-menu .menu-overview::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -5px;
     border-bottom: 1px solid var(--hairline);
-    border-radius: 9px 9px 0 0;
-    margin-bottom: 5px; padding-bottom: 11px;
   }
 
   /* Live vs pending sign-ups are already distinguished by the button against the
