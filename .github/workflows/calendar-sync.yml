@@ -3,23 +3,27 @@
 # The calendar is the one content source that changes outside git and
 # Sanity, so neither existing trigger (push, Sanity webhook) ever fires
 # for it. This job fetches the ICS feed hourly, hashes it, and compares
-# that to the hash baked into the DEPLOYED site at build time
-# (/calendar-hash.txt — written by astro.config.mjs). A production
-# deploy fires exactly when the feed differs from what the site was
-# last built from, and never otherwise.
+# that to the hash committed at .calendar-hash in the repo. On a real
+# difference it fires the Netlify build hooks AND commits the new hash —
+# the repo is the record of what was last built from.
 #
-# The deployed site IS the record of what was last built — no GitHub
-# state to maintain (an earlier version stored the hash in a repo
-# variable, but GITHUB_TOKEN cannot write variables: HTTP 403, and no
-# permissions key exists for it). Self-healing: if a hook-fire fails,
-# the site still carries the old hash, so the next run sees the diff
-# and retries.
+# Why not bake the hash into the site at build time: Netlify's build
+# runners cannot reach Google Calendar (both production and dev builds
+# baked 'unknown' — Google blocks their IPs), so the site-side fetch
+# approach is dead. The GitHub runner CAN reach Google, so the hash is
+# computed here and persisted to the repo, which the runner can write
+# (contents: write works; variables do not — HTTP 403, no permissions
+# key exists for them).
 #
-# Two one-time setup steps, both in the repo/hosting settings:
-#   1. Secret NETLIFY_BUILD_HOOK_MAIN — the main-branch build hook URL
-#      (Netlify → Site configuration → Build & deploy → Build hooks).
-#   2. Secret NETLIFY_BUILD_HOOK_DEV — optional; keeps the preview in
-#      step. Skipped silently when unset.
+# The hash is tool-independent: Google serves events in a different
+# order every request and stamps each response with a fresh DTSTAMP,
+# and sorting LINES does not fix it (ICS folds long lines with a
+# leading space, which sorts differently in shell vs Node). Each line
+# is hashed, the line-hashes sorted and re-hashed — the input order
+# cannot affect the result.
+#
+# One-time setup: secrets NETLIFY_BUILD_HOOK_MAIN (required) and
+# NETLIFY_BUILD_HOOK_DEV (optional, keeps the preview in step).
 #
 # GitHub's scheduler is best-effort: "hourly" means roughly hourly, and
 # Google's ICS feed itself lags the app by a few minutes, so a calendar
@@ -32,32 +36,28 @@ on:
     - cron: '17 * * * *'   # hourly, off the top-of-hour rush
   workflow_dispatch:        # manual run, for testing
 
+permissions:
+  contents: write           # commit the updated .calendar-hash
+
 jobs:
   check:
     runs-on: ubuntu-latest
     env:
       FEED_URL: https://calendar.google.com/calendar/ical/twintrailsfoundation%40gmail.com/public/basic.ics
-      SITE_URL: https://sundance-ttef.netlify.app
     steps:
-      - name: Hash the live feed and the deployed site's baked hash
+      - uses: actions/checkout@v4
+
+      - name: Hash the live feed and compare to the committed hash
         id: check
         run: |
-          # A failed fetch must not fire a deploy.
+          # A failed fetch must not fire a deploy or update the hash.
           curl -sfL "$FEED_URL" -o feed.ics
-          # Canonicalize BEFORE hashing, tool-independently: Google
-          # serves events in a different order every request and stamps
-          # each response with a fresh DTSTAMP, and sorting LINES does
-          # not fix it (ICS folds long lines with a leading space, which
-          # sorts differently in shell vs Node). Hash each line, sort
-          # the hashes, hash that — the input order cannot affect the
-          # result. astro.config.mjs computes it identically.
           feed=$(tr -d '\r' < feed.ics | grep -v '^DTSTAMP' | grep . \
             | while IFS= read -r line; do printf '%s' "$line" | sha256sum | cut -d' ' -f1; done \
             | sort | sha256sum | cut -d' ' -f1)
-          # Missing or unreadable baked hash (older deploy) counts as
-          # "changed" once, so the site gains the file.
-          baked=$(curl -sfL "$SITE_URL/calendar-hash.txt" || echo none)
+          baked=$(cat .calendar-hash 2>/dev/null || echo none)
           echo "feed=$feed baked=$baked"
+          echo "feed=$feed" >> "$GITHUB_OUTPUT"
           [ "$feed" = "$baked" ] \
             && echo "changed=false" >> "$GITHUB_OUTPUT" \
             || echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -71,3 +71,20 @@ jobs:
             curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_DEV }}"
             echo "dev build hook fired"
           fi
+
+      - name: Commit the new hash
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          echo "${{ steps.check.outputs.feed }}" > .calendar-hash
+          git config user.name "calendar-sync[bot]"
+          git config user.email "calendar-sync[bot]@users.noreply.github.com"
+          # Commit to whatever branch this run checked out (main for
+          # scheduled runs). If another commit landed since checkout,
+          # rebase rather than fail — the hash file never conflicts.
+          git add .calendar-hash
+          # [skip netlify]: the hash commit must not trigger a production
+          # build of its own — the site content has not changed, only the
+          # record of what the calendar looked like.
+          git commit -m "Calendar changed: update baked hash [skip netlify]" || exit 0
+          git pull --rebase --autostash || true
+          git push
