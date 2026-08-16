@@ -334,7 +334,12 @@
   /* display:grid above beats the UA sheet's [hidden]{display:none}, so a
      "hidden" extra row was never actually hidden without this. */
   .events-more[hidden] { display: none; }
-  .events-toggle-row { display: flex; justify-content: center; margin-top: 20px; }
+  .events-toggle-row { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .events-toggle {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--maroon);
+  }
+  .events-toggle:hover { text-decoration: underline; }
   .event {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
     overflow: hidden; display: flex; flex-direction: column; gap: 7px;
