@@ -331,6 +331,9 @@
   /* events */
   .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
   .events-more { margin-top: 22px; }
+  /* display:grid above beats the UA sheet's [hidden]{display:none}, so a
+     "hidden" extra row was never actually hidden without this. */
+  .events-more[hidden] { display: none; }
   .events-toggle-row { display: flex; justify-content: center; margin-top: 20px; }
   .event {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);

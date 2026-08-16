@@ -23,9 +23,14 @@ interface Props {
    * False on /calendar/, which is meant to be complete.
    */
   headlinesOnly?: boolean;
+  /**
+   * Allow the "Show more events" button to reveal extra rows. Calendar page
+   * only — the home page shows its row and stops, by design.
+   */
+  showMore?: boolean;
 }
 
-const { limit = 3, days = 120, headlinesOnly = false } = Astro.props;
+const { limit = 3, days = 120, headlinesOnly = false, showMore = false } = Astro.props;
 
 const yearly = await getYearlyEvents();
 const dineOut = await getDineOutNights();
@@ -48,13 +53,15 @@ const events = headlinesOnly
     })()
   : all;
 
-/* The first row shows by default; every further row sits behind a "show
-   more" button, all rendered into the HTML at build time so there is
-   nothing to fetch when they are revealed. The button stays at the bottom
-   while hidden rows remain, and is hidden itself until JS unwraps it —
-   without JS the page reads exactly as it did before the button existed. */
+/* The first row shows by default; when showMore is on, every further row
+   sits behind a "show more" button, all rendered into the HTML at build
+   time so there is nothing to fetch when they are revealed. The button
+   stays at the bottom while hidden rows remain, and is hidden itself until
+   JS unwraps it — without JS the page reads exactly as it did before the
+   button existed. */
+const visible = showMore ? events : events.slice(0, limit);
 const rows: (typeof events)[] = [];
-for (let i = 0; i < events.length; i += limit) rows.push(events.slice(i, i + limit));
+for (let i = 0; i < visible.length; i += limit) rows.push(visible.slice(i, i + limit));
 const [first, ...rest] = rows;
 ---
 
