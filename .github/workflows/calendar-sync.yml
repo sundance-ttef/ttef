@@ -44,7 +44,11 @@ jobs:
       - name: Compare against the last-seen hash
         id: check
         run: |
-          last=$(gh variable get LAST_CALENDAR_HASH 2>/dev/null || echo none)
+          # --repo is required: the runner has no git checkout, and without
+          # it gh errors "not a git repository" — silently on this line
+          # (|| echo none swallows it) and fatally on the set below, which
+          # would leave the hash unrecorded and fire a deploy EVERY hour.
+          last=$(gh variable get LAST_CALENDAR_HASH --repo ${{ github.repository }} 2>/dev/null || echo none)
           echo "last=$last current=${{ steps.hash.outputs.sha }}"
           [ "$last" = "${{ steps.hash.outputs.sha }}" ] \
             && echo "changed=false" >> "$GITHUB_OUTPUT" \
@@ -62,4 +66,4 @@ jobs:
 
       - name: Record the new hash
         if: steps.check.outputs.changed == 'true'
-        run: gh variable set LAST_CALENDAR_HASH --body "${{ steps.hash.outputs.sha }}"
+        run: gh variable set LAST_CALENDAR_HASH --repo ${{ github.repository }} --body "${{ steps.hash.outputs.sha }}"
