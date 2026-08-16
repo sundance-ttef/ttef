@@ -332,29 +332,57 @@
   .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
   .event {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
-    overflow: hidden; text-decoration: none; display: flex; flex-direction: column;
+    overflow: hidden; display: flex; flex-direction: column; gap: 7px;
+    padding: 0 20px 18px;
     box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s;
   }
   .event:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .event-img { height: 158px; overflow: hidden; background: var(--surface-sunken); }
-  .event-img img { width: 100%; height: 100%; object-fit: cover; }
-  .event-body { padding: 17px 19px 21px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
-  .event-meta { display: flex; align-items: center; gap: 9px; }
+  /* The header band: date and time on the left, org chip on the right, on
+     the org's tint so the whose reads before a word does. School gets the
+     neutral sunken tone — a third brand colour would invent meaning. */
+  .event-when {
+    margin: 0 -20px 4px; padding: 11px 20px;
+    background: var(--surface-sunken); border-bottom: 1px solid var(--hairline);
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .event.f .event-when { background: var(--maroon-tint); }
+  .event.p .event-when { background: var(--teal-soft); }
+  .ew-left { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .ew-date {
+    font-family: var(--display); font-size: var(--fs-2xl); font-weight: 600;
+    color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+  }
+  .ew-time { font-size: var(--fs-sm); font-weight: 700; color: var(--maroon); font-variant-numeric: tabular-nums; }
+  .event.p .ew-time { color: var(--teal-deep); }
+  .event h3 { font-size: var(--fs-xl); line-height: 1.25; }
+  .event h3 a { color: inherit; text-decoration: none; }
+  .event h3 a:hover { color: var(--maroon); text-decoration: underline; }
   .owner {
     font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
     padding: 3px 9px; border-radius: var(--radius-pill);
   }
-  .owner.f { background: var(--maroon-tint); color: var(--maroon); }
-  .owner.p { background: var(--teal-soft); color: var(--teal); }
-  /* The date and time are the point of an upcoming-event card — an event IS a
-     thing happening at a time — so they carry the weight, not the grey caption
-     treatment they had. */
-  .event-date {
-    font-size: var(--fs-sm); font-weight: 700; color: var(--maroon);
-    font-variant-numeric: tabular-nums;
-  }
-  .event h3 { font-size: var(--fs-xl); }
+  /* The chip sits on the tinted band, so it gets a light pill of its own —
+     its usual tinted background would mush into the band. The per-org
+     background lives on the class itself (.owner.s far below) so this needs
+     the extra .event qualifier to win. */
+  .event .event-when .owner { background: rgba(255,255,255,.75); }
+  .owner.f { color: var(--maroon); }
+  .owner.p { color: var(--teal); }
   .event p { font-size: var(--fs-sm); color: var(--muted); }
+  /* Calendar-sourced descriptions can run long; the card is a summary, so the
+     text clamps rather than stretching the grid row. */
+  .event p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  /* Location and Zoom sit in a footer pinned to the card's bottom, so a card
+     with no description still puts its practical details in the same place. */
+  .event-foot {
+    margin-top: auto; padding-top: 10px; border-top: 1px solid var(--hairline);
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .event-where { display: flex; flex-direction: column; gap: 1px; text-decoration: none; }
+  .event-where:hover .ew-name { text-decoration: underline; }
+  .ew-name { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .02em; color: var(--ink); }
+  .ew-name::before { content: '📍 '; }
+  .ew-addr { font-size: var(--fs-2xs); color: var(--muted); padding-left: 1.35em; }
 
   /* impact */
   /* was tinted when it sat between other home sections; as its own page it
@@ -632,7 +660,7 @@
   .event-static.is-link { cursor: pointer; }
   .event-static.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
-  .event-zoom { color: var(--maroon); font-weight: 650; margin-top: 8px; }
+  .event-zoom { color: var(--maroon); font-weight: 650; font-size: var(--fs-xs); }
 
   .cal-frame {
     position: relative; border-radius: var(--radius); overflow: hidden;
