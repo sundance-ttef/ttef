@@ -1,0 +1,65 @@
+# Rebuild the site when the school calendar actually changes.
+#
+# The calendar is the one content source that changes outside git and
+# Sanity, so neither existing trigger (push, Sanity webhook) ever fires
+# for it. This job fetches the ICS feed hourly, hashes it, and fires the
+# Netlify build hooks only when the hash differs from the last run — a
+# production deploy happens exactly when there is new date information
+# and never otherwise.
+#
+# Two one-time setup steps, both in the repo/hosting settings:
+#   1. Secret NETLIFY_BUILD_HOOK_MAIN — the main-branch build hook URL
+#      (Netlify → Site configuration → Build & deploy → Build hooks).
+#   2. Secret NETLIFY_BUILD_HOOK_DEV — optional; keeps the preview in
+#      step. Skipped silently when unset.
+#
+# GitHub's scheduler is best-effort: "hourly" means roughly hourly, and
+# Google's ICS feed itself lags the app by a few minutes, so a calendar
+# edit reaches the site in about an hour worst case.
+
+name: Calendar sync
+
+on:
+  schedule:
+    - cron: '17 * * * *'   # hourly, off the top-of-hour rush
+  workflow_dispatch:        # manual run, for testing
+
+permissions:
+  actions: write            # read/update the LAST_CALENDAR_HASH repo variable
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      FEED_URL: https://calendar.google.com/calendar/ical/twintrailsfoundation%40gmail.com/public/basic.ics
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Fetch and hash the calendar feed
+        id: hash
+        run: |
+          # A failed fetch must not fire a deploy or update the hash.
+          curl -sfL "$FEED_URL" -o feed.ics
+          echo "sha=$(sha256sum feed.ics | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Compare against the last-seen hash
+        id: check
+        run: |
+          last=$(gh variable get LAST_CALENDAR_HASH 2>/dev/null || echo none)
+          echo "last=$last current=${{ steps.hash.outputs.sha }}"
+          [ "$last" = "${{ steps.hash.outputs.sha }}" ] \
+            && echo "changed=false" >> "$GITHUB_OUTPUT" \
+            || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Fire the Netlify build hooks
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_MAIN }}"
+          echo "main build hook fired"
+          if [ -n "${{ secrets.NETLIFY_BUILD_HOOK_DEV }}" ]; then
+            curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_DEV }}"
+            echo "dev build hook fired"
+          fi
+
+      - name: Record the new hash
+        if: steps.check.outputs.changed == 'true'
+        run: gh variable set LAST_CALENDAR_HASH --body "${{ steps.hash.outputs.sha }}"
