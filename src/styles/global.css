@@ -330,6 +330,8 @@
 
   /* events */
   .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .events-more { margin-top: 22px; }
+  .events-toggle-row { display: flex; justify-content: center; margin-top: 20px; }
   .event {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
     overflow: hidden; display: flex; flex-direction: column; gap: 7px;

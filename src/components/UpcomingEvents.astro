@@ -7,9 +7,9 @@
  * event's page and borrows its description and its org, which is real data
  * rather than the guess made from the title.
  */
-import { getYearlyEvents, getDineOutNights, orgTag } from '../lib/sanity';
-import { getCalendarEvents, matchEvent, orgOf, timeLabel, isZoomMeeting, isRoutine, splitLocation, mapsUrl } from '../lib/calendar';
-import { org } from '../data/nav';
+import { getYearlyEvents, getDineOutNights } from '../lib/sanity';
+import { getCalendarEvents, isRoutine } from '../lib/calendar';
+import EventCard from './EventCard.astro';
 
 interface Props {
   /** How many cards to show. */
@@ -44,54 +44,52 @@ const events = headlinesOnly
       const firstHeadline = all.findIndex((e) => !isRoutine(e.title));
       const gap = firstHeadline > 0 ? all.slice(0, firstHeadline) : [];
       const headlines = all.filter((e) => !isRoutine(e.title));
-      return [...gap, ...headlines].slice(0, limit);
+      return [...gap, ...headlines];
     })()
-  : all.slice(0, limit);
+  : all;
+
+/* The first row shows by default; every further row sits behind a "show
+   more" button, all rendered into the HTML at build time so there is
+   nothing to fetch when they are revealed. The button stays at the bottom
+   while hidden rows remain, and is hidden itself until JS unwraps it —
+   without JS the page reads exactly as it did before the button existed. */
+const rows: (typeof events)[] = [];
+for (let i = 0; i < events.length; i += limit) rows.push(events.slice(i, i + limit));
+const [first, ...rest] = rows;
 ---
 
 {events.length > 0 && (
-  <div class="events">
-    {events.map((e) => {
-      const match = matchEvent(e.title, candidates);
-      const tag = orgTag(match?.org ?? orgOf(e.title));
-      const zoom = isZoomMeeting(e.title);
-      /* The card is not a link: the footer holds real utility links (Maps,
-         Zoom), and nested anchors are invalid HTML. The TITLE links when the
-         event has a page — the same "only link what goes somewhere" rule,
-         one level down. */
-      const pageHref = match ? `/events/${match.slug}/` : null;
-      const d = new Date(e.date + 'T12:00:00');
-      const when = d.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'});
-      const place = e.location ? splitLocation(e.location) : null;
-      return (
-        <div class={`event ${tag.cls}`}>
-          {/* Date and time lead in a tinted header band, with the org chip
-              at the other end — the when and the whose are the two things a
-              scanning family needs first, so they share the top row. */}
-          <div class="event-when">
-            <span class="ew-left">
-              <span class="ew-date">{when}</span>
-              <span class="ew-time">{timeLabel(e)}</span>
-            </span>
-            <span class={`owner ${tag.cls}`}>{tag.label}</span>
-          </div>
-          <h3>{pageHref ? <a href={pageHref}>{e.title}</a> : e.title}</h3>
-          {/* A matched event shows its curated page summary; anything else
-              falls back to whatever the calendar entry itself says. */}
-          {match ? <p>{match.summary}</p> : e.description && <p>{e.description}</p>}
-          {(place || zoom) && (
-            <div class="event-foot">
-              {place && (
-                <a class="event-where" href={mapsUrl(place.raw)} target="_blank" rel="noopener noreferrer">
-                  <span class="ew-name">{place.name}</span>
-                  {place.addr && <span class="ew-addr">{place.addr}</span>}
-                </a>
-              )}
-              {zoom && <a class="event-zoom" href={org.zoom} target="_blank" rel="noopener noreferrer">Join by Zoom &rarr;</a>}
-            </div>
-          )}
-        </div>
-      );
-    })}
-  </div>
+  <>
+    <div class="events">
+      {first.map((e) => <EventCard e={e} candidates={candidates} />)}
+    </div>
+    {rest.map((row) => (
+      <div class="events events-more" hidden>
+        {row.map((e) => <EventCard e={e} candidates={candidates} />)}
+      </div>
+    ))}
+    {rest.length > 0 && (
+      <div class="events-toggle-row">
+        <button class="btn btn-outline events-toggle" type="button" hidden>
+          Show more events
+        </button>
+      </div>
+    )}
+    {rest.length > 0 && (
+      <script>
+        document.querySelectorAll('.events-toggle').forEach((btn) => {
+          btn.hidden = false;
+          btn.addEventListener('click', () => {
+            /* Reveal the next hidden row; the button leaves the page only
+               when no hidden rows remain. */
+            const hidden = document.querySelector('.events-more[hidden]');
+            if (hidden) hidden.hidden = false;
+            if (!document.querySelector('.events-more[hidden]')) {
+              btn.closest('.events-toggle-row').remove();
+            }
+          });
+        });
+      </script>
+    )}
+  </>
 )}
