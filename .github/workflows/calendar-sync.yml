@@ -2,10 +2,18 @@
 #
 # The calendar is the one content source that changes outside git and
 # Sanity, so neither existing trigger (push, Sanity webhook) ever fires
-# for it. This job fetches the ICS feed hourly, hashes it, and fires the
-# Netlify build hooks only when the hash differs from the last run — a
-# production deploy happens exactly when there is new date information
-# and never otherwise.
+# for it. This job fetches the ICS feed hourly, hashes it, and compares
+# that to the hash baked into the DEPLOYED site at build time
+# (/calendar-hash.txt — written by astro.config.mjs). A production
+# deploy fires exactly when the feed differs from what the site was
+# last built from, and never otherwise.
+#
+# The deployed site IS the record of what was last built — no GitHub
+# state to maintain (an earlier version stored the hash in a repo
+# variable, but GITHUB_TOKEN cannot write variables: HTTP 403, and no
+# permissions key exists for it). Self-healing: if a hook-fire fails,
+# the site still carries the old hash, so the next run sees the diff
+# and retries.
 #
 # Two one-time setup steps, both in the repo/hosting settings:
 #   1. Secret NETLIFY_BUILD_HOOK_MAIN — the main-branch build hook URL
@@ -24,33 +32,29 @@ on:
     - cron: '17 * * * *'   # hourly, off the top-of-hour rush
   workflow_dispatch:        # manual run, for testing
 
-permissions:
-  actions: write            # read/update the LAST_CALENDAR_HASH repo variable
-
 jobs:
   check:
     runs-on: ubuntu-latest
     env:
       FEED_URL: https://calendar.google.com/calendar/ical/twintrailsfoundation%40gmail.com/public/basic.ics
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SITE_URL: https://sundance-ttef.netlify.app
     steps:
-      - name: Fetch and hash the calendar feed
-        id: hash
-        run: |
-          # A failed fetch must not fire a deploy or update the hash.
-          curl -sfL "$FEED_URL" -o feed.ics
-          echo "sha=$(sha256sum feed.ics | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
-
-      - name: Compare against the last-seen hash
+      - name: Hash the live feed and the deployed site's baked hash
         id: check
         run: |
-          # --repo is required: the runner has no git checkout, and without
-          # it gh errors "not a git repository" — silently on this line
-          # (|| echo none swallows it) and fatally on the set below, which
-          # would leave the hash unrecorded and fire a deploy EVERY hour.
-          last=$(gh variable get LAST_CALENDAR_HASH --repo ${{ github.repository }} 2>/dev/null || echo none)
-          echo "last=$last current=${{ steps.hash.outputs.sha }}"
-          [ "$last" = "${{ steps.hash.outputs.sha }}" ] \
+          # A failed fetch must not fire a deploy.
+          curl -sfL "$FEED_URL" -o feed.ics
+          # Canonicalize BEFORE hashing: Google serves events in a
+          # different order every request and stamps each response with
+          # a fresh DTSTAMP, so a raw hash differs on every fetch even
+          # when nothing changed. astro.config.mjs canonicalizes the
+          # same way when it bakes the hash into the site.
+          feed=$(grep -v '^DTSTAMP' feed.ics | sort | sha256sum | cut -d' ' -f1)
+          # Missing or unreadable baked hash (older deploy) counts as
+          # "changed" once, so the site gains the file.
+          baked=$(curl -sfL "$SITE_URL/calendar-hash.txt" || echo none)
+          echo "feed=$feed baked=$baked"
+          [ "$feed" = "$baked" ] \
             && echo "changed=false" >> "$GITHUB_OUTPUT" \
             || echo "changed=true" >> "$GITHUB_OUTPUT"
 
@@ -63,7 +67,3 @@ jobs:
             curl -sf -X POST "${{ secrets.NETLIFY_BUILD_HOOK_DEV }}"
             echo "dev build hook fired"
           fi
-
-      - name: Record the new hash
-        if: steps.check.outputs.changed == 'true'
-        run: gh variable set LAST_CALENDAR_HASH --repo ${{ github.repository }} --body "${{ steps.hash.outputs.sha }}"
