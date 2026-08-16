@@ -14,19 +14,30 @@ const FEED_URL =
  * is needed. A failed fetch bakes 'unknown', which differs from any
  * real hash and simply triggers one extra rebuild next check.
  *
- * The hash must be CANONICAL: Google serves the feed with events in a
- * different order on every request and stamps each response with a
- * fresh DTSTAMP, so a raw hash differs on every fetch even when nothing
- * changed (measured: 7,174 diff lines between consecutive fetches).
- * Strip the stamp and sort the lines — the same canonicalization the
- * workflow applies — so only real edits move the hash.
+ * The hash must be CANONICAL and tool-independent. Google serves the
+ * feed with events in a different order on every request and stamps
+ * each response with a fresh DTSTAMP, so a raw hash differs on every
+ * fetch even when nothing changed (measured: 7,174 diff lines between
+ * consecutive fetches). Sorting lines does NOT fix it: ICS folds long
+ * lines with a leading space, and sort orders space-first, so the
+ * shell's and Node's sorts land folded lines in different places.
+ * Instead each line is hashed and the line-hashes sorted — order of
+ * the input cannot affect the result, and the workflow computes it
+ * identically (sha256sum per line | sort | sha256sum).
  */
-const canonicalize = (ics) =>
-  ics
+const canonicalHash = (ics) => {
+  const lines = ics
+    .replace(/\r/g, '')
     .split('\n')
-    .filter((line) => !line.startsWith('DTSTAMP'))
+    .filter((line) => line && !line.startsWith('DTSTAMP'));
+  const lineHashes = lines
+    .map((line) => createHash('sha256').update(line).digest('hex'))
     .sort()
     .join('\n');
+  // The trailing newline matches the workflow's pipe into sha256sum —
+  // without it the outer hashes differ even when every line-hash agrees.
+  return createHash('sha256').update(lineHashes + '\n').digest('hex');
+};
 
 const calendarHash = {
   name: 'calendar-hash',

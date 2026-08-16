@@ -44,12 +44,16 @@ jobs:
         run: |
           # A failed fetch must not fire a deploy.
           curl -sfL "$FEED_URL" -o feed.ics
-          # Canonicalize BEFORE hashing: Google serves events in a
-          # different order every request and stamps each response with
-          # a fresh DTSTAMP, so a raw hash differs on every fetch even
-          # when nothing changed. astro.config.mjs canonicalizes the
-          # same way when it bakes the hash into the site.
-          feed=$(grep -v '^DTSTAMP' feed.ics | sort | sha256sum | cut -d' ' -f1)
+          # Canonicalize BEFORE hashing, tool-independently: Google
+          # serves events in a different order every request and stamps
+          # each response with a fresh DTSTAMP, and sorting LINES does
+          # not fix it (ICS folds long lines with a leading space, which
+          # sorts differently in shell vs Node). Hash each line, sort
+          # the hashes, hash that — the input order cannot affect the
+          # result. astro.config.mjs computes it identically.
+          feed=$(tr -d '\r' < feed.ics | grep -v '^DTSTAMP' | grep . \
+            | while IFS= read -r line; do printf '%s' "$line" | sha256sum | cut -d' ' -f1; done \
+            | sort | sha256sum | cut -d' ' -f1)
           # Missing or unreadable baked hash (older deploy) counts as
           # "changed" once, so the site gains the file.
           baked=$(curl -sfL "$SITE_URL/calendar-hash.txt" || echo none)
