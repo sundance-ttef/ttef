@@ -347,7 +347,7 @@
   }
   .event.f .event-when { background: var(--maroon-tint); }
   .event.p .event-when { background: var(--teal-soft); }
-  .ew-left { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .ew-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .ew-date {
     font-family: var(--display); font-size: var(--fs-2xl); font-weight: 600;
     color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
