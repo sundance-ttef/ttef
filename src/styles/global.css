@@ -340,10 +340,14 @@
     font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--maroon);
   }
   .events-toggle:hover { text-decoration: underline; }
+  /* Two shapes share this class: the calendar card (a div, with a small link
+     inside the h3) and the traditions card on /events/ (the whole card IS the
+     anchor). The reset has to live here, not on the inner link, or the anchor
+     card underlines every word in it. */
   .event {
     background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
     overflow: hidden; display: flex; flex-direction: column; gap: 7px;
-    padding: 0 20px 18px;
+    padding: 0 20px 18px; text-decoration: none;
     box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s;
   }
   .event:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
@@ -371,13 +375,13 @@
     font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
     padding: 3px 9px; border-radius: var(--radius-pill);
   }
-  /* The chip sits on the tinted band, so it gets a light pill of its own —
-     its usual tinted background would mush into the band. The per-org
-     background lives on the class itself (.owner.s far below) so this needs
-     the extra .event qualifier to win. */
+  /* The chip's pill is its own tint by default — that is how it reads on a
+     plain card ground (/events/, /volunteer/). On the calendar card it sits on
+     the org's tinted band instead, where that tint would mush into the band, so
+     there it gets a light pill; the extra .event qualifier is what wins. */
   .event .event-when .owner { background: rgba(255,255,255,.75); }
-  .owner.f { color: var(--maroon); }
-  .owner.p { color: var(--teal); }
+  .owner.f { background: var(--maroon-tint); color: var(--maroon); }
+  .owner.p { background: var(--teal-soft); color: var(--teal); }
   .event p { font-size: var(--fs-sm); color: var(--muted); }
   /* Calendar-sourced descriptions can run long; the card is a summary, so the
      text clamps rather than stretching the grid row. */
@@ -669,6 +673,9 @@
   .event-static:hover { transform: none; box-shadow: var(--shadow); }
   .event-static.is-link { cursor: pointer; }
   .event-static.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  /* The whole card is the link, so the title carries the hover affordance the
+     inner-link cards get from .event h3 a:hover. */
+  .event-static.is-link:hover h3 { color: var(--maroon); text-decoration: underline; }
 
   .event-zoom { color: var(--maroon); font-weight: 650; font-size: var(--fs-xs); }
 
