@@ -25,7 +25,7 @@ const events = await getYearlyEvents();
           const tag = orgTag(e.org);
           const cover = imageUrl(e.coverImage, 560, 380);
           return (
-            <a class="event event-static is-link" href={`/events/${e.slug}/`}>
+            <a class={`event event-static is-link ${tag.cls}`} href={`/events/${e.slug}/`}>
               <div class="event-img is-placeholder">
                 {cover
                   ? <img class="event-photo" src={cover} alt={e.coverImage?.alt ?? e.title} loading="lazy" />

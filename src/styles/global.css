@@ -382,6 +382,17 @@
   .event .event-when .owner { background: rgba(255,255,255,.75); }
   .owner.f { background: var(--maroon-tint); color: var(--maroon); }
   .owner.p { background: var(--teal-soft); color: var(--teal); }
+  /* The chip and the when-it-happens read as one line, so they align on their
+     centres rather than sitting a word-space apart. */
+  .event-meta { display: flex; align-items: center; gap: 9px; }
+  /* The when carries weight — a tradition IS a thing that happens at a time —
+     and it takes the org's colour like .ew-time does, so a teal PAC chip never
+     sits beside a maroon date. */
+  .event-date {
+    font-size: var(--fs-sm); font-weight: 700; color: var(--maroon);
+    font-variant-numeric: tabular-nums;
+  }
+  .event.p .event-date { color: var(--teal-deep); }
   .event p { font-size: var(--fs-sm); color: var(--muted); }
   /* Calendar-sourced descriptions can run long; the card is a summary, so the
      text clamps rather than stretching the grid row. */
@@ -669,7 +680,14 @@
   .meeting-card p { font-size: var(--fs-md); color: var(--muted); max-width: 62ch; }
 
   .events-3 { grid-template-columns: repeat(3, 1fr); }
-  .event-static { cursor: default; }
+  /* The traditions card keeps the original shape: photo full-bleed to the card
+     edges, copy padded inside a body. The .event base now carries the calendar
+     card's own padding, which insets the photo, so undo it here and let the
+     body do the padding as it used to. */
+  .event-static { padding: 0; cursor: default; }
+  .event-static .event-body {
+    padding: 17px 19px 21px; display: flex; flex-direction: column; gap: 7px; flex: 1;
+  }
   .event-static:hover { transform: none; box-shadow: var(--shadow); }
   .event-static.is-link { cursor: pointer; }
   .event-static.is-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
