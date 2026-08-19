@@ -37,6 +37,10 @@ export const nav: NavEntry[] = [
       })),
     ],
   },
+  // Top level, not under Support Us: buying a yearbook is not giving, it is a
+  // thing families come here to do, on a deadline. It sits beside Events for
+  // the same reason Calendar does.
+  { label: 'Yearbook', href: '/yearbook/' },
   {
     label: 'Support Us',
     href: '/support/',
@@ -74,6 +78,7 @@ export const org = {
     foundation: 'Sundance-Foundation@GoogleGroups.com',
     pac: 'pacsundancepq@gmail.com',
     finance: 'sundance-finance@googlegroups.com',
+    yearbook: 'YearbookTeam.sundance@gmail.com',
   },
   zoom: 'https://us02web.zoom.us/j/87377496307?pwd=xdNaPtEO3g8Hkm1NGqGSIF0di34uIe.1',
   calendarId: 'twintrailsfoundation@gmail.com',

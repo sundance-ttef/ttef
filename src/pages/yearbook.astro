@@ -1,0 +1,133 @@
+---
+/**
+ * Yearbook — order the school yearbook from TreeRing.
+ *
+ * PAC's, so the accents are teal. Rebuilt from the printed flyer as real
+ * markup rather than dropped in as the JPEG: the flyer is text baked into a
+ * picture, unreadable on a phone and invisible to screen readers and search.
+ * What DID come across from the flyer is the tree artwork, lifted out of it
+ * with the paper background flooded to transparent so it sits on the page's
+ * own ground rather than in a white rectangle. The flyer stays a print handout.
+ *
+ * TWO PRICES AND A DISCOUNT, stated exactly as the flyer states them. The
+ * flyer does not say whether $21.56 / $27.47 are before or after the 10%, so
+ * neither does this page — inventing "was/now" figures would be inventing a
+ * money claim.
+ *
+ * The pre-order deadline is DERIVED from the school year, not typed: October
+ * 31 of the year the school year opens. Once it passes, the discount line
+ * disappears on the next build and the prices stay — the same shape as an
+ * event whose date has gone by, and the reason a forgotten update degrades to
+ * a missing offer rather than a false one.
+ *
+ * WHITESPACE: Astro trims the whitespace at a line break before an element or
+ * an expression, exactly like JSX. Any sentence with a <b> or an <a> inside it
+ * is written on ONE line here, because breaking it glued the words together
+ * ("they are printedonly in your copy") in the rendered HTML while the source
+ * still read correctly.
+ */
+import Base from '../layouts/Base.astro';
+import { org } from '../data/nav';
+import { fundraising } from '../data/fundraising';
+
+const TREERING_URL = 'https://www.treering.com/validate';
+const PASSCODE = '10sundance';
+
+/* "2026–27" → 2026. The en dash is a real character, so slice rather than split. */
+const yearOpens = Number(fundraising.schoolYear.slice(0, 4));
+/* Noon, so a timezone offset can never roll the date onto the 30th or the 1st. */
+const deadline = new Date(`${yearOpens}-10-31T12:00:00`);
+const deadlineText = deadline.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+const preOrderOpen = new Date() <= deadline;
+
+const books = [
+  { cover: 'Softcover', price: '$21.56', note: 'tax included' },
+  { cover: 'Hardcover', price: '$27.47', note: 'tax included' },
+];
+
+const steps = [
+  { title: 'Go to TreeRing', copy: 'Open <b>treering.com/validate</b> in any browser, or scan the QR code on the flyer sent home.' },
+  { title: 'Enter the school passcode', copy: 'Sundance families use <b>10sundance</b>. It links your account to our school.' },
+  { title: 'Choose your book, then personalize it', copy: 'Pick softcover or hardcover, then fill your two free custom pages.' },
+];
+---
+
+<Base
+  title="Yearbook"
+  description={`Order the ${fundraising.schoolYear} Sundance Elementary yearbook from TreeRing — softcover $21.56 or hardcover $27.47, tax included, with two free custom pages.`}
+>
+  <section>
+    <div class="wrap">
+      <div class="sec-head page-head">
+        <div>
+          <p class="eyebrow">PAC &middot; Yearbook</p>
+          {/* The year is one token: on a phone the heading broke it across
+              two lines as "2026–" / "27". */}
+          <h2>Order the <span class="yb-year">{fundraising.schoolYear}</span> yearbook</h2>
+          <p>A whole year of Sundance in one book &mdash; plus two pages that are yours alone.
+             Yearbooks are ordered online through TreeRing using our school passcode.</p>
+        </div>
+        <a class="btn btn-lg btn-pac" href={TREERING_URL} target="_blank" rel="noopener noreferrer">
+          Order your yearbook
+        </a>
+      </div>
+
+      {/* The artwork and the prices are one block: the tree says WHAT this is
+          faster than a sentence can, and the two figures are the first thing a
+          parent came here for. */}
+      <div class="yb-hero">
+        <img class="yb-tree" src="/img/yearbook-tree.png"
+             alt="The Sundance Elementary yearbook tree — a tree whose leaves are open books, apples, flowers and sheets of notebook paper."
+             width="733" height="760" />
+        <div class="yb-hero-copy">
+          {preOrderOpen && (
+            <p class="yb-deadline"><b>Pre-order by {deadlineText}</b> to get <b>10% off</b>.</p>
+          )}
+          <div class="yb-prices">
+            {books.map((b) => (
+              <div class="yb-price">
+                <div class="yb-price-cover">{b.cover}</div>
+                <div class="yb-price-amt num">{b.price}</div>
+                <div class="yb-price-note">{b.note}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <h3 class="block-title spaced">How to order</h3>
+      <div class="yb-steps">
+        {steps.map((s, i) => (
+          <div class="yb-step">
+            <div class="yb-step-num">Step {i + 1}</div>
+            <h4>{s.title}</h4>
+            <p set:html={s.copy} />
+          </div>
+        ))}
+      </div>
+
+      {/* The passcode is the one thing a parent has to carry from this page to
+          TreeRing, so it is set apart and selectable rather than buried in a
+          sentence. */}
+      <div class="yb-passcode">
+        <div>
+          <p class="yb-passcode-label">School passcode</p>
+          <p class="yb-passcode-code num">{PASSCODE}</p>
+        </div>
+        <a class="btn btn-pac" href={TREERING_URL} target="_blank" rel="noopener noreferrer">
+          Go to treering.com/validate
+        </a>
+      </div>
+
+      <div class="yb-custom">
+        <div class="yb-custom-icon" aria-hidden="true">&#128247;</div>
+        <div>
+          <h3>Two free custom pages</h3>
+          <p>Every book comes with <b>2 custom pages at no extra cost</b>, and they are printed <b>only in your copy</b>. Add photos from your computer, Facebook, Instagram, Google&nbsp;Drive and more.</p>
+        </div>
+      </div>
+
+      <p class="yb-questions">Questions? Email the yearbook team at <a href={`mailto:${org.email.yearbook}`}>{org.email.yearbook}</a>.</p>
+    </div>
+  </section>
+</Base>

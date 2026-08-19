@@ -1681,3 +1681,124 @@
   line-height: 1.2; color: var(--ink);
 }
 .also-card p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* ---------------------------------------------------------------------------
+   /yearbook/ — ordering the school yearbook from TreeRing.
+
+   Teal throughout, because the yearbook is PAC's. Appended at the end for the
+   same reason as the Tagaby block above: this file is long and flat, so a rule
+   added earlier loses to a later one at equal specificity.
+   --------------------------------------------------------------------------- */
+
+/* The tree, lifted out of the flyer, beside the two figures a parent came for.
+   The artwork carries no information the text does not, so it goes first in the
+   source but shrinks out of the way first too: below 760px it caps at 200px and
+   the prices take the full width, rather than a decorative picture pushing the
+   price of the book below the fold on a phone. */
+.yb-hero {
+  display: flex; align-items: center; gap: 34px; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.yb-tree {
+  flex: 0 0 auto; width: 300px; max-width: 100%; height: auto;
+  /* No frame and no fill: the paper background is already transparent, so the
+     art sits directly on the page ground the way it sits on the flyer's page. */
+}
+.yb-hero-copy { flex: 1 1 380px; min-width: 280px; }
+
+.yb-year { white-space: nowrap; }
+
+/* The discount, not the prices, is the thing with a clock on it — so it reads
+   as a notice rather than as a third price card. Gold, like the other
+   time-boxed notices on the site, and never teal: teal is doing the "this is
+   PAC's" job on this page and cannot also mean "hurry". */
+.yb-deadline {
+  background: var(--gold-soft); border: 1px solid var(--gold);
+  border-radius: var(--radius); padding: 14px 18px; margin-bottom: 26px;
+  font-size: var(--fs-md); color: var(--gold-ink-2); text-align: center;
+}
+.yb-deadline b { color: var(--gold-ink); }
+
+/* Two cards, side by side, sized by content rather than stretched across the
+   page: with two items an auto-fit grid gave each one half of 1180px, and a
+   four-word label in a 560px box reads as a missing column. */
+.yb-prices { display: flex; flex-wrap: wrap; gap: 16px; }
+.yb-price {
+  flex: 1 1 200px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-top: 4px solid var(--teal); border-radius: var(--radius-md);
+  padding: 20px 24px 22px; box-shadow: var(--shadow);
+}
+.yb-price-cover {
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--muted);
+}
+.yb-price-amt {
+  font-family: var(--display); font-size: var(--fs-5xl); font-weight: 600;
+  color: var(--teal-deep); line-height: 1.05; margin-top: 6px;
+}
+.yb-price-note { font-size: var(--fs-sm); color: var(--muted); margin-top: 2px; }
+
+.yb-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.yb-step {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 22px 24px; border-top: 3px solid var(--teal);
+}
+.yb-step-num {
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--muted);
+}
+.yb-step h4 { font-family: var(--display); font-size: var(--fs-xl); margin-top: 4px; }
+.yb-step p { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.yb-step b { color: var(--ink); }
+
+/* The passcode is a string a parent has to retype into another site, so it is
+   set in the tabular face at a size that survives a phone screen, and the
+   block that holds it carries the action right next to it. */
+.yb-passcode {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px; margin-top: 26px;
+  background: var(--teal-soft); border-left: 3px solid var(--teal);
+  border-radius: var(--radius); padding: 22px 26px;
+}
+.yb-passcode-label {
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--teal-deep);
+}
+.yb-passcode-code {
+  font-family: var(--display); font-size: var(--fs-5xl); font-weight: 600;
+  color: var(--teal-deep); line-height: 1.1; margin-top: 2px;
+  /* Selectable and spaced enough that "10sundance" cannot be misread as
+     "1Osundance" when it is being copied by eye. */
+  letter-spacing: .01em; user-select: all;
+}
+
+/* The BOX is sized by the measure, rather than stretched to the wrap and the
+   text capped inside it. Full width with a 62ch paragraph, the copy stopped
+   dead about 490px short of the card's own edge, which reads as text wrapping
+   early rather than as a deliberate measure. */
+.yb-custom {
+  display: flex; align-items: flex-start; gap: 20px; margin-top: 26px;
+  width: fit-content; max-width: 100%; margin-inline: auto;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 24px 28px; box-shadow: var(--shadow);
+}
+.yb-custom-icon { font-size: 30px; line-height: 1; flex: 0 0 auto; }
+.yb-custom h3 { font-family: var(--display); font-size: var(--fs-2xl); font-weight: 600; }
+.yb-custom p { font-size: var(--fs-md); color: var(--muted); margin-top: 6px; line-height: 1.55; max-width: 58ch; }
+.yb-custom b { color: var(--ink); }
+
+.yb-questions { margin-top: 26px; font-size: var(--fs-sm); color: var(--muted); }
+.yb-questions a { color: var(--teal-deep); font-weight: 650; }
+
+@media (max-width: 860px) { .yb-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) {
+  .yb-hero { gap: 22px; justify-content: center; }
+  .yb-tree { width: 200px; }
+}
+@media (max-width: 560px) {
+  .yb-steps { grid-template-columns: 1fr; }
+  .yb-passcode { padding: 20px 22px; }
+  .yb-passcode .btn { width: 100%; justify-content: center; }
+  .yb-custom { gap: 14px; padding: 20px 22px; }
+}
