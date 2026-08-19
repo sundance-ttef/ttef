@@ -37,8 +37,13 @@ const flyer = imageUrl(ev.flyer, 900);
       </div>
     </div>
 
+    {/* The numbers take the event's OWN colour. They were hard maroon, which
+        was right only because the auction — a Foundation event — was the only
+        one that had ever had any. On a PAC event that put a maroon block under
+        a teal eyebrow, which is the one thing colour on this site is not
+        allowed to do. */}
     {ev.stats?.length ? (
-      <div class="stat-row">
+      <div class={`stat-row ${tag.cls}`}>
         {ev.stats.map((s) => (
           <div class="stat">
             <div class="stat-num">{s.value}</div>

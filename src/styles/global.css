@@ -1802,3 +1802,24 @@
   .yb-passcode .btn { width: 100%; justify-content: center; }
   .yb-custom { gap: 14px; padding: 20px 22px; }
 }
+
+/* ---------------------------------------------------------------------------
+   Event page corrections, appended so they win the flat-file cascade.
+   --------------------------------------------------------------------------- */
+
+/* The headline numbers carry the event's org colour. `.stat` is hard maroon,
+   which was correct only by accident: the Spring Auction was the only event
+   that had ever had stats, and it is the Foundation's. The first PAC event
+   with them put a maroon block directly under a teal "PAC ·" eyebrow.
+   Teal-deep rather than teal for the figure — the number is display-sized on
+   white and the deeper tone clears 4.5:1 with room to spare. */
+.stat-row.p .stat { border-top-color: var(--teal); }
+.stat-row.p .stat-num { color: var(--teal-deep); }
+.stat-row.s .stat { border-top-color: var(--ink); }
+.stat-row.s .stat-num { color: var(--ink); }
+
+/* Portable Text emits one <p> per paragraph, and the reset zeroes their
+   margins, so a two-paragraph write-up rendered as one run-on block with the
+   sentences touching. Unseen until now only because no event had a body with
+   more than one paragraph in it. */
+.event-body-copy p + p { margin-top: 14px; }
